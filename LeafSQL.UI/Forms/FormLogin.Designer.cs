@@ -112,7 +112,7 @@
             this.textBoxAddress.Name = "textBoxAddress";
             this.textBoxAddress.Size = new System.Drawing.Size(213, 20);
             this.textBoxAddress.TabIndex = 0;
-            this.textBoxAddress.Text = "http://localhost:51001/DataAccess.svc";
+            this.textBoxAddress.Text = "http://localhost:6858/";
             // 
             // label3
             // 

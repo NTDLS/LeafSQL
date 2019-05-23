@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LeafSQL.Library.Client;
 using LeafSQL.Library.Payloads;
 
 namespace LeafSQL.UI.Forms
@@ -44,21 +45,18 @@ namespace LeafSQL.UI.Forms
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            /*
             try
             {
-                DataAccessClient dal = new DataAccessClient();
+                LeafSQLClient client = new LeafSQLClient(textBoxAddress.Text);
 
-                dal.Endpoint.Address = new EndpointAddress(textBoxAddress.Text);
-
-                UserSession session = dal.Login(textBoxUsername.Text, textBoxPassword.Text);
-                if (session == null)
+                var loginToken = client.Login(textBoxUsername.Text, textBoxPassword.Text);
+                if (loginToken.IsValid == false)
                 {
                     MessageBox.Show("Login failed.");
                     return;
                 }
 
-                dal.Logout(session);
+                client.Logout();
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -67,7 +65,6 @@ namespace LeafSQL.UI.Forms
             {
                 MessageBox.Show(ex.Message);
             }
-            */
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

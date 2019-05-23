@@ -369,11 +369,11 @@ namespace LeafSQL.UI.Forms
 
         private void FormMain_Shown(object sender, EventArgs e)
         {
-            using (Forms.FormLogin form = new FormLogin())
+            using (var formLogin = new FormLogin())
             {
-                if (form.ShowDialog() == DialogResult.OK)
+                if (formLogin.ShowDialog() == DialogResult.OK)
                 {
-                    client = new LeafSQLClient($"http:/{form.Address}/", form.Username, form.Password);
+                    client = new LeafSQLClient(formLogin.Address, formLogin.Username, formLogin.Password);
                 }
                 else
                 {
