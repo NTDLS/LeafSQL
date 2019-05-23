@@ -43,7 +43,7 @@ namespace <#= strNamespace #>
 	{        
 		public void Export_<#= oneTable.Schema #>_<#= oneTable.Name #>()
 		{
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
 
             if(client.Schema.Exists("<#= databaseName #>:<#= oneTable.Schema #>:<#= oneTable.Name #>"))
 			{

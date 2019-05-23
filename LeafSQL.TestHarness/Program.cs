@@ -16,26 +16,27 @@ namespace LeafSQL.TestHarness
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             Console.WriteLine("{0} v{1}", fileVersionInfo.FileDescription, fileVersionInfo.ProductVersion);
 
-            //Exporter.ExportAll();
-            //TestCreateAllAdventureWorks2012Indexes();
+            Exporter.ExportAll();
+            TestCreateAllAdventureWorks2012Indexes();
             //TestServerStress();
 
             //TestCreateIndexAddDocuments();
             //TestAddDocumentsCreateIndex();
             //TestIndexDocumentDeletion();
 
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "username", "password");
+            //LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "username", "password");
 
             //string query = "SELECT TOP 100 ProductID, Name, ModifiedDate FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 Color = 'Silver'";
             //client.Query.Execute(query);
 
+            Console.WriteLine("Complete");
             Console.ReadLine();
         }
 
         #region TestIndexDocumentDeletion.
         private static void TestIndexDocumentDeletion()
         {
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
             Console.WriteLine("Session Started: {0}", client.Token.SessionId);
 
             string schemaPath = "Students:Indexing";
@@ -125,7 +126,7 @@ namespace LeafSQL.TestHarness
         #region TestAddDocumentsCreateIndex.
         private static void TestAddDocumentsCreateIndex()
         {
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
 
             Console.WriteLine("Session Started: {0}", client.Token.SessionId);
             string schemaPath = "Students:Indexing";
@@ -206,7 +207,7 @@ namespace LeafSQL.TestHarness
         #region TestCreateIndexAddDocuments.
         private static void TestCreateIndexAddDocuments()
         {
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
             Console.WriteLine("Session Started: {0}", client.Token.SessionId);
 
             string schemaPath = "Students:Indexing";
@@ -290,7 +291,7 @@ namespace LeafSQL.TestHarness
 
         static void StressTestThreadProc()
         {
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
 
             Console.WriteLine("Session Started: {0}", client.Token.SessionId);
 
@@ -375,7 +376,7 @@ namespace LeafSQL.TestHarness
 
         static void TestCreateAllAdventureWorks2012Indexes()
         {
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
             Console.WriteLine("Session Started: {0}", client.Token.SessionId);
 
             client.Transaction.Begin();

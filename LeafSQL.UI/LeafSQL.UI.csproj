@@ -38,22 +38,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NTDLS.CodeEditor">
-      <HintPath>..\..\..\SyntaxBox\Release\NTDLS.CodeEditor.dll</HintPath>
+      <HintPath>..\SyntaxBox\Release\NTDLS.CodeEditor.dll</HintPath>
     </Reference>
     <Reference Include="NTDLS.CodeEditor.SyntaxFiles">
-      <HintPath>..\..\..\SyntaxBox\Release\NTDLS.CodeEditor.SyntaxFiles.dll</HintPath>
+      <HintPath>..\SyntaxBox\Release\NTDLS.CodeEditor.SyntaxFiles.dll</HintPath>
     </Reference>
     <Reference Include="NTDLS.Core">
-      <HintPath>..\..\..\SyntaxBox\Release\NTDLS.Core.dll</HintPath>
+      <HintPath>..\SyntaxBox\Release\NTDLS.Core.dll</HintPath>
     </Reference>
     <Reference Include="NTDLS.SyntaxDocument">
-      <HintPath>..\..\..\SyntaxBox\Release\NTDLS.SyntaxDocument.dll</HintPath>
+      <HintPath>..\SyntaxBox\Release\NTDLS.SyntaxDocument.dll</HintPath>
     </Reference>
     <Reference Include="NTDLS.Win32">
-      <HintPath>..\..\..\SyntaxBox\Release\NTDLS.Win32.dll</HintPath>
+      <HintPath>..\SyntaxBox\Release\NTDLS.Win32.dll</HintPath>
     </Reference>
     <Reference Include="NTDLS.Windows.Forms">
-      <HintPath>..\..\..\SyntaxBox\Release\NTDLS.Windows.Forms.dll</HintPath>
+      <HintPath>..\SyntaxBox\Release\NTDLS.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

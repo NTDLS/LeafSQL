@@ -12,7 +12,7 @@ namespace LeafSQL.TestHarness.ADORepository
 	{        
 		public void Export_Sales_ShoppingCartItem()
 		{
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
 
             if(client.Schema.Exists("AdventureWorks2012:Sales:ShoppingCartItem"))
 			{
