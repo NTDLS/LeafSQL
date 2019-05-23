@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language Name="SQL" Startblock="Code">
+  <FileTypes>
+	<FileType Extension=".SQL" Name="SQL file"/></FileTypes>
+
+	<Block Name="Code" Style="Code" IsMultiline="true">		
+		<Scope Start="((?i)(case)(?!(\s)+(tran)))" End="((?i)end)" StartIsComplex="true" EndIsComplex="true" Style="C1" Text="begin...end" StartISKeyword="true" EndIsKeyword="true" />
+		<Scope Start="((?i)(begin)(?!(\s)+(tran)))" End="((?i)end)" StartIsComplex="true" EndIsComplex="true" Style="C1" Text="begin...end" StartISKeyword="true" EndIsKeyword="true" />
+		
+		<Keywords>
+			<PatternGroup Name="C1" Style="C1" CaseSensitive="false" NormalizeCase="false">
+				<Patterns>
+					INSERT UPDATE SELECT DELETE FROM WHERE AND OR TOP INTO
+				</Patterns>
+				<Pattern Text="go" IsSeparator="true"/>
+			</PatternGroup>
+			
+			<PatternGroup Name="Functions" Style="Functions" CaseSensitive="false" NormalizeCase="false">
+				<Patterns>
+					<!-- keywords -->
+				</Patterns>
+			</PatternGroup>
+
+			<PatternGroup Name="C2" Style="C2" CaseSensitive="false" NormalizeCase="false">
+				<Patterns>
+					<!-- keywords -->
+				</Patterns>
+			</PatternGroup>
+			<PatternGroup Name="C3" Style="C3" CaseSensitive="false" NormalizeCase="false">
+				<Patterns>
+					<!-- keywords -->
+				</Patterns>
+			</PatternGroup>
+			<PatternGroup Name="C5" Style="C5" CaseSensitive="false" NormalizeCase="false">
+				<Patterns>
+					<!-- keywords -->
+				</Patterns>
+			</PatternGroup>
+			<PatternGroup Name="C6" Style="C6" CaseSensitive="false" NormalizeCase="false">
+				<Patterns>
+					<!-- keywords -->
+				</Patterns>
+			</PatternGroup>
+			<PatternGroup Name="Numbers" Style="Number">
+				<Pattern Text="([0-9]+)" IsComplex="true" />
+			</PatternGroup>
+			<PatternGroup Name="ServerVariables" Style="ServerVariable">
+				<Pattern Text="(@@[a-zA-Z]+[a-zA-Z0-9]*)" IsComplex="true" />
+			</PatternGroup>
+			<PatternGroup Name="Variables" Style="Variable">
+				<Pattern Text="(@[a-zA-Z]+[a-zA-Z0-9]*)" IsComplex="true" />
+			</PatternGroup>
+		</Keywords>
+
+		<Operators>
+			<PatternGroup name="Operators" Style="Operator">
+				<Patterns>
+			 @ % " &amp; * ( ) - + | \ / [ ] ; &quot; ' &lt; &gt; , .
+				</Patterns>
+			</PatternGroup>
+		</Operators>
+
+		<ChildBlocks>
+			<Child Name="Multiline Comment" />
+			<Child Name="Singleline Comment" />
+			<Child Name="String" />
+			<Child Name="Code" />
+		</ChildBlocks>
+	</Block>	
+	<Block Name="Multiline Comment" Style="Comment"  IsMultiline="true">
+		<Scope Start="/*" End="*/" Style="Comment" Text="/*...*/"/>
+	</Block>
+	<Block Name="Singleline Comment" Style="Comment"  IsMultiline="false">
+		<Scope Start="--" End="" Style="Comment" />
+	</Block>
+	<Block Name="String" Style="String" IsMultiline="true">
+		<Scope Start="&quot;" End="&quot;" EscapeChar="" Style="String" />
+<Scope Start="'" End="'" EscapeChar="\" Style="String" />
+
+	</Block>"
+<Style Name="Code" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Scope" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Comment" ForeColor="Green" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="String" ForeColor="SteelBlue" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Number" ForeColor="Teal" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="ServerVariable" ForeColor="DarkMagenta" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Variable" ForeColor="Magenta" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Keyword" ForeColor="Blue" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Operator" ForeColor="Red" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C1" ForeColor="Blue" 	BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Functions" ForeColor="Blue"	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C2" ForeColor="DarkBlue" 	BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="C3" ForeColor="Magenta" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C4" ForeColor="Red" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C5" ForeColor="DarkRed" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="C6" ForeColor="DarkGreen" 	BackColor="" Bold="false" Italic="false" Underline="false" />
+</Language>
+
