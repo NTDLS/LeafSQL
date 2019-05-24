@@ -17,7 +17,7 @@ namespace LeafSQL.Engine.Health
         {
             this.core = core;
 
-            string healthCounterDiskPath = Path.Combine(core.settings.LogDirectory, Constants.HealthStatsFile);
+            string healthCounterDiskPath = Path.Combine(core.Settings.LogDirectory, Constants.HealthStatsFile);
             if (File.Exists(healthCounterDiskPath))
             {
                 Counters = core.IO.GetJsonNonTracked<List<HealthCounter>>(healthCounterDiskPath);
@@ -39,7 +39,7 @@ namespace LeafSQL.Engine.Health
             {
                 lastCheckpoint = DateTime.UtcNow;
                 Counters = Counters.Where(o => o.Value > 0).ToList();
-                core.IO.PutJsonNonTracked(Path.Combine(core.settings.LogDirectory, Constants.HealthStatsFile), Counters);
+                core.IO.PutJsonNonTracked(Path.Combine(core.Settings.LogDirectory, Constants.HealthStatsFile), Counters);
             }
         }
 
@@ -85,7 +85,7 @@ namespace LeafSQL.Engine.Health
         /// <param name="value"></param>
         public void Increment(HealthCounterType type, string instance, double value)
         {
-            if (value == 0 || core.settings.RecordInstanceHealth == false)
+            if (value == 0 || core.Settings.RecordInstanceHealth == false)
             {
                 return;
             }

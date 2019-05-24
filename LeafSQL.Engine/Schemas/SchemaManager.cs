@@ -26,7 +26,7 @@ namespace LeafSQL.Engine.Schemas
                     rootSchemaMeta = new PersistSchema()
                     {
                         Id = Constants.RootSchemaGUID,
-                        DiskPath = core.settings.DataRootPath,
+                        DiskPath = core.Settings.DataRootPath,
                         VirtualPath = string.Empty,
                         Exists = true,
                         Name = string.Empty,
@@ -40,16 +40,16 @@ namespace LeafSQL.Engine.Schemas
         {
             this.core = core;
 
-            rootCatalogFile = Path.Combine(core.settings.DataRootPath, Constants.SchemaCatalogFile);
+            rootCatalogFile = Path.Combine(core.Settings.DataRootPath, Constants.SchemaCatalogFile);
 
             //If the catalog doesnt exist, create a new empty one.
             if (File.Exists(rootCatalogFile) == false)
             {
-                Directory.CreateDirectory(core.settings.DataRootPath);
+                Directory.CreateDirectory(core.Settings.DataRootPath);
 
-                core.IO.PutJsonNonTracked(Path.Combine(core.settings.DataRootPath, Constants.SchemaCatalogFile), new PersistSchemaCatalog());
-                core.IO.PutJsonNonTracked(Path.Combine(core.settings.DataRootPath, Constants.DocumentCatalogFile), new PersistDocumentCatalog());
-                core.IO.PutJsonNonTracked(Path.Combine(core.settings.DataRootPath, Constants.IndexCatalogFile), new PersistIndexCatalog());
+                core.IO.PutJsonNonTracked(Path.Combine(core.Settings.DataRootPath, Constants.SchemaCatalogFile), new PersistSchemaCatalog());
+                core.IO.PutJsonNonTracked(Path.Combine(core.Settings.DataRootPath, Constants.DocumentCatalogFile), new PersistDocumentCatalog());
+                core.IO.PutJsonNonTracked(Path.Combine(core.Settings.DataRootPath, Constants.IndexCatalogFile), new PersistIndexCatalog());
             }
         }
 
@@ -114,7 +114,7 @@ namespace LeafSQL.Engine.Schemas
                     var segments = schemaPath.Split(':');
                     string schemaName = segments[segments.Count() - 1];
 
-                    string namespaceDiskPath = Path.Combine(core.settings.DataRootPath, String.Join("\\", segments));
+                    string namespaceDiskPath = Path.Combine(core.Settings.DataRootPath, String.Join("\\", segments));
                     string parentSchemaDiskPath = Directory.GetParent(namespaceDiskPath).FullName;
 
                     string parentCatalogDiskPath = Path.Combine(parentSchemaDiskPath, Constants.SchemaCatalogFile);
@@ -140,7 +140,7 @@ namespace LeafSQL.Engine.Schemas
                         namespaceMeta = new PersistSchema()
                         {
                             Name = schemaName,
-                            DiskPath = core.settings.DataRootPath + "\\" + schemaPath.Replace(':', '\\'),
+                            DiskPath = core.Settings.DataRootPath + "\\" + schemaPath.Replace(':', '\\'),
                             VirtualPath = schemaPath,
                             Exists = false
                         };

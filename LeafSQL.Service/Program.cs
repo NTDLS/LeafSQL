@@ -11,8 +11,9 @@ namespace LeafSQL.Service
         {
             //System.Diagnostics.Process.Start("CMD.exe", "/C rd C:\\LeafSQL /S /Q");
 
-            Library.Settings settings = new Library.Settings()
+            var settings = new Library.Payloads.ServerSettings()
             {
+                Name = Settings.Default.Name,
                 BaseAddress = Settings.Default.BaseAddress,
                 DataRootPath = Settings.Default.DataRootPath.TrimEnd(new char[] { '/', '\\' }),
                 TransactionDataPath = Settings.Default.TransactionDataPath.TrimEnd(new char[] { '/', '\\' }),

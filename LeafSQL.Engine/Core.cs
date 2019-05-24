@@ -1,17 +1,16 @@
-﻿using LeafSQL.Engine.Documents;
+﻿using LeafSQL.Engine.Caching;
+using LeafSQL.Engine.Documents;
 using LeafSQL.Engine.Health;
+using LeafSQL.Engine.Indexes;
 using LeafSQL.Engine.IO;
 using LeafSQL.Engine.Locking;
 using LeafSQL.Engine.Logging;
+using LeafSQL.Engine.Query;
 using LeafSQL.Engine.Schemas;
+using LeafSQL.Engine.Sessions;
 using LeafSQL.Engine.Transactions;
-using LeafSQL.Library;
 using System.Diagnostics;
 using System.Reflection;
-using LeafSQL.Engine.Sessions;
-using LeafSQL.Engine.Caching;
-using LeafSQL.Engine.Indexes;
-using LeafSQL.Engine.Query;
 
 namespace LeafSQL.Engine
 {
@@ -22,7 +21,7 @@ namespace LeafSQL.Engine
         public LockManager Locking { get; set; }
         public DocumentManager Documents { get; set; }
         public TransactionManager Transactions { get; set; }
-        public Settings settings { get; set; }
+        public Library.Payloads.ServerSettings Settings { get; set; }
         public LogManager Log { get; set; }
         public HealthManager Health { get; set; }
         public SecurityManager Security { get; set; }
@@ -31,9 +30,9 @@ namespace LeafSQL.Engine
         public PersistIndexManager Indexes { get; set; }
         public QueryManager Query { get; set; }
 
-        public Core(Settings settings)
+        public Core(Library.Payloads.ServerSettings settings)
         {
-            this.settings = settings;
+            this.Settings = settings;
 
             Log = new LogManager(this);
 

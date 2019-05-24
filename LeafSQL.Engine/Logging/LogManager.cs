@@ -47,7 +47,7 @@ namespace LeafSQL.Engine.Logging
 
         public void Write(LogEntry entry)
         {
-            if (entry.Severity == Constants.LogSeverity.Trace && core.settings.WriteTraceData == false)
+            if (entry.Severity == Constants.LogSeverity.Trace && core.Settings.WriteTraceData == false)
             {
                 return;
             }
@@ -132,7 +132,7 @@ namespace LeafSQL.Engine.Logging
 
                 fileHandle.WriteLine(message.ToString());
 
-                if (core.settings.FlushLog)
+                if (core.Settings.FlushLog)
                 {
                     fileHandle.Flush();
                 }
@@ -190,8 +190,8 @@ namespace LeafSQL.Engine.Logging
                     Close();
 
                     recycledTime = DateTime.Now;
-                    string fileName = core.settings.LogDirectory + "\\" + String.Format("{0}_{1}_{2}.txt", recycledTime.Year, recycledTime.Month, recycledTime.Day);
-                    Directory.CreateDirectory(core.settings.LogDirectory);
+                    string fileName = core.Settings.LogDirectory + "\\" + String.Format("{0}_{1}_{2}.txt", recycledTime.Year, recycledTime.Month, recycledTime.Day);
+                    Directory.CreateDirectory(core.Settings.LogDirectory);
                     fileHandle = new System.IO.StreamWriter(fileName, true);
                 }
             }

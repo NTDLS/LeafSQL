@@ -70,7 +70,6 @@
     <Compile Include="ADORepository\Person_StateProvinceRepository.cs" />
     <Compile Include="ADORepository\Production_BillOfMaterialsRepository.cs" />
     <Compile Include="ADORepository\Production_CultureRepository.cs" />
-    <Compile Include="ADORepository\Production_DocumentRepository.cs" />
     <Compile Include="ADORepository\Production_IllustrationRepository.cs" />
     <Compile Include="ADORepository\Production_LocationRepository.cs" />
     <Compile Include="ADORepository\Production_ProductCategoryRepository.cs" />

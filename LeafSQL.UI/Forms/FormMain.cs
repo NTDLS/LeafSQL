@@ -24,9 +24,9 @@ namespace LeafSQL.UI.Forms
         LeafSQLClient client;
 
         private LSDBTreeNode contextNode = null;
-        //private LSDBTreeNode ServerNode = null;
-        //private LSDBTreeNode NamespacesNode = null;
-        //private LSDBTreeNode LoginsNode = null;
+        private LSDBTreeNode ServerNode = null;
+        private LSDBTreeNode NamespacesNode = null;
+        private LSDBTreeNode LoginsNode = null;
 
         bool ContainsNodeOfType(LSDBTreeNode node, Types.TreeNodeType type)
         {
@@ -539,14 +539,13 @@ namespace LeafSQL.UI.Forms
 
         private void PopulateServerExplorer()
         {
-            /*
             treeViewDatabase.Nodes.Clear();
 
             treeViewDatabase.ImageList = imageListTreeView;
 
-            ServerInfo serverInfo = client.GetServerInfo();
+            var settings = client.Settings.Get();
 
-            ServerNode = new LSDBTreeNode(Types.TreeNodeType.Server, serverInfo.NickName, serverInfo.NickName);
+            ServerNode = new LSDBTreeNode(Types.TreeNodeType.Server, settings.Name, settings.Name);
 
             NamespacesNode = new LSDBTreeNode(Types.TreeNodeType.Namespaces, "Namespaces", "Namespaces");
             NamespacesNode.Nodes.Add(new LSDBTreeNode(Types.TreeNodeType.Namespace, "/", "/"));
@@ -563,7 +562,6 @@ namespace LeafSQL.UI.Forms
 
             treeViewDatabase.Nodes.Add(ServerNode);
             ServerNode.Expand();
-            */
         }
 
         private void FormMain_Load(object sender, EventArgs e)

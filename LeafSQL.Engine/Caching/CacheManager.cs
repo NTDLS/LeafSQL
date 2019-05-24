@@ -48,7 +48,7 @@ namespace LeafSQL.Engine.Caching
 
         public CacheItem Upsert(string key, object value)
         {
-            long tryFreetreshold = core.settings.MaxCacheMemory * 1024 * 1024;
+            long tryFreetreshold = core.Settings.MaxCacheMemory * 1024 * 1024;
             long currentVirtualMemorySize = Process.GetCurrentProcess().PrivateMemorySize64;
 
             if (currentVirtualMemorySize > tryFreetreshold)
@@ -62,13 +62,13 @@ namespace LeafSQL.Engine.Caching
 
                     HashSet<string> triedKeys = new HashSet<string>();
 
-                    while (Process.GetCurrentProcess().WorkingSet64 > (tryFreetreshold * ((100 - core.settings.CacheScavengeBuffer) / 100.0)))
+                    while (Process.GetCurrentProcess().WorkingSet64 > (tryFreetreshold * ((100 - core.Settings.CacheScavengeBuffer) / 100.0)))
                     {
                         int countOfItemsFreed = 0;
 
                         lock (collection)
                         {
-                            int countOfOldRecordsToEval = (collection.Count / core.settings.CacheScavengeRate);
+                            int countOfOldRecordsToEval = (collection.Count / core.Settings.CacheScavengeRate);
 
                             var top10PctOldest = (((from o in collection
                                                     where triedKeys.Contains(o.Key) == false
@@ -76,7 +76,7 @@ namespace LeafSQL.Engine.Caching
                                                 .OrderByDescending(o => o.Value.LastHit)
                                                 .Take(countOfOldRecordsToEval)).ToList();
 
-                            int countOfLeastUsedToEval = (top10PctOldest.Count / core.settings.CacheScavengeRate);
+                            int countOfLeastUsedToEval = (top10PctOldest.Count / core.Settings.CacheScavengeRate);
 
                             var top10PctLeastUsed = (((from o in top10PctOldest
                                                        where triedKeys.Contains(o.Key) == false

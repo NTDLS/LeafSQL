@@ -51,7 +51,7 @@ namespace LeafSQL.Engine.IO
                 string cacheKey = Helpers.RemoveModFileName(filePath.ToLower());
                 transaction.LockFile(intendedOperation, cacheKey);
 
-                if (core.settings.AllowIOCaching)
+                if (core.Settings.AllowIOCaching)
                 {
                     var cachedObject = core.Cache.Get(cacheKey);
 
@@ -89,7 +89,7 @@ namespace LeafSQL.Engine.IO
                     throw new NotImplementedException();
                 }
 
-                if (core.settings.AllowIOCaching)
+                if (core.Settings.AllowIOCaching)
                 {
                     core.Cache.Upsert(cacheKey, deserializedObject);
                     core.Health.Increment(Constants.HealthCounterType.IOCacheReadAdditions);
@@ -153,7 +153,7 @@ namespace LeafSQL.Engine.IO
                         transaction.RecordFileAlter(filePath);
                     }
 
-                    if (core.settings.AllowDeferredIO && transaction.IsLongLived)
+                    if (core.Settings.AllowDeferredIO && transaction.IsLongLived)
                     {
                         deferDiskWrite = transaction.DeferredIOs.RecordDeferredDiskIO(cacheKey, filePath, deserializedObject, format);
                     }
@@ -186,7 +186,7 @@ namespace LeafSQL.Engine.IO
                     core.Log.Trace(String.Format("IO:Write-Deferred:{0}->{1}", transaction.ProcessId, filePath));
                 }
 
-                if (core.settings.AllowIOCaching)
+                if (core.Settings.AllowIOCaching)
                 {
                     core.Cache.Upsert(cacheKey, deserializedObject);
                     core.Health.Increment(Constants.HealthCounterType.IOCacheWriteAdditions);
@@ -277,7 +277,7 @@ namespace LeafSQL.Engine.IO
                 string cacheKey = Helpers.RemoveModFileName(filePath.ToLower());
                 transaction.LockFile(Constants.LockOperation.Write, cacheKey);
 
-                if (core.settings.AllowIOCaching)
+                if (core.Settings.AllowIOCaching)
                 {
                     core.Cache.Remove(cacheKey);
                 }
@@ -303,7 +303,7 @@ namespace LeafSQL.Engine.IO
                 string cacheKey = Helpers.RemoveModFileName(diskPath.ToLower());
                 transaction.LockDirectory(Constants.LockOperation.Write, cacheKey);
 
-                if (core.settings.AllowIOCaching)
+                if (core.Settings.AllowIOCaching)
                 {
                     core.Cache.RemoveStartsWith(cacheKey);
                 }

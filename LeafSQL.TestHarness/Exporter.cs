@@ -9,7 +9,7 @@ namespace LeafSQL.TestHarness
     public static partial class Exporter
     {
         public static void ExportAll()
-        {
+        {/*
             (new ADORepository.dbo_AWBuildVersionRepository()).Export_dbo_AWBuildVersion();
             (new ADORepository.dbo_DatabaseLogRepository()).Export_dbo_DatabaseLog();
             (new ADORepository.dbo_ErrorLogRepository()).Export_dbo_ErrorLog();
@@ -34,14 +34,14 @@ namespace LeafSQL.TestHarness
             (new ADORepository.Person_StateProvinceRepository()).Export_Person_StateProvince();
             (new ADORepository.Production_BillOfMaterialsRepository()).Export_Production_BillOfMaterials();
             (new ADORepository.Production_CultureRepository()).Export_Production_Culture();
-            (new ADORepository.Production_DocumentRepository()).Export_Production_Document();
+
             (new ADORepository.Production_IllustrationRepository()).Export_Production_Illustration();
             (new ADORepository.Production_LocationRepository()).Export_Production_Location();
             (new ADORepository.Production_ProductRepository()).Export_Production_Product();
             (new ADORepository.Production_ProductCategoryRepository()).Export_Production_ProductCategory();
             (new ADORepository.Production_ProductCostHistoryRepository()).Export_Production_ProductCostHistory();
             (new ADORepository.Production_ProductDescriptionRepository()).Export_Production_ProductDescription();
-            (new ADORepository.Production_ProductDocumentRepository()).Export_Production_ProductDocument();
+
             (new ADORepository.Production_ProductInventoryRepository()).Export_Production_ProductInventory();
             (new ADORepository.Production_ProductListPriceHistoryRepository()).Export_Production_ProductListPriceHistory();
             (new ADORepository.Production_ProductModelRepository()).Export_Production_ProductModel();
@@ -53,6 +53,7 @@ namespace LeafSQL.TestHarness
             (new ADORepository.Production_ProductSubcategoryRepository()).Export_Production_ProductSubcategory();
             (new ADORepository.Production_ScrapReasonRepository()).Export_Production_ScrapReason();
             (new ADORepository.Production_TransactionHistoryRepository()).Export_Production_TransactionHistory();
+            */
             (new ADORepository.Production_TransactionHistoryArchiveRepository()).Export_Production_TransactionHistoryArchive();
             (new ADORepository.Production_UnitMeasureRepository()).Export_Production_UnitMeasure();
             (new ADORepository.Production_WorkOrderRepository()).Export_Production_WorkOrder();

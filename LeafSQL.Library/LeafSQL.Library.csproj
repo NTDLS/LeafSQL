@@ -44,12 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\Management\Settings.cs" />
     <Compile Include="Client\Management\Security.cs" />
     <Compile Include="Client\Management\Document.cs" />
     <Compile Include="Client\LeafSQLClient.cs" />
     <Compile Include="Client\Management\Indexes.cs" />
     <Compile Include="Client\Management\Query.cs" />
     <Compile Include="Client\Management\Transaction.cs" />
+    <Compile Include="Payloads\ServerSettingsResponse.cs" />
     <Compile Include="Payloads\LoginToken.cs" />
     <Compile Include="Payloads\LoginResponse.cs" />
     <Compile Include="Payloads\ActionResponse.cs" />
@@ -65,7 +67,7 @@
     <Compile Include="Payloads\Schema.cs" />
     <Compile Include="Client\Management\Schema.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Payloads\ServerSettings.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

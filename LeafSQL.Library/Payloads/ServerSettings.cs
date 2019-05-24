@@ -1,7 +1,11 @@
-﻿namespace LeafSQL.Library
+﻿namespace LeafSQL.Library.Payloads
 {
-    public class Settings
+    public class ServerSettings
     {
+        /// <summary>
+        /// The user-supplied name of the server.
+        /// </summary>
+        public string Name { get; set; }
         /// <summary>
         /// Whether the engine will keep instance level health metrics. This can be useful but will have a serious impact on performance.
         /// </summary>

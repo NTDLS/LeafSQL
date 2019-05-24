@@ -32,11 +32,14 @@
     <Setting Name="CacheScavengeRate" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="CacheScavengeBuffer" Type="System.Double" Scope="User">
+    <Setting Name="CacheScavengeBuffer" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="RecordInstanceHealth" Type="System.Boolean" Scope="User">
+    <Setting Name="RecordInstanceHealth" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">LeafSQLDev10</Value>
     </Setting>
   </Settings>
 </SettingsFile>
