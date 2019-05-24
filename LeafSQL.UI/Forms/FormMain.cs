@@ -463,39 +463,32 @@ namespace LeafSQL.UI.Forms
 
             string SchemaName = GetFullSchemaNameFromNode(node);
 
-            client.Schema.Indexes.ListAsync(SchemaName).ContinueWith((t) =>
+            var indexes = client.Schema.Indexes.List(SchemaName);
+
+            foreach (Index index in indexes.OrderBy(o => o.Name))
+            {
+                var indexNode = new LSTreeNode(Types.TreeNodeType.Index, index.Name);
+
+                foreach (IndexAttribute attribute in index.Attributes)
                 {
-                    if (t.Status == TaskStatus.RanToCompletion)
-                    {
-                        foreach (Index index in t.Result.OrderBy(o => o.Name))
-                        {
-                            var indexNode = new LSTreeNode(Types.TreeNodeType.Index, index.Name);
+                    indexNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.IndexAttribute, attribute.Name));
+                }
 
-                            foreach (IndexAttribute attribute in index.Attributes)
-                            {
-                                indexNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.IndexAttribute, attribute.Name));
-                            }
-
-                            node.Nodes.Add(indexNode);
-                        }
-                    }
-                }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                node.Nodes.Add(indexNode);
+            }
         }
+
 
         void PopulateLogins()
         {
             LoginsNode.Nodes.Clear();
 
-            client.Security.GetLoginsAsync().ContinueWith((t) =>
-                {
-                    if (t.Status == TaskStatus.RanToCompletion)
-                    {
-                        foreach (var login in t.Result.OrderBy(o => o.Username))
-                        {
-                            LoginsNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Login, login.Username, login.Id));
-                        }
-                    }
-                }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+            var logins = client.Security.GetLogins();
+
+            foreach (var login in logins.OrderBy(o => o.Username))
+            {
+                LoginsNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Login, login.Username, login.Id));
+            }
         }
 
         string GetFullSchemaNameFromNode(LSTreeNode node)
