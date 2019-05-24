@@ -73,7 +73,6 @@
     <Compile Include="Controllers\SchemaController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
-    <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="OWIN\Services.cs" />
     <Compile Include="OWIN\Startup.cs" />
     <Compile Include="Controllers\ServerController.cs" />

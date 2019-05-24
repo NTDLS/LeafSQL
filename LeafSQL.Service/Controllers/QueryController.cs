@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Library;
+using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
@@ -9,9 +10,10 @@ namespace LeafSQL.Service.Controllers
 {
     public class QueryController : ApiController
     {
-        public IActionResponse Execute(Guid sessionId, [FromBody]string value)
+        [HttpPost]
+        public IActionResponse Execute([FromBody]ActionExecuteNonQuery action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -19,7 +21,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                var statement = JsonConvert.DeserializeObject<string>(value);
+                var statement = JsonConvert.DeserializeObject<string>(action.Statement);
 
                 Program.Core.Query.Execute(processId, statement);
 

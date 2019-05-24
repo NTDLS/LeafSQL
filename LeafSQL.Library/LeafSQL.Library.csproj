@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\Management\Base\ManagementBase.cs" />
     <Compile Include="Client\Management\Settings.cs" />
     <Compile Include="Client\Management\Security.cs" />
     <Compile Include="Client\Management\Document.cs" />
@@ -51,6 +52,11 @@
     <Compile Include="Client\Management\Indexes.cs" />
     <Compile Include="Client\Management\Query.cs" />
     <Compile Include="Client\Management\Transaction.cs" />
+    <Compile Include="Payloads\Actions\ActionExecuteNonQuery.cs" />
+    <Compile Include="Payloads\Actions\ActionCreateIndex.cs" />
+    <Compile Include="Payloads\Actions\ActionStoreDocument.cs" />
+    <Compile Include="Payloads\Actions\Base\ActionGenericObject.cs" />
+    <Compile Include="Payloads\Actions\Base\ActionGeneric.cs" />
     <Compile Include="Payloads\Responses\ActionResponceLogins.cs" />
     <Compile Include="Payloads\Responses\ActionResponseIndexes.cs" />
     <Compile Include="Payloads\Responses\ActionResponseDocuments.cs" />
@@ -66,7 +72,7 @@
     <Compile Include="Payloads\Document.cs" />
     <Compile Include="Payloads\Index.cs" />
     <Compile Include="Payloads\IndexAttribute.cs" />
-    <Compile Include="Payloads\LoginRequest.cs" />
+    <Compile Include="Payloads\Actions\ActionLogin.cs" />
     <Compile Include="Payloads\Login.cs" />
     <Compile Include="Payloads\Schema.cs" />
     <Compile Include="Client\Management\Schema.cs" />

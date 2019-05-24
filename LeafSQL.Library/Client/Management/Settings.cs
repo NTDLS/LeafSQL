@@ -1,52 +1,38 @@
-﻿using LeafSQL.Library.Payloads;
+﻿using LeafSQL.Library.Client.Management.Base;
+using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
-using System;
 using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
-    public class Settings
+    public class Settings : ManagementBase
     {
         private LeafSQLClient client;
 
         public Settings(LeafSQLClient client)
+            : base(client)
         {
             this.client = client;
         }
-    
+
         public async Task<ServerSettings> GetAsync()
         {
-            string url = string.Format("api/Server/{0}/Settings", client.Token.SessionId);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGeneric(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ActionResponseServerSettings>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+            };
 
-                return result.Settings;
-            }
+            return (await SubmitAsync<ActionGeneric, ActionResponseServerSettings>("api/Server/Settings", action)).Settings;
         }
 
         public ServerSettings Get()
         {
-            string url = string.Format("api/Server/{0}/Settings", client.Token.SessionId);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGeneric(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponseServerSettings>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+            };
 
-                return result.Settings;
-            }
+            return Submit<ActionGeneric, ActionResponseServerSettings>("api/Server/Settings", action).Settings;
         }
     }
 }
+

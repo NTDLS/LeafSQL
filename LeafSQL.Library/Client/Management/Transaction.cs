@@ -1,61 +1,44 @@
-﻿using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
-using System;
+﻿using LeafSQL.Library.Client.Management.Base;
+using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Responses;
 
 namespace LeafSQL.Library.Client.Management
 {
-    public class Transaction
+    public class Transaction : ManagementBase
     {
         private LeafSQLClient client;
 
         public Transaction(LeafSQLClient client)
+            : base(client)
         {
             this.client = client;
         }
 
         public void Begin()
         {
-            string url = string.Format("api/Transaction/{0}/Begin", client.Token.SessionId);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGeneric(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+            };
+
+            Submit<ActionGeneric, IActionResponse>("api/Transaction/Begin", action);
         }
 
         public void Commit()
         {
-            string url = string.Format("api/Transaction/{0}/Commit", client.Token.SessionId);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGeneric(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+            };
+
+            Submit<ActionGeneric, IActionResponse>("api/Transaction/Commit", action);
         }
 
         public void Rollback()
         {
-            string url = string.Format("api/Transaction/{0}/Rollback", client.Token.SessionId);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGeneric(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+            };
+
+            Submit<ActionGeneric, IActionResponse>("api/Transaction/Rollback", action);
         }
     }
 }

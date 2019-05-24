@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Library;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Threading;
@@ -12,11 +13,11 @@ namespace LeafSQL.Service.Controllers
         /// Lists the existing namespaces within a given namespace.
         /// </summary>
         /// <param name="schema"></param>
-        [HttpGet]
         //api/Namespace/List
-        public ActionResponseSchemas List(Guid sessionId, string schema)
+        [HttpPost]
+        public ActionResponseSchemas List([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -24,7 +25,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                var persistSchemas = Program.Core.Schemas.GetList(processId, schema);
+                var persistSchemas = Program.Core.Schemas.GetList(processId, action.SchemaName);
 
                 foreach (var persistSchema in persistSchemas)
                 {
@@ -45,11 +46,11 @@ namespace LeafSQL.Service.Controllers
         /// Creates a single namespace or an entire namespace path.
         /// </summary>
         /// <param name="schema"></param>
-        [HttpGet]
         //api/Namespace/{Namespace}/Create
-        public IActionResponse Create(Guid sessionId, string schema)
+        [HttpPost]
+        public IActionResponse Create([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -57,7 +58,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                Program.Core.Schemas.Create(processId, schema);
+                Program.Core.Schemas.Create(processId, action.SchemaName);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -72,11 +73,11 @@ namespace LeafSQL.Service.Controllers
         /// Checks for the existence of a schema.
         /// </summary>
         /// <param name="schema"></param>
-        [HttpGet]
         //api/Namespace/{Namespace}/Exists
-        public ActionResponseBoolean Exists(Guid sessionId, string schema)
+        [HttpPost]
+        public ActionResponseBoolean Exists([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -84,7 +85,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                result.Value = Program.Core.Schemas.Exists(processId, schema);
+                result.Value = Program.Core.Schemas.Exists(processId, action.SchemaName);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -99,11 +100,11 @@ namespace LeafSQL.Service.Controllers
         /// Drops a single namespace or an entire namespace path.
         /// </summary>
         /// <param name="schema"></param>
-        [HttpGet]
         //api/Namespace/{Namespace}/Drop
-        public IActionResponse Drop(Guid sessionId, string schema)
+        [HttpPost]
+        public IActionResponse Drop([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -111,7 +112,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                Program.Core.Schemas.Drop(processId, schema);
+                Program.Core.Schemas.Drop(processId, action.SchemaName);
                 result.Success = true;
             }
             catch (Exception ex)

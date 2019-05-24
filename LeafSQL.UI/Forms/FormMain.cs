@@ -137,7 +137,7 @@ namespace LeafSQL.UI.Forms
 
                                     if (t.Status != TaskStatus.RanToCompletion)
                                     {
-                                        Program.AsyncExceptionMessage(t.Exception, "An error occured while processing your request.");
+                                        Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                                     }
 
                                     PopulateSchemaIndexes(contextNode);
@@ -166,7 +166,7 @@ namespace LeafSQL.UI.Forms
 
                             if (t.Status != TaskStatus.RanToCompletion)
                             {
-                                Program.AsyncExceptionMessage(t.Exception, "An error occured while processing your request.");
+                                Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                             }
                         }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -175,34 +175,31 @@ namespace LeafSQL.UI.Forms
 
         private void ContextMenu_DeleteIndex(object sender, EventArgs e)
         {
-            /*
             if (MessageBox.Show("Are you sure you want to delete the index [" + contextNode.Text + "]?",
                 "Delete Index?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
-            string SchemaName = GetFullSchemaNameFromNode(contextNode);
+            string schemaName = GetFullSchemaNameFromNode(contextNode);
 
-            client.DropSchemaIndexAsync(SchemaName, contextNode.Value.ToString()).ContinueWith((t) =>
+            client.Schema.Indexes.DeleteByNameAsync(schemaName, contextNode.Value.ToString()).ContinueWith((t) =>
             {
                 FormProgress.WaitForVisible();
                 FormProgress.Complete();
 
-                if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
+                if (t.Status == TaskStatus.RanToCompletion)
                 {
-                    //Success
                     contextNode.Remove();
                 }
                 else
                 {
-                    Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
+                    Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                 }
 
             }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
             FormProgress.Start("Deleting index [" + contextNode.Text + "]...");
-            */
         }
 
         private void ContextMenu_BrowseDocuments(object sender, EventArgs e)

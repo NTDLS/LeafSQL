@@ -201,6 +201,79 @@ namespace LeafSQL.Engine.Indexes
             }
         }
 
+        public void DeleteById(UInt64 processId, string schema, Guid indexId)
+        {
+            try
+            {
+                using (var txRef = core.Transactions.Begin(processId))
+                {
+                    var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
+                    if (schemaMeta == null || schemaMeta.Exists == false)
+                    {
+                        throw new LeafSQLSchemaDoesNotExistException(schema);
+                    }
+
+                    var indexCatalog = GetIndexCatalog(txRef.Transaction, schemaMeta, LockOperation.Write);
+
+                    var existingIndex = indexCatalog.Collection.Find(o => o.Id == indexId);
+                    if (existingIndex == null)
+                    {
+                        throw new Exceptions.LeafSQLIndexDoesNotExistException($"The index id [{indexId}] does not exist in ThreadExceptionEventArgs schema[{schema}].");
+                    }
+
+                    core.IO.DeleteFile(txRef.Transaction, existingIndex.DiskPath);
+
+                    indexCatalog.Collection.Remove(existingIndex);
+
+                    core.IO.PutJson(txRef.Transaction, indexCatalog.DiskPath, indexCatalog);
+
+                    txRef.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                core.Log.Write(String.Format("Failed to create index for process {0}.", processId), ex);
+                throw;
+            }
+        }
+
+        public void DeleteByName(UInt64 processId, string schema, string indexName)
+        {
+            try
+            {
+                using (var txRef = core.Transactions.Begin(processId))
+                {
+                    var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
+                    if (schemaMeta == null || schemaMeta.Exists == false)
+                    {
+                        throw new LeafSQLSchemaDoesNotExistException(schema);
+                    }
+
+                    var indexCatalog = GetIndexCatalog(txRef.Transaction, schemaMeta, LockOperation.Write);
+
+                    var existingIndex = indexCatalog.Collection.Find(o => o.Name.ToLower() == indexName.ToLower());
+                    if (existingIndex == null)
+                    {
+                        throw new Exceptions.LeafSQLIndexDoesNotExistException($"The index [{indexName}] does not exist in ThreadExceptionEventArgs schema[{schema}].");
+                    }
+
+                    core.IO.DeleteFile(txRef.Transaction, existingIndex.DiskPath);
+
+                    indexCatalog.Collection.Remove(existingIndex);
+
+                    core.IO.PutJson(txRef.Transaction, indexCatalog.DiskPath, indexCatalog);
+
+                    txRef.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                core.Log.Write(String.Format("Failed to create index for process {0}.", processId), ex);
+                throw;
+            }
+        }
+
+
         public void Rebuild(UInt64 processId, string schema, string indexName)
         {
             try
@@ -471,7 +544,7 @@ namespace LeafSQL.Engine.Indexes
                         core.IO.PutPBuf(transaction, indexMeta.DiskPath, findResult.Catalog);
                     }
                 }
-                else
+                else if(findResult.IsPartialMatch)
                 {
                     //If we didn't find a full match for all supplied key values,
                     //  then create the tree and add the document to the lowest leaf.
@@ -485,7 +558,7 @@ namespace LeafSQL.Engine.Indexes
                             findResult.Leaves = findResult.Leaf.Leaves;
                         }
 
-                        if (findResult.Leaf.DocumentIDs == null)
+                        if (findResult.Leaf == null || findResult.Leaf.DocumentIDs == null)
                         {
                             findResult.Leaf.DocumentIDs = new HashSet<Guid>();
                         }
@@ -592,7 +665,7 @@ namespace LeafSQL.Engine.Indexes
                     TargetThreadCount = Environment.ProcessorCount * 2
                 };
 
-                state.TargetThreadCount = 1;
+                //state.TargetThreadCount = 1;
 
                 var param = new RebuildIndexItemThreadProc_Params()
                 {

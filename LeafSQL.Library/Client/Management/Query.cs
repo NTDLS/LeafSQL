@@ -1,54 +1,38 @@
-﻿using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
-using System;
-using System.Net.Http;
-using System.Text;
+﻿using LeafSQL.Library.Client.Management.Base;
+using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Responses;
 using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
-    public class Query
+    public class Query : ManagementBase
     {
         private LeafSQLClient client;
 
         public Query(LeafSQLClient client)
+            : base(client)
         {
             this.client = client;
         }
 
         public async Task ExecuteAsync(string statement)
         {
-            string url = string.Format("api/Query/{0}/Execute", client.Token.SessionId);
-
-            var postContent = new StringContent(JsonConvert.SerializeObject(statement), Encoding.UTF8);
-
-            using (var response = await client.Client.PostAsync(url, postContent))
+            var action = new ActionExecuteNonQuery(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                Statement = statement
+            };
+
+            await SubmitAsync<ActionExecuteNonQuery, IActionResponse>("api/Query/Execute", action);
         }
 
         public void Execute(string statement)
         {
-            string url = string.Format("api/Query/{0}/Execute", client.Token.SessionId);
-
-            var postContent = new StringContent(JsonConvert.SerializeObject(statement), Encoding.UTF8);
-
-            using (var response = client.Client.PostAsync(url, postContent))
+            var action = new ActionExecuteNonQuery(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
-        }
+                Statement = statement
+            };
 
+            Submit<ActionExecuteNonQuery, IActionResponse>("api/Query/Execute", action);
+        }
     }
 }

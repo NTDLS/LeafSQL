@@ -1,9 +1,7 @@
 ﻿using LeafSQL.Library;
-using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Web.Http;
 
@@ -12,13 +10,14 @@ namespace LeafSQL.Service.Controllers
     public class ServerController : ApiController
     {
         // GET api/Server/Settings
-        [HttpGet]
-        public ActionResponseServerSettings Settings(Guid sessionId)
+        [HttpPost]
+        public ActionResponseServerSettings Settings([FromBody]ActionGeneric action)
         {
             var result = new ActionResponseServerSettings();
 
             try
             {
+                UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
                 Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -28,7 +27,7 @@ namespace LeafSQL.Service.Controllers
             catch (Exception ex)
             {
                 result.Success = false;
-                result.Message = "Login failed with an exception: " + ex.Message;
+                result.Message = ex.Message;
             }
 
             return result;

@@ -1,19 +1,19 @@
-﻿using LeafSQL.Library.Payloads;
+﻿using LeafSQL.Library.Client.Management.Base;
+using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Actions;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
-    public class Security
+    public class Security : ManagementBase
     {
         private LeafSQLClient client;
 
         public Security(LeafSQLClient client)
+            : base(client)
         {
             this.client = client;
         }
@@ -26,29 +26,15 @@ namespace LeafSQL.Library.Client.Management
         /// <returns></returns>
         public LoginToken Login(string username, string password)
         {
-            string url = string.Format("api/Security/Login");
-
-            var loginRequest = new LoginRequest()
+            var action = new ActionLogin(client.Token.SessionId)
             {
                 Username = username,
                 PasswordHash = Utility.HashPassword(password)
             };
 
-            var postContent = new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8);
+            client.Token = Submit<ActionLogin, ActionResponceLogin>("api/Security/Login", action).ToToken();
 
-            using (var response = client.Client.PostAsync(url, postContent))
-            {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponceLogin>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-
-                client.Token = result.ToToken();
-
-                return client.Token;
-            }
+            return client.Token;
         }
 
         /// <summary>
@@ -56,19 +42,13 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         public void Logout()
         {
-            string url = string.Format("api/Security/{0}/Logout", client.Token.SessionId);
+            var action = new ActionGeneric(client.Token.SessionId)
+            {
+            };
+
+            Submit<ActionGeneric, IActionResponse>("api/Security/Logout", action);
 
             client.Token = new LoginToken();
-
-            using (var response = client.Client.GetAsync(url))
-            {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponceLogin>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
         }
 
         /// <summary>
@@ -77,37 +57,20 @@ namespace LeafSQL.Library.Client.Management
         /// <returns></returns>
         public async Task<List<Login>> GetLoginsAsync()
         {
-            string url = string.Format("api/Security/{0}/ListLogins", client.Token.SessionId);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGeneric(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ActionResponceLogins>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+            };
 
-                return result.List;
-            }
+            return (await SubmitAsync<ActionGeneric, ActionResponceLogins>("api/Security/ListLogins", action)).List;
         }
 
         public List<Login> GetLogins()
         {
-            string url = string.Format("api/Security/{0}/ListLogins", client.Token.SessionId);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGeneric(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponceLogins>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+            };
 
-                return result.List;
-            }
+            return Submit<ActionGeneric, ActionResponceLogins>("api/Security/ListLogins", action).List;
         }
-
     }
 }

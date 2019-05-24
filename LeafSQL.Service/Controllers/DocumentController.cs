@@ -1,7 +1,7 @@
 ﻿using LeafSQL.Library;
-using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Actions;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Web.Http;
@@ -14,15 +14,15 @@ namespace LeafSQL.Service.Controllers
         /// Lists the documents within a given namespace.
         /// </summary>
         /// <param name="schema"></param>
-        [HttpGet]
         //api/Namespace/List
-        public ActionResponseDocuments List(Guid sessionId, string schema)
+        [HttpPost]
+        public ActionResponseDocuments List([FromBody] ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            var persistCatalog = Program.Core.Documents.EnumerateCatalog(processId, schema);
+            var persistCatalog = Program.Core.Documents.EnumerateCatalog(processId, action.SchemaName);
 
             var result = new ActionResponseDocuments();
 
@@ -34,9 +34,10 @@ namespace LeafSQL.Service.Controllers
             return result;
         }
 
-        public ActionResponseId Store(Guid sessionId, string schema, [FromBody]string value)
+        [HttpPost]
+        public ActionResponseId Store([FromBody] ActionStoreDocument action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -44,11 +45,9 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                var content = JsonConvert.DeserializeObject<Document>(value);
-
                 Guid newId = Guid.Empty;
 
-                Program.Core.Documents.Store(processId, schema, content, out newId);
+                Program.Core.Documents.Store(processId, action.SchemaName, action.Object, out newId);
 
                 result.Id = newId;
                 result.Success = true;
@@ -65,11 +64,11 @@ namespace LeafSQL.Service.Controllers
         /// Deletes a single document by its Id.
         /// </summary>
         /// <param name="schema"></param>
-        [HttpGet]
         //api/Document/{Namespace}/DeleteById/{Id}
-        public IActionResponse DeleteById(Guid sessionId, string schema, Guid doc)
+        [HttpPost]
+        public IActionResponse DeleteById([FromBody] ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
 
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
@@ -78,7 +77,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                Program.Core.Documents.DeleteById(processId, schema, doc);
+                Program.Core.Documents.DeleteById(processId, action.SchemaName, action.ObjectId);
                 result.Success = true;
             }
             catch (Exception ex)

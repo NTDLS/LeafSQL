@@ -1,18 +1,18 @@
-﻿using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
-using System;
+﻿using LeafSQL.Library.Client.Management.Base;
+using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
-    public class Schema
+    public class Schema : ManagementBase
     {
         private LeafSQLClient client;
-
         public Indexes Indexes { get; set; }
 
         public Schema(LeafSQLClient client)
+            : base(client)
         {
             this.client = client;
             this.Indexes = new Indexes(client);
@@ -24,31 +24,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task CreateAsync(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/Create", client.Token.SessionId, schema);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema
+            };
+
+            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Schema/Create", action);
         }
+
         public void Create(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/Create", client.Token.SessionId, schema);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema
+            };
+
+            Submit<ActionGenericObject, IActionResponse>("api/Schema/Create", action);
         }
 
         /// <summary>
@@ -57,36 +48,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task<bool> ExistsAsync(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/Exists", client.Token.SessionId, schema);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+                SchemaName = schema
+            };
 
-                return result.Value;
-            }
+            return (await SubmitAsync<ActionGenericObject, ActionResponseBoolean>("api/Schema/Exists", action)).Value;
         }
 
         public bool Exists(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/Exists", client.Token.SessionId, schema);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+                SchemaName = schema
+            };
 
-                return result.Value;
-            }
+            return Submit<ActionGenericObject, ActionResponseBoolean>("api/Schema/Exists", action).Value;
         }
 
 
@@ -96,32 +73,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task DropAsync(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/Drop", client.Token.SessionId, schema);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema
+            };
+
+            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Schema/Drop", action);
         }
 
         public void Drop(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/Drop", client.Token.SessionId, schema);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema
+            };
+
+            Submit<ActionGenericObject, IActionResponse>("api/Schema/Drop", action);
         }
 
         /// <summary>
@@ -130,38 +97,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task<List<Payloads.Schema>> ListAsync(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/List", client.Token.SessionId, schema);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ActionResponseSchemas>(resultText);
+                SchemaName = schema
+            };
 
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-
-                return result.List;
-            }
+            return (await SubmitAsync<ActionGenericObject, ActionResponseSchemas>("api/Schema/List", action)).List;
         }
 
         public List<Payloads.Schema> List(string schema)
         {
-            string url = string.Format("api/Schema/{0}/{1}/List", client.Token.SessionId, schema);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponseSchemas>(resultText);
+                SchemaName = schema
+            };
 
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-
-                return result.List;
-            }
+            return Submit<ActionGenericObject, ActionResponseSchemas>("api/Schema/List", action).List;
         }
     }
 }

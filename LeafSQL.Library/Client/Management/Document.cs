@@ -1,19 +1,20 @@
-﻿using LeafSQL.Library.Payloads;
+﻿using LeafSQL.Library.Client.Management.Base;
+using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Actions;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
-    public class Document
+    public class Document: ManagementBase
     {
         private LeafSQLClient client;
 
         public Document(LeafSQLClient client)
+            : base(client)
         {
             this.client = client;
         }
@@ -25,36 +26,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task StoreAsync(string schema, Payloads.Document document)
         {
-            string url = string.Format("api/Document/{0}/{1}/Store", client.Token.SessionId, schema);
-
-            var postContent = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8);
-
-            using (var response = await client.Client.PostAsync(url, postContent))
+            var action = new ActionStoreDocument(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                Object = document
+            };
+
+            await SubmitAsync<ActionStoreDocument, IActionResponse>("api/Document/Store", action);
         }
 
         public void Store(string schema, Payloads.Document document)
         {
-            string url = string.Format("api/Document/{0}/{1}/Store", client.Token.SessionId, schema);
-
-            var postContent = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8);
-
-            using (var response = client.Client.PostAsync(url, postContent))
+            var action = new ActionStoreDocument(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                Object = document
+            };
+
+            Submit<ActionStoreDocument, IActionResponse>("api/Document/Store", action);
         }
 
         /// <summary>
@@ -64,32 +53,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task DeleteByIdAsync(string schema, Guid id)
         {
-            string url = string.Format("api/Document/{0}/{1}/{2}/DeleteById", client.Token.SessionId, schema, id);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                ObjectId = id
+            };
+
+            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Document/DeleteById", action);
         }
 
         public void DeleteById(string schema, Guid id)
         {
-            string url = string.Format("api/Document/{0}/{1}/{2}/DeleteById", client.Token.SessionId, schema, id);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                ObjectId = id
+            };
+
+            Submit<ActionGenericObject, IActionResponse>("api/Document/DeleteById", action);
         }
 
         /// <summary>
@@ -98,39 +79,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task<List<DocumentMeta>> GetCatalogAsync(string schema)
         {
-            string url = string.Format("api/Document/{0}/{1}/Catalog", client.Token.SessionId, schema);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ActionResponseDocuments>(resultText);
+                SchemaName = schema,
+            };
 
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-
-                return result.List;
-            }
+            return (await SubmitAsync<ActionGenericObject, ActionResponseDocuments>("api/Document/List", action)).List;
         }
 
         public List<DocumentMeta> GetCatalog(string schema)
         {
-            string url = string.Format("api/Document/{0}/{1}/Catalog", client.Token.SessionId, schema);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponseDocuments>(resultText);
+                SchemaName = schema,
+            };
 
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-
-                return result.List;
-            }
+            return Submit<ActionGenericObject, ActionResponseDocuments>("api/Document/List", action).List;
         }
-
     }
 }

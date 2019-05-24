@@ -1,18 +1,18 @@
-﻿using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
-using System;
+﻿using LeafSQL.Library.Client.Management.Base;
+using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Responses;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
-    public class Indexes
+    public class Indexes : ManagementBase
     {
         private LeafSQLClient client;
 
         public Indexes(LeafSQLClient client)
+            : base(client)
         {
             this.client = client;
         }
@@ -22,38 +22,26 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="document"></param>
-        public async Task CreateAsync(string schema, Payloads.Index document)
+        public async Task CreateAsync(string schema, Payloads.Index index)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/Create", client.Token.SessionId, schema);
-
-            var postContent = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8);
-
-            using (var response = await client.Client.PostAsync(url, postContent))
+            var action = new ActionCreateIndex(client.Token.SessionId)
             {
-                var resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                Object = index
+            };
+
+            await SubmitAsync<ActionCreateIndex, IActionResponse>("api/Indexes/Create", action);
         }
 
-        public void Create(string schema, Payloads.Index document)
+        public void Create(string schema, Payloads.Index index)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/Create", client.Token.SessionId, schema);
-
-            var postContent = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8);
-
-            using (var response = client.Client.PostAsync(url, postContent))
+            var action = new ActionCreateIndex(client.Token.SessionId)
             {
-                var resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                Object = index
+            };
+
+            Submit<ActionCreateIndex, IActionResponse>("api/Indexes/Create", action);
         }
 
         /// <summary>
@@ -63,32 +51,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task RebuildAsync(string schema, string indexName)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/{2}/Rebuild", client.Token.SessionId, schema, indexName);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                ObjectName = indexName
+            };
+
+            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Indexes/RebuildByName", action);
         }
 
         public void Rebuild(string schema, string indexName)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/{2}/Rebuild", client.Token.SessionId, schema, indexName);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
-            }
+                SchemaName = schema,
+                ObjectName = indexName
+            };
+
+            Submit<ActionGenericObject, IActionResponse>("api/Indexes/RebuildByName", action);
         }
 
         /// <summary>
@@ -98,36 +78,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task<bool> ExistsAsync(string schema, string indexName)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/{2}/Exists", client.Token.SessionId, schema, indexName);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+                SchemaName = schema,
+                ObjectName = indexName
+            };
 
-                return result.Value;
-            }
+            return (await SubmitAsync<ActionGenericObject, ActionResponseBoolean>("api/Indexes/ExistsByName", action)).Value;
         }
 
         public bool Exists(string schema, string indexName)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/{2}/Exists", client.Token.SessionId, schema, indexName);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+                SchemaName = schema,
+                ObjectName = indexName
+            };
 
-                return result.Value;
-            }
+            return Submit<ActionGenericObject, ActionResponseBoolean>("api/Indexes/ExistsByName", action).Value;
         }
 
         /// <summary>
@@ -137,36 +105,49 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task<List<Payloads.Index>> ListAsync(string schema)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/List", client.Token.SessionId, schema);
-
-            using (var response = await client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<ActionResponseIndexes>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+                SchemaName = schema
+            };
 
-                return result.List;
-            }
+            return (await SubmitAsync<ActionGenericObject, ActionResponseIndexes>("api/Indexes/List", action)).List;
         }
 
         public List<Payloads.Index> List(string schema)
         {
-            string url = string.Format("api/Indexes/{0}/{1}/List", client.Token.SessionId, schema);
-
-            using (var response = client.Client.GetAsync(url))
+            var action = new ActionGenericObject(client.Token.SessionId)
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponseIndexes>(resultText);
-                if (result.Success == false)
-                {
-                    throw new Exception(result.Message);
-                }
+                SchemaName = schema
+            };
 
-                return result.List;
-            }
+            return Submit<ActionGenericObject, ActionResponseIndexes>("api/Indexes/List", action).List;
+        }
+
+        /// <summary>
+        /// Creates an index on the given schema.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <param name="document"></param>
+        public async Task DeleteByNameAsync(string schema, string indexName)
+        {
+            var action = new ActionGenericObject(client.Token.SessionId)
+            {
+                SchemaName = schema,
+                ObjectName = indexName
+            };
+
+            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Indexes/DeleteByName", action);
+        }
+
+        public void DeleteByName(string schema, string indexName)
+        {
+            var action = new ActionGenericObject(client.Token.SessionId)
+            {
+                SchemaName = schema,
+                ObjectName = indexName
+            };
+
+            Submit<ActionGenericObject, IActionResponse>("api/Indexes/DeleteByName", action);
         }
     }
 }

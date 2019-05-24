@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Library;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Threading;
@@ -8,10 +9,10 @@ namespace LeafSQL.Service.Controllers
 {
     public class TransactionController : ApiController
     {
-        [HttpGet]
-        public IActionResponse Begin(Guid sessionId)
+        [HttpPost]
+        public IActionResponse Begin([FromBody]ActionGeneric action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -30,10 +31,10 @@ namespace LeafSQL.Service.Controllers
             return result;
         }
 
-        [HttpGet]
-        public IActionResponse Commit(Guid sessionId)
+        [HttpPost]
+        public IActionResponse Commit([FromBody]ActionGeneric action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
@@ -52,10 +53,10 @@ namespace LeafSQL.Service.Controllers
             return result;
         }
 
-        [HttpGet]
-        public IActionResponse Rollback(Guid sessionId)
+        [HttpPost]
+        public IActionResponse Rollback([FromBody]ActionGeneric action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 

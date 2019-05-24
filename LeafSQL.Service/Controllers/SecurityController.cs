@@ -1,7 +1,7 @@
 ﻿using LeafSQL.Library;
 using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,7 +12,8 @@ namespace LeafSQL.Service.Controllers
     public class SecurityController : ApiController
     {
         //api/Security/Login
-        public ActionResponceLogin Login([FromBody]string value)
+        [HttpPost]
+        public ActionResponceLogin Login([FromBody]ActionLogin action)
         {
             var result = new ActionResponceLogin();
 
@@ -21,8 +22,7 @@ namespace LeafSQL.Service.Controllers
                 Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-                var loginRequest = JsonConvert.DeserializeObject<LoginRequest>(value);
-                result.SessionId = Program.Core.Security.Login(loginRequest.Username, loginRequest.PasswordHash);
+                result.SessionId = Program.Core.Security.Login(action.Username, action.PasswordHash);
                 result.ProcessId = Program.Core.Sessions.SessionIdToProcessId(result.SessionId);
                 result.Success = true;
             }
@@ -34,9 +34,9 @@ namespace LeafSQL.Service.Controllers
             return result;
         }
 
-        [HttpGet]
         //api/Security/{sessionId}/Logout
-        public IActionResponse Logout(Guid sessionId)
+        [HttpPost]
+        public IActionResponse Logout([FromBody]ActionExecuteNonQuery action)
         {
             IActionResponse result = new IActionResponse();
 
@@ -45,7 +45,7 @@ namespace LeafSQL.Service.Controllers
                 Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-                Program.Core.Sessions.LogoutSession(sessionId);
+                Program.Core.Sessions.LogoutSession(action.SessionId);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -56,9 +56,9 @@ namespace LeafSQL.Service.Controllers
             return result;
         }
 
-        [HttpGet]
         //api/Security/{sessionId}/ListLogins
-        public ActionResponceLogins ListLogins(Guid sessionId)
+        [HttpPost]
+        public ActionResponceLogins ListLogins([FromBody]ActionExecuteNonQuery action)
         {
             var result = new ActionResponceLogins();
 
