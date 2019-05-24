@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LeafSQL.Library.Payloads;
+
+using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.UI.Forms
 {
@@ -29,11 +30,11 @@ namespace LeafSQL.UI.Forms
             }
         }
 
-        public List<Library.Payloads.IndexAttribute> IndexAttributes
+        public List<IndexAttribute> IndexAttributes
         {
             get
             {
-                List<Library.Payloads.IndexAttribute> attributes = new List<Library.Payloads.IndexAttribute>();
+                List<IndexAttribute> attributes = new List<IndexAttribute>();
 
                 foreach (ListViewItem item in listViewAttributes.Items)
                 {

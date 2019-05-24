@@ -2,7 +2,7 @@
 
 namespace LeafSQL.Library.Payloads.Actions.Base
 {
-    public class ActionGeneric
+    public class ActionGeneric: IActionRequest
     {
         public ActionGeneric(Guid sessionId)
         {

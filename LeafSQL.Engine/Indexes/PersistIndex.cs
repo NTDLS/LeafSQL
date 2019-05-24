@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using LeafSQL.Engine.Interfaces;
-using LeafSQL.Library.Payloads;
+﻿using LeafSQL.Engine.Interfaces;
+using LeafSQL.Library.Payloads.Models;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace LeafSQL.Engine.Indexes
 {
@@ -40,7 +40,7 @@ namespace LeafSQL.Engine.Indexes
 
         public Index ToPayload()
         {
-            var result = new Library.Payloads.Index()
+            var result = new Library.Payloads.Models.Index()
             {
                 Name = this.Name,
                 Created = this.Created,
@@ -69,7 +69,7 @@ namespace LeafSQL.Engine.Indexes
             Attributes.Add(attribute);
         }
 
-        static public PersistIndex FromPayload(Index index)
+        static public PersistIndex FromPayload(Library.Payloads.Models.Index index)
         {
             var persistIndex = new PersistIndex()
             {

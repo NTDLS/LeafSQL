@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using LeafSQL.Library;
 using LeafSQL.Library.Client;
 using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Models;
 using LeafSQL.UI;
 using LeafSQL.UI.Forms;
 

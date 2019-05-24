@@ -1,4 +1,5 @@
-﻿using LeafSQL.Library.Payloads.Responses;
+﻿using LeafSQL.Library.Payloads.Actions;
+using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -16,7 +17,7 @@ namespace LeafSQL.Library.Client.Management.Base
             this.client = client;
         }
 
-        public r Submit<s, r>(string url, s action) where r : IActionResponse
+        public r Submit<s, r>(string url, s action) where s : IActionRequest where r : IActionResponse
         {
             var postContent = new StringContent(JsonConvert.SerializeObject(action), Encoding.UTF8, "application/json");
 
@@ -33,7 +34,7 @@ namespace LeafSQL.Library.Client.Management.Base
             }
         }
 
-        public async Task<r> SubmitAsync<s, r>(string url, s action) where r : IActionResponse
+        public async Task<r> SubmitAsync<s, r>(string url, s action) where s : IActionRequest where r : IActionResponse
         {
             var postContent = new StringContent(JsonConvert.SerializeObject(action), Encoding.UTF8, "application/json");
 

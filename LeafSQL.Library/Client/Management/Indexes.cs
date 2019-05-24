@@ -22,26 +22,26 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="document"></param>
-        public async Task CreateAsync(string schema, Payloads.Index index)
+        public async Task CreateAsync(string schema, Payloads.Models.Index index)
         {
-            var action = new ActionCreateIndex(client.Token.SessionId)
+            var action = new ActionRequestCreateIndex(client.Token.SessionId)
             {
                 SchemaName = schema,
                 Object = index
             };
 
-            await SubmitAsync<ActionCreateIndex, IActionResponse>("api/Indexes/Create", action);
+            await SubmitAsync<ActionRequestCreateIndex, IActionResponse>("api/Indexes/Create", action);
         }
 
-        public void Create(string schema, Payloads.Index index)
+        public void Create(string schema, Payloads.Models.Index index)
         {
-            var action = new ActionCreateIndex(client.Token.SessionId)
+            var action = new ActionRequestCreateIndex(client.Token.SessionId)
             {
                 SchemaName = schema,
                 Object = index
             };
 
-            Submit<ActionCreateIndex, IActionResponse>("api/Indexes/Create", action);
+            Submit<ActionRequestCreateIndex, IActionResponse>("api/Indexes/Create", action);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="document"></param>
-        public async Task<List<Payloads.Index>> ListAsync(string schema)
+        public async Task<List<Payloads.Models.Index>> ListAsync(string schema)
         {
             var action = new ActionGenericObject(client.Token.SessionId)
             {
@@ -113,7 +113,7 @@ namespace LeafSQL.Library.Client.Management
             return (await SubmitAsync<ActionGenericObject, ActionResponseIndexes>("api/Indexes/List", action)).List;
         }
 
-        public List<Payloads.Index> List(string schema)
+        public List<Payloads.Models.Index> List(string schema)
         {
             var action = new ActionGenericObject(client.Token.SessionId)
             {

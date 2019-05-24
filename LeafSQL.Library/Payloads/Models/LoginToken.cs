@@ -1,7 +1,7 @@
 ﻿using LeafSQL.Library.Payloads.Responses;
 using System;
 
-namespace LeafSQL.Library.Payloads
+namespace LeafSQL.Library.Payloads.Models
 {
     public class LoginToken
     {

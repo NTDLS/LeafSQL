@@ -24,26 +24,26 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="document"></param>
-        public async Task StoreAsync(string schema, Payloads.Document document)
+        public async Task StoreAsync(string schema, Payloads.Models.Document document)
         {
-            var action = new ActionStoreDocument(client.Token.SessionId)
+            var action = new ActionRequestStoreDocument(client.Token.SessionId)
             {
                 SchemaName = schema,
                 Object = document
             };
 
-            await SubmitAsync<ActionStoreDocument, IActionResponse>("api/Document/Store", action);
+            await SubmitAsync<ActionRequestStoreDocument, IActionResponse>("api/Document/Store", action);
         }
 
-        public void Store(string schema, Payloads.Document document)
+        public void Store(string schema, Payloads.Models.Document document)
         {
-            var action = new ActionStoreDocument(client.Token.SessionId)
+            var action = new ActionRequestStoreDocument(client.Token.SessionId)
             {
                 SchemaName = schema,
                 Object = document
             };
 
-            Submit<ActionStoreDocument, IActionResponse>("api/Document/Store", action);
+            Submit<ActionRequestStoreDocument, IActionResponse>("api/Document/Store", action);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace LeafSQL.Library.Client.Management
         /// Lists the doucments within a given schema.
         /// </summary>
         /// <param name="schema"></param>
-        public async Task<List<DocumentMeta>> GetCatalogAsync(string schema)
+        public async Task<List<Payloads.Models.DocumentMeta>> GetCatalogAsync(string schema)
         {
             var action = new ActionGenericObject(client.Token.SessionId)
             {
@@ -87,7 +87,7 @@ namespace LeafSQL.Library.Client.Management
             return (await SubmitAsync<ActionGenericObject, ActionResponseDocuments>("api/Document/List", action)).List;
         }
 
-        public List<DocumentMeta> GetCatalog(string schema)
+        public List<Payloads.Models.DocumentMeta> GetCatalog(string schema)
         {
             var action = new ActionGenericObject(client.Token.SessionId)
             {

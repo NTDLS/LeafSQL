@@ -22,7 +22,7 @@ namespace LeafSQL.Engine.Documents
             };
         }
 
-        static public PersistDocument FromPayload(Document document)
+        static public PersistDocument FromPayload(Library.Payloads.Models.Document document)
         {
             return new PersistDocument()
             {
@@ -33,9 +33,9 @@ namespace LeafSQL.Engine.Documents
             };
         }
 
-        static public Document ToPayload(PersistDocument document)
+        static public Library.Payloads.Models.Document ToPayload(PersistDocument document)
         {
-            return new Document()
+            return new Library.Payloads.Models.Document()
             {
                 Id = document.Id,
                 Created = document.Created,

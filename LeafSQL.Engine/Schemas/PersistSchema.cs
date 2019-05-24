@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using LeafSQL.Library.Payloads;
 using LeafSQL.Engine.Interfaces;
+using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.Engine.Schemas
 {
@@ -17,9 +17,9 @@ namespace LeafSQL.Engine.Schemas
         [JsonIgnore]
         public bool Exists { get; set; }
 
-        public Schema ToPayload()
+        public Library.Payloads.Models.Schema ToPayload()
         {
-            return new Schema()
+            return new Library.Payloads.Models.Schema()
             {
                 Id = Id,
                 Name = Name

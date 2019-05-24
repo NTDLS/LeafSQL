@@ -11,7 +11,7 @@ namespace LeafSQL.Service.Controllers
     public class QueryController : ApiController
     {
         [HttpPost]
-        public IActionResponse Execute([FromBody]ActionExecuteNonQuery action)
+        public IActionResponse Execute([FromBody]ActionRequestExecuteNonQuery action)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());

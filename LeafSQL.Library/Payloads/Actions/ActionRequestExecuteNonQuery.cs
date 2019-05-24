@@ -3,9 +3,9 @@ using System;
 
 namespace LeafSQL.Library.Payloads
 {
-    public class ActionExecuteNonQuery : ActionGeneric
+    public class ActionRequestExecuteNonQuery : ActionGeneric
     {
-        public ActionExecuteNonQuery(Guid sessionId) : base(sessionId) { }
+        public ActionRequestExecuteNonQuery(Guid sessionId) : base(sessionId) { }
 
         public string Statement { get; set; }
     }

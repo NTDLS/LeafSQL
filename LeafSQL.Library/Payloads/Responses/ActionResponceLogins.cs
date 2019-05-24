@@ -1,4 +1,4 @@
-﻿using System;
+﻿using LeafSQL.Library.Payloads.Models;
 using System.Collections.Generic;
 
 namespace LeafSQL.Library.Payloads.Responses

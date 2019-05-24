@@ -3,9 +3,9 @@ using System;
 
 namespace LeafSQL.Library.Payloads.Actions
 {
-    public class ActionLogin : ActionGeneric
+    public class ActionRequestLogin : ActionGeneric
     {
-        public ActionLogin(Guid sessionId) : base(sessionId) { }
+        public ActionRequestLogin(Guid sessionId) : base(sessionId) { }
 
         public string Username { get; set; }
         public string PasswordHash { get; set; }

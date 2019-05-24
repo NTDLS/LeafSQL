@@ -2,6 +2,7 @@
 using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,13 +27,13 @@ namespace LeafSQL.Library.Client.Management
         /// <returns></returns>
         public LoginToken Login(string username, string password)
         {
-            var action = new ActionLogin(client.Token.SessionId)
+            var action = new ActionRequestLogin(client.Token.SessionId)
             {
                 Username = username,
                 PasswordHash = Utility.HashPassword(password)
             };
 
-            client.Token = Submit<ActionLogin, ActionResponceLogin>("api/Security/Login", action).ToToken();
+            client.Token = Submit<ActionRequestLogin, ActionResponceLogin>("api/Security/Login", action).ToToken();
 
             return client.Token;
         }
@@ -48,14 +49,14 @@ namespace LeafSQL.Library.Client.Management
 
             Submit<ActionGeneric, IActionResponse>("api/Security/Logout", action);
 
-            client.Token = new LoginToken();
+            client.Token = new Payloads.Models.LoginToken();
         }
 
         /// <summary>
         /// Gets a list of all logins from the server.
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Login>> GetLoginsAsync()
+        public async Task<List<Payloads.Models.Login>> GetLoginsAsync()
         {
             var action = new ActionGeneric(client.Token.SessionId)
             {
@@ -64,7 +65,7 @@ namespace LeafSQL.Library.Client.Management
             return (await SubmitAsync<ActionGeneric, ActionResponceLogins>("api/Security/ListLogins", action)).List;
         }
 
-        public List<Login> GetLogins()
+        public List<Payloads.Models.Login> GetLogins()
         {
             var action = new ActionGeneric(client.Token.SessionId)
             {

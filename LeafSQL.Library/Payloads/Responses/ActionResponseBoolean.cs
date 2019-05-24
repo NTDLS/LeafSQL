@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LeafSQL.Library.Payloads.Responses
+﻿namespace LeafSQL.Library.Payloads.Responses
 {
     public class ActionResponseBoolean : IActionResponse
     {

@@ -21,7 +21,7 @@ namespace LeafSQL.Engine
         public LockManager Locking { get; set; }
         public DocumentManager Documents { get; set; }
         public TransactionManager Transactions { get; set; }
-        public Library.Payloads.ServerSettings Settings { get; set; }
+        public Library.Payloads.Models.ServerSettings Settings { get; set; }
         public LogManager Log { get; set; }
         public HealthManager Health { get; set; }
         public SecurityManager Security { get; set; }
@@ -30,7 +30,7 @@ namespace LeafSQL.Engine
         public IndexManager Indexes { get; set; }
         public QueryManager Query { get; set; }
 
-        public Core(Library.Payloads.ServerSettings settings)
+        public Core(Library.Payloads.Models.ServerSettings settings)
         {
             this.Settings = settings;
 

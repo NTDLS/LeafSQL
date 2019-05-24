@@ -91,9 +91,9 @@ namespace LeafSQL.Engine.Indexes
             return indexSelections;
         }
 
-        public List<Library.Payloads.Index> List(UInt64 processId, string schema)
+        public List<Library.Payloads.Models.Index> List(UInt64 processId, string schema)
         {
-            var result = new List<Library.Payloads.Index>();
+            var result = new List<Library.Payloads.Models.Index>();
             try
             {
                 using (var txRef = core.Transactions.Begin(processId))
@@ -153,7 +153,7 @@ namespace LeafSQL.Engine.Indexes
             return result;
         }
 
-        public void Create(UInt64 processId, string schema, Index index, out Guid newId)
+        public void Create(UInt64 processId, string schema, Library.Payloads.Models.Index index, out Guid newId)
         {
             try
             {

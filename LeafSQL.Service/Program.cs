@@ -11,7 +11,7 @@ namespace LeafSQL.Service
         {
             //System.Diagnostics.Process.Start("CMD.exe", "/C rd C:\\LeafSQL /S /Q");
 
-            var settings = new Library.Payloads.ServerSettings()
+            var settings = new Library.Payloads.Models.ServerSettings()
             {
                 Name = Settings.Default.Name,
                 BaseAddress = Settings.Default.BaseAddress,

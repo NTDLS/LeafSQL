@@ -95,7 +95,7 @@ namespace LeafSQL.Library.Client.Management
         /// Lists the existing schemas within a given schema.
         /// </summary>
         /// <param name="schema"></param>
-        public async Task<List<Payloads.Schema>> ListAsync(string schema)
+        public async Task<List<Payloads.Models.Schema>> ListAsync(string schema)
         {
             var action = new ActionGenericObject(client.Token.SessionId)
             {
@@ -105,7 +105,7 @@ namespace LeafSQL.Library.Client.Management
             return (await SubmitAsync<ActionGenericObject, ActionResponseSchemas>("api/Schema/List", action)).List;
         }
 
-        public List<Payloads.Schema> List(string schema)
+        public List<Payloads.Models.Schema> List(string schema)
         {
             var action = new ActionGenericObject(client.Token.SessionId)
             {

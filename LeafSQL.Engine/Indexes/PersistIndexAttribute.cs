@@ -1,5 +1,5 @@
 ﻿using LeafSQL.Engine.Interfaces;
-using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.Engine.Indexes
 {

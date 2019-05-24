@@ -1,5 +1,4 @@
 ﻿using System;
-using LeafSQL.Library.Payloads;
 
 namespace LeafSQL.Engine.Documents
 {
@@ -8,9 +7,9 @@ namespace LeafSQL.Engine.Documents
     {
         public Guid Id { get; set; }
 
-        public DocumentMeta ToPayload()
+        public Library.Payloads.Models.DocumentMeta ToPayload()
         {
-            return new DocumentMeta()
+            return new Library.Payloads.Models.DocumentMeta()
             {
                 Id = this.Id
             };

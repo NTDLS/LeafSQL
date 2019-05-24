@@ -12,7 +12,7 @@ namespace LeafSQL.Service.Controllers
     public class IndexesController : ApiController
     {
         [HttpPost]
-        public ActionResponseId Create([FromBody] ActionCreateIndex action)
+        public ActionResponseId Create([FromBody] ActionRequestCreateIndex action)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());

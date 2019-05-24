@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LeafSQL.Library.Payloads
+namespace LeafSQL.Library.Payloads.Actions
 {
-    public class IndexAttribute
+    public interface IActionRequest
     {
-        public string Name { get; set; }
     }
 }

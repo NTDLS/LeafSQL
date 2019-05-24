@@ -35,7 +35,7 @@ namespace LeafSQL.Service.Controllers
         }
 
         [HttpPost]
-        public ActionResponseId Store([FromBody] ActionStoreDocument action)
+        public ActionResponseId Store([FromBody] ActionRequestStoreDocument action)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());

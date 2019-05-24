@@ -1,10 +1,10 @@
 ﻿using LeafSQL.Library.Client;
+using LeafSQL.Library.Payloads.Models;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
-using LeafSQL.Library.Payloads;
-using System.Linq;
 
 namespace LeafSQL.TestHarness
 {

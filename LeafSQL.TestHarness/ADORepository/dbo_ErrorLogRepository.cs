@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.SqlClient;
 using LeafSQL.Library.Client;
-using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Models;
+using System;
+using System.Data.SqlClient;
 
 namespace LeafSQL.TestHarness.ADORepository
 {
-	public partial class dbo_ErrorLogRepository
+    public partial class dbo_ErrorLogRepository
 	{        
 		public void Export_dbo_ErrorLog()
 		{

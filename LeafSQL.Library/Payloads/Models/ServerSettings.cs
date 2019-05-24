@@ -1,4 +1,4 @@
-﻿namespace LeafSQL.Library.Payloads
+﻿namespace LeafSQL.Library.Payloads.Models
 {
     public class ServerSettings
     {

@@ -1,6 +1,7 @@
 ﻿using LeafSQL.Library;
 using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Actions;
+using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace LeafSQL.Service.Controllers
     {
         //api/Security/Login
         [HttpPost]
-        public ActionResponceLogin Login([FromBody]ActionLogin action)
+        public ActionResponceLogin Login([FromBody]ActionRequestLogin action)
         {
             var result = new ActionResponceLogin();
 
@@ -36,7 +37,7 @@ namespace LeafSQL.Service.Controllers
 
         //api/Security/{sessionId}/Logout
         [HttpPost]
-        public IActionResponse Logout([FromBody]ActionExecuteNonQuery action)
+        public IActionResponse Logout([FromBody]ActionRequestExecuteNonQuery action)
         {
             IActionResponse result = new IActionResponse();
 
@@ -58,7 +59,7 @@ namespace LeafSQL.Service.Controllers
 
         //api/Security/{sessionId}/ListLogins
         [HttpPost]
-        public ActionResponceLogins ListLogins([FromBody]ActionExecuteNonQuery action)
+        public ActionResponceLogins ListLogins([FromBody]ActionRequestExecuteNonQuery action)
         {
             var result = new ActionResponceLogins();
 

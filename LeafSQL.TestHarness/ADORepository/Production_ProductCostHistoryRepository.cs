@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 using LeafSQL.Library.Client;
-using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.TestHarness.ADORepository
 {

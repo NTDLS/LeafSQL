@@ -451,7 +451,7 @@ namespace LeafSQL.Engine.Documents
 
         }
 
-        public void Store(UInt64 processId, string schema, Document document, out Guid newId)
+        public void Store(UInt64 processId, string schema, Library.Payloads.Models.Document document, out Guid newId)
         {
             try
             {
