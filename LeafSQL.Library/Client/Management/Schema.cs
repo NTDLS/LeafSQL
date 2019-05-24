@@ -38,7 +38,17 @@ namespace LeafSQL.Library.Client.Management
         }
         public void Create(string schema)
         {
-            CreateAsync(schema).Wait();
+            string url = string.Format("api/Schema/{0}/{1}/Create", client.Token.SessionId, schema);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -64,7 +74,19 @@ namespace LeafSQL.Library.Client.Management
 
         public bool Exists(string schema)
         {
-            return ExistsAsync(schema).Result;
+            string url = string.Format("api/Schema/{0}/{1}/Exists", client.Token.SessionId, schema);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.Value;
+            }
         }
 
 
@@ -89,7 +111,17 @@ namespace LeafSQL.Library.Client.Management
 
         public void Drop(string schema)
         {
-            DropAsync(schema).Wait();
+            string url = string.Format("api/Schema/{0}/{1}/Drop", client.Token.SessionId, schema);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -116,7 +148,20 @@ namespace LeafSQL.Library.Client.Management
 
         public List<Payloads.Schema> List(string schema)
         {
-            return ListAsync(schema).Result;
+            string url = string.Format("api/Schema/{0}/{1}/List", client.Token.SessionId, schema);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ActionResponseSchemas>(resultText);
+
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.List;
+            }
         }
     }
 }

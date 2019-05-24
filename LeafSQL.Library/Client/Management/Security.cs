@@ -94,7 +94,19 @@ namespace LeafSQL.Library.Client.Management
 
         public List<Login> GetLogins()
         {
-            return GetLoginsAsync().Result;
+            string url = string.Format("api/Security/{0}/ListLogins", client.Token.SessionId);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ActionResponceLogins>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.List;
+            }
         }
 
     }

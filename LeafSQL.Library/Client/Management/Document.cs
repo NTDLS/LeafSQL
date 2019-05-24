@@ -42,7 +42,19 @@ namespace LeafSQL.Library.Client.Management
 
         public void Store(string schema, Payloads.Document document)
         {
-            StoreAsync(schema, document).Wait();
+            string url = string.Format("api/Document/{0}/{1}/Store", client.Token.SessionId, schema);
+
+            var postContent = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8);
+
+            using (var response = client.Client.PostAsync(url, postContent))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -67,7 +79,17 @@ namespace LeafSQL.Library.Client.Management
 
         public void DeleteById(string schema, Guid id)
         {
-            DeleteByIdAsync(schema, id).Wait();
+            string url = string.Format("api/Document/{0}/{1}/{2}/DeleteById", client.Token.SessionId, schema, id);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -94,7 +116,20 @@ namespace LeafSQL.Library.Client.Management
 
         public List<DocumentMeta> GetCatalog(string schema)
         {
-            return GetCatalogAsync(schema).Result;
+            string url = string.Format("api/Document/{0}/{1}/Catalog", client.Token.SessionId, schema);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ActionResponseDocuments>(resultText);
+
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.List;
+            }
         }
 
     }

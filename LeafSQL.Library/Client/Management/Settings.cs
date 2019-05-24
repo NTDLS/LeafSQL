@@ -34,8 +34,19 @@ namespace LeafSQL.Library.Client.Management
 
         public ServerSettings Get()
         {
-            return GetAsync().Result;
-        }
+            string url = string.Format("api/Server/{0}/Settings", client.Token.SessionId);
 
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ActionResponseServerSettings>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.Settings;
+            }
+        }
     }
 }

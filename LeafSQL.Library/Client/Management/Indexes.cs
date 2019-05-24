@@ -41,7 +41,19 @@ namespace LeafSQL.Library.Client.Management
 
         public void Create(string schema, Payloads.Index document)
         {
-            CreateAsync(schema, document).Wait();
+            string url = string.Format("api/Indexes/{0}/{1}/Create", client.Token.SessionId, schema);
+
+            var postContent = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8);
+
+            using (var response = client.Client.PostAsync(url, postContent))
+            {
+                var resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -66,7 +78,17 @@ namespace LeafSQL.Library.Client.Management
 
         public void Rebuild(string schema, string indexName)
         {
-            RebuildAsync(schema, indexName).Wait();
+            string url = string.Format("api/Indexes/{0}/{1}/{2}/Rebuild", client.Token.SessionId, schema, indexName);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+            }
         }
 
         /// <summary>
@@ -93,7 +115,19 @@ namespace LeafSQL.Library.Client.Management
 
         public bool Exists(string schema, string indexName)
         {
-            return ExistsAsync(schema, indexName).Result;
+            string url = string.Format("api/Indexes/{0}/{1}/{2}/Exists", client.Token.SessionId, schema, indexName);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.Value;
+            }
         }
 
         /// <summary>
@@ -120,7 +154,19 @@ namespace LeafSQL.Library.Client.Management
 
         public List<Payloads.Index> List(string schema)
         {
-            return ListAsync(schema).Result;
+            string url = string.Format("api/Indexes/{0}/{1}/List", client.Token.SessionId, schema);
+
+            using (var response = client.Client.GetAsync(url))
+            {
+                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ActionResponseIndexes>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.List;
+            }
         }
     }
 }
