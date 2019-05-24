@@ -1,4 +1,5 @@
-﻿using LeafSQL.Library;
+﻿using LeafSQL.Engine.Exceptions;
+using LeafSQL.Library;
 using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
@@ -20,11 +21,16 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                var content = JsonConvert.DeserializeObject<Index>(value);
+                var index = JsonConvert.DeserializeObject<Index>(value);
 
                 Guid newId = Guid.Empty;
 
-                Program.Core.Indexes.Create(processId, schema, content, out newId);
+                if (Program.Core.Indexes.Exists(processId, schema, index.Name))
+                {
+                    throw new LeafSQLDuplicateObjectException($"An index already exist in the schema [{schema}] with the name: [{index.Name}]");
+                }
+
+                Program.Core.Indexes.Create(processId, schema, index, out newId);
 
                 result.Id = newId;
                 result.Success = true;
@@ -52,7 +58,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                Program.Core.Indexes.Exists(processId, schema, byName);
+                Program.Core.Indexes.Rebuild(processId, schema, byName);
                 result.Success = true;
             }
             catch (Exception ex)

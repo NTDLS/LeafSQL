@@ -1,10 +1,10 @@
-﻿using LeafSQL.Library.Payloads;
-using LeafSQL.Library.Payloads.Responses;
+﻿using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
@@ -22,15 +22,15 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="document"></param>
-        public void Create(string schema, Payloads.Index document)
+        public async Task CreateAsync(string schema, Payloads.Index document)
         {
             string url = string.Format("api/Indexes/{0}/{1}/Create", client.Token.SessionId, schema);
 
             var postContent = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8);
 
-            using (var response = client.Client.PostAsync(url, postContent))
+            using (var response = await client.Client.PostAsync(url, postContent))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                var resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
@@ -39,18 +39,48 @@ namespace LeafSQL.Library.Client.Management
             }
         }
 
+        public void Create(string schema, Payloads.Index document)
+        {
+            CreateAsync(schema, document).Wait();
+        }
+
         /// <summary>
         /// Checks for the existence of an index.
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="document"></param>
-        public bool Exists(string schema, string indexName)
+        public async Task RebuildAsync(string schema, string indexName)
+        {
+            string url = string.Format("api/Indexes/{0}/{1}/{2}/Rebuild", client.Token.SessionId, schema, indexName);
+
+            using (var response = await client.Client.GetAsync(url))
+            {
+                string resultText = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+            }
+        }
+
+        public void Rebuild(string schema, string indexName)
+        {
+            RebuildAsync(schema, indexName).Wait();
+        }
+
+        /// <summary>
+        /// Checks for the existence of an index.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <param name="document"></param>
+        public async Task<bool> ExistsAsync(string schema, string indexName)
         {
             string url = string.Format("api/Indexes/{0}/{1}/{2}/Exists", client.Token.SessionId, schema, indexName);
 
-            using (var response = client.Client.GetAsync(url))
+            using (var response = await client.Client.GetAsync(url))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
                 if (result.Success == false)
                 {
@@ -61,18 +91,23 @@ namespace LeafSQL.Library.Client.Management
             }
         }
 
+        public bool Exists(string schema, string indexName)
+        {
+            return ExistsAsync(schema, indexName).Result;
+        }
+
         /// <summary>
         /// Gets a list of indexes for a specific schema.
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="document"></param>
-        public List<Payloads.Index> List(string schema)
+        public async Task<List<Payloads.Index>> ListAsync(string schema)
         {
             string url = string.Format("api/Indexes/{0}/{1}/List", client.Token.SessionId, schema);
 
-            using (var response = client.Client.GetAsync(url))
+            using (var response = await client.Client.GetAsync(url))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ActionResponseIndexes>(resultText);
                 if (result.Success == false)
                 {
@@ -83,5 +118,9 @@ namespace LeafSQL.Library.Client.Management
             }
         }
 
+        public List<Payloads.Index> List(string schema)
+        {
+            return ListAsync(schema).Result;
+        }
     }
 }

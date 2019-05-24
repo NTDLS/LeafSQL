@@ -57,6 +57,7 @@
     <Compile Include="Core.cs" />
     <Compile Include="CriticalSections.cs" />
     <Compile Include="Documents\DocumentManager.cs" />
+    <Compile Include="Exceptions\LeafSQLDuplicateObjectException.cs" />
     <Compile Include="Exceptions\LeafSQLIndexDoesNotExistException.cs" />
     <Compile Include="Exceptions\LeafSQLSchemaDoesNotExistException.cs" />
     <Compile Include="Exceptions\LeafSQLDuplicateKeyViolation.cs" />

@@ -102,7 +102,6 @@
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LeafSQL Manager";
-            this.Load += new System.EventHandler(this.FormMain_Load);
             this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.splitContainerPrimaryVerticle.Panel1.ResumeLayout(false);
             this.splitContainerPrimaryVerticle.Panel2.ResumeLayout(false);

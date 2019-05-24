@@ -106,7 +106,7 @@ namespace LeafSQL.TestHarness
 
             client.Transaction.Begin();
 
-            var documents = client.Document.Catalog(schemaPath);
+            var documents = client.Document.GetCatalog(schemaPath);
             foreach (var doc in documents)
             {
                 if (doc.Id.ToString().StartsWith("0") == false)
@@ -347,7 +347,7 @@ namespace LeafSQL.TestHarness
 
                     #region List/Delete Documents.
                     //Console.WriteLine("Students:CurrentYear");
-                    var documents = client.Document.Catalog("Students:CurrentYear");
+                    var documents = client.Document.GetCatalog("Students:CurrentYear");
                     foreach (var doc in documents)
                     {
                         if (doc.Id.ToString().StartsWith("0") == false)

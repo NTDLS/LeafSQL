@@ -19,14 +19,17 @@ namespace LeafSQL.UI.Forms
 {
     public partial class FormMain : Form
     {
-        bool isInitializing = true;
-
-        LeafSQLClient client;
-
+        private bool isInitializing = true;
+        private LeafSQLClient client;
         private LSTreeNode contextNode = null;
         private LSTreeNode ServerNode = null;
         private LSTreeNode SchemaNode = null;
         private LSTreeNode LoginsNode = null;
+
+        public FormMain()
+        {
+            InitializeComponent();
+        }
 
         bool ContainsNodeOfType(LSTreeNode node, Types.TreeNodeType type)
         {
@@ -68,6 +71,7 @@ namespace LeafSQL.UI.Forms
                 }
             }
         }
+
         private void treeViewDatabase_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             ContextMenu menu = new ContextMenu();
@@ -114,47 +118,39 @@ namespace LeafSQL.UI.Forms
 
         private void ContextMenu_CreateIndex(object sender, EventArgs e)
         {
-            /*
-            string SchemaName = GetFullSchemaNameFromNode(contextNode);
+            string schemaName = GetFullSchemaNameFromNode(contextNode);
 
             using (FormCreateIndex form = new FormCreateIndex())
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    client.CreateSchemaIndexAsync(SchemaName,
+                    client.Schema.Indexes.CreateAsync(schemaName,
                                 new Index
                                 {
                                     Name = form.IndexName,
-                                    AllowNulls = form.AllowNulls,
-                                    IndexType = form.IndexType,
+                                    IsUnique = form.IsUnique,
                                     Attributes = form.IndexAttributes
                                 }).ContinueWith((t) =>
-                    {
-                        FormProgress.WaitForVisible();
-                        FormProgress.Complete();
+                                {
+                                    FormProgress.WaitForVisible();
+                                    FormProgress.Complete();
 
-                        if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
-                        {
-                            //Success
-                        }
-                        else
-                        {
-                            Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
-                        }
+                                    if (t.Status != TaskStatus.RanToCompletion)
+                                    {
+                                        Program.AsyncExceptionMessage(t.Exception, "An error occured while processing your request.");
+                                    }
 
-                        PopulateSchemaIndexes(contextNode);
+                                    PopulateSchemaIndexes(contextNode);
 
-                    }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                                }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
                     FormProgress.Start("Creating index [" + form.IndexName + "]...");
                 }
             }
-            */
         }
 
         private void ContextMenu_RebuildIndex(object sender, EventArgs e)
         {
-            /*
             if (MessageBox.Show("Are you sure you want to rebuild the index [" + contextNode.Text + "]?",
                 "Rebuild Index?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
@@ -163,23 +159,18 @@ namespace LeafSQL.UI.Forms
 
             string SchemaName = GetFullSchemaNameFromNode(contextNode);
 
-            client.RebuildIndexAsync(SchemaName, contextNode.Value.ToString()).ContinueWith((t) =>
+            client.Schema.Indexes.RebuildAsync(SchemaName, contextNode.Value.ToString()).ContinueWith((t) =>
                         {
                             FormProgress.WaitForVisible();
                             FormProgress.Complete();
 
-                            if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
+                            if (t.Status != TaskStatus.RanToCompletion)
                             {
-                                //Success
-                            }
-                            else
-                            {
-                                Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
+                                Program.AsyncExceptionMessage(t.Exception, "An error occured while processing your request.");
                             }
                         }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
             FormProgress.Start("Rebuilding index [" + contextNode.Text.ToString() + "]...");
-            */
         }
 
         private void ContextMenu_DeleteIndex(object sender, EventArgs e)
@@ -430,10 +421,7 @@ namespace LeafSQL.UI.Forms
 
         #endregion
 
-        public FormMain()
-        {
-            InitializeComponent();
-        }
+        #region Tree Population.
 
         void PopulateSchemas(LSTreeNode node)
         {
@@ -475,41 +463,48 @@ namespace LeafSQL.UI.Forms
 
             string SchemaName = GetFullSchemaNameFromNode(node);
 
-            var indexes = client.Schema.Indexes.List(SchemaName);
-            foreach (Index index in indexes.OrderBy(o => o.Name))
-            {
-                var indexNode = new LSTreeNode(Types.TreeNodeType.Index, index.Name);
-
-                foreach (IndexAttribute attribute in index.Attributes)
+            client.Schema.Indexes.ListAsync(SchemaName).ContinueWith((t) =>
                 {
-                    indexNode.Nodes.Add( new LSTreeNode(Types.TreeNodeType.IndexAttribute, attribute.Name));
-                }
+                    if (t.Status == TaskStatus.RanToCompletion)
+                    {
+                        foreach (Index index in t.Result.OrderBy(o => o.Name))
+                        {
+                            var indexNode = new LSTreeNode(Types.TreeNodeType.Index, index.Name);
 
-                node.Nodes.Add(indexNode);
-            }
+                            foreach (IndexAttribute attribute in index.Attributes)
+                            {
+                                indexNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.IndexAttribute, attribute.Name));
+                            }
+
+                            node.Nodes.Add(indexNode);
+                        }
+                    }
+                }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         void PopulateLogins()
         {
-            /*
-            LoginsResult result = client.GetLogins();
-
             LoginsNode.Nodes.Clear();
 
-            foreach (var login in result.Collection.OrderBy(o=> o.UserName))
-            {
-                LoginsNode.Nodes.Add(new LSDBTreeNode(Types.TreeNodeType.Login, login.UserName, login.UserId));
-            }
-            */
+            client.Security.GetLoginsAsync().ContinueWith((t) =>
+                {
+                    if (t.Status == TaskStatus.RanToCompletion)
+                    {
+                        foreach (var login in t.Result.OrderBy(o => o.Username))
+                        {
+                            LoginsNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Login, login.Username, login.Id));
+                        }
+                    }
+                }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         string GetFullSchemaNameFromNode(LSTreeNode node)
         {
-            string SchemaName = string.Empty;
+            string schemaName = string.Empty;
 
             if (node.Type == Types.TreeNodeType.Schema)
             {
-                SchemaName = node.Value.ToString();
+                schemaName = node.Value.ToString();
             }
 
             LSTreeNode current = (LSTreeNode)node.Parent;
@@ -518,19 +513,26 @@ namespace LeafSQL.UI.Forms
             {
                 if (current.Type == Types.TreeNodeType.Schema)
                 {
-                    if (current.Text == ":")
+                    if (current.Text == "<root>")
                     {
-                        SchemaName = ":" + SchemaName;
+                        schemaName = ":" + schemaName;
                     }
                     else
                     {
-                        SchemaName = current.Value.ToString() + ":" + SchemaName;
+                        schemaName = current.Value.ToString() + ":" + schemaName;
                     }
                 }
                 current = (LSTreeNode)current.Parent;
             }
 
-            return SchemaName;
+            schemaName = schemaName.Replace("::", ":");
+
+            if (schemaName.Length > 1 && schemaName.EndsWith(":"))
+            {
+                schemaName = schemaName.Substring(0, schemaName.Length - 1);
+            }
+
+            return schemaName;
         }
 
         private void PopulateServerExplorer()
@@ -560,9 +562,6 @@ namespace LeafSQL.UI.Forms
             ServerNode.Expand();
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-
-        }
+        #endregion
     }
 }

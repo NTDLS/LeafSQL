@@ -57,6 +57,5 @@ namespace LeafSQL.Library.Client.Management
                 }
             }
         }
-
     }
 }

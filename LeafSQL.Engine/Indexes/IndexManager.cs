@@ -592,6 +592,8 @@ namespace LeafSQL.Engine.Indexes
                     TargetThreadCount = Environment.ProcessorCount * 2
                 };
 
+                state.TargetThreadCount = 1;
+
                 var param = new RebuildIndexItemThreadProc_Params()
                 {
                     DocumentCatalog = documentCatalog,

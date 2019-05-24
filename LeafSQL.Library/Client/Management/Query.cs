@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
@@ -16,21 +17,26 @@ namespace LeafSQL.Library.Client.Management
             this.client = client;
         }
 
-        public void Execute(string statement)
+        public async Task ExecuteAsync(string statement)
         {
             string url = string.Format("api/Query/{0}/Execute", client.Token.SessionId);
 
             var postContent = new StringContent(JsonConvert.SerializeObject(statement), Encoding.UTF8);
 
-            using (var response = client.Client.PostAsync(url, postContent))
+            using (var response = await client.Client.PostAsync(url, postContent))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
                     throw new Exception(result.Message);
                 }
             }
+        }
+
+        public void Execute(string statement)
+        {
+            ExecuteAsync(statement).Wait();
         }
 
     }

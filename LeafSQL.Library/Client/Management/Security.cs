@@ -2,8 +2,10 @@
 using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
@@ -16,6 +18,12 @@ namespace LeafSQL.Library.Client.Management
             this.client = client;
         }
 
+        /// <summary>
+        /// Logs a user into the server.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public LoginToken Login(string username, string password)
         {
             string url = string.Format("api/Security/Login");
@@ -43,6 +51,9 @@ namespace LeafSQL.Library.Client.Management
             }
         }
 
+        /// <summary>
+        /// Logs a user out of the server.
+        /// </summary>
         public void Logout()
         {
             string url = string.Format("api/Security/{0}/Logout", client.Token.SessionId);
@@ -59,5 +70,32 @@ namespace LeafSQL.Library.Client.Management
                 }
             }
         }
+
+        /// <summary>
+        /// Gets a list of all logins from the server.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Login>> GetLoginsAsync()
+        {
+            string url = string.Format("api/Security/{0}/ListLogins", client.Token.SessionId);
+
+            using (var response = await client.Client.GetAsync(url))
+            {
+                string resultText = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<ActionResponceLogins>(resultText);
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.List;
+            }
+        }
+
+        public List<Login> GetLogins()
+        {
+            return GetLoginsAsync().Result;
+        }
+
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="Client\Management\Indexes.cs" />
     <Compile Include="Client\Management\Query.cs" />
     <Compile Include="Client\Management\Transaction.cs" />
+    <Compile Include="Payloads\Responses\ActionResponceLogins.cs" />
     <Compile Include="Payloads\Responses\ActionResponseIndexes.cs" />
     <Compile Include="Payloads\Responses\ActionResponseDocuments.cs" />
     <Compile Include="Payloads\DocumentMeta.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Payloads\Index.cs" />
     <Compile Include="Payloads\IndexAttribute.cs" />
     <Compile Include="Payloads\LoginRequest.cs" />
+    <Compile Include="Payloads\Login.cs" />
     <Compile Include="Payloads\Schema.cs" />
     <Compile Include="Client\Management\Schema.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -194,7 +194,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxIndexName;
-        private System.Windows.Forms.ComboBox comboBoxIndexType;
         private System.Windows.Forms.CheckBox checkBoxIsUnique;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonCreate;

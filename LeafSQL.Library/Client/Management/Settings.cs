@@ -2,6 +2,7 @@
 using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
+using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
@@ -14,13 +15,13 @@ namespace LeafSQL.Library.Client.Management
             this.client = client;
         }
     
-        public ServerSettings Get()
+        public async Task<ServerSettings> GetAsync()
         {
             string url = string.Format("api/Server/{0}/Settings", client.Token.SessionId);
 
-            using (var response = client.Client.GetAsync(url))
+            using (var response = await client.Client.GetAsync(url))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ActionResponseServerSettings>(resultText);
                 if (result.Success == false)
                 {
@@ -30,5 +31,11 @@ namespace LeafSQL.Library.Client.Management
                 return result.Settings;
             }
         }
+
+        public ServerSettings Get()
+        {
+            return GetAsync().Result;
+        }
+
     }
 }

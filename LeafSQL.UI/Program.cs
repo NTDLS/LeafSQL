@@ -1,5 +1,5 @@
-﻿using LeafSQL.Library.Payloads.Responses;
-using System;
+﻿using System;
+using System.Text;
 using System.Windows.Forms;
 
 namespace LeafSQL.UI
@@ -17,10 +17,21 @@ namespace LeafSQL.UI
             Application.Run(new Forms.FormMain());
         }
 
-        public static void AsyncResultMessage(IActionResponse result, string defaultMessage)
+        public static void AsyncExceptionMessage(AggregateException exceptions, string defaultMessage = "One or more excpetions occured.")
         {
-            string message = result == null || (result.Message == null || result.Message == string.Empty) ? defaultMessage : result.Message;
-            MessageBox.Show(message, "LeafSQL", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var exception in exceptions.InnerExceptions)
+            {
+                stringBuilder.AppendLine(exception.Message);
+            }
+
+            if (stringBuilder.Length == 0)
+            {
+                stringBuilder.Append(defaultMessage);
+            }
+
+            MessageBox.Show(stringBuilder.ToString(), "LeafSQL", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
     }
 }

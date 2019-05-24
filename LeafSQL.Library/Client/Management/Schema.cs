@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LeafSQL.Library.Client.Management
 {
@@ -21,13 +22,13 @@ namespace LeafSQL.Library.Client.Management
         /// Creates a single schema or an entire schema path.
         /// </summary>
         /// <param name="schema"></param>
-        public void Create(string schema)
+        public async Task CreateAsync(string schema)
         {
             string url = string.Format("api/Schema/{0}/{1}/Create", client.Token.SessionId, schema);
 
-            using (var response = client.Client.GetAsync(url))
+            using (var response = await client.Client.GetAsync(url))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
@@ -35,18 +36,22 @@ namespace LeafSQL.Library.Client.Management
                 }
             }
         }
+        public void Create(string schema)
+        {
+            CreateAsync(schema).Wait();
+        }
 
         /// <summary>
         /// Checks for the existence of a schema.
         /// </summary>
         /// <param name="schema"></param>
-        public bool Exists(string schema)
+        public async Task<bool> ExistsAsync(string schema)
         {
             string url = string.Format("api/Schema/{0}/{1}/Exists", client.Token.SessionId, schema);
 
-            using (var response = client.Client.GetAsync(url))
+            using (var response = await client.Client.GetAsync(url))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ActionResponseBoolean>(resultText);
                 if (result.Success == false)
                 {
@@ -57,17 +62,23 @@ namespace LeafSQL.Library.Client.Management
             }
         }
 
+        public bool Exists(string schema)
+        {
+            return ExistsAsync(schema).Result;
+        }
+
+
         /// <summary>
         /// Drops a single schema or an entire schema path.
         /// </summary>
         /// <param name="schema"></param>
-        public void Drop(string schema)
+        public async Task DropAsync(string schema)
         {
             string url = string.Format("api/Schema/{0}/{1}/Drop", client.Token.SessionId, schema);
 
-            using (var response = client.Client.GetAsync(url))
+            using (var response = await client.Client.GetAsync(url))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
@@ -76,17 +87,22 @@ namespace LeafSQL.Library.Client.Management
             }
         }
 
+        public void Drop(string schema)
+        {
+            DropAsync(schema).Wait();
+        }
+
         /// <summary>
         /// Lists the existing schemas within a given schema.
         /// </summary>
         /// <param name="schema"></param>
-        public List<Payloads.Schema> List(string schema)
+        public async Task<List<Payloads.Schema>> ListAsync(string schema)
         {
             string url = string.Format("api/Schema/{0}/{1}/List", client.Token.SessionId, schema);
 
-            using (var response = client.Client.GetAsync(url))
+            using (var response = await client.Client.GetAsync(url))
             {
-                string resultText = response.Result.Content.ReadAsStringAsync().Result;
+                string resultText = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ActionResponseSchemas>(resultText);
 
                 if (result.Success == false)
@@ -97,6 +113,10 @@ namespace LeafSQL.Library.Client.Management
                 return result.List;
             }
         }
+
+        public List<Payloads.Schema> List(string schema)
+        {
+            return ListAsync(schema).Result;
+        }
     }
 }
-
