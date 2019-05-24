@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace LeafSQL.UI.Forms
 {
-    public partial class FormCreateNamespace : Form
+    public partial class FormCreateSchema : Form
     {
-        public string NamespaceName { get; set; }
+        public string SchemaName { get; set; }
 
-        public FormCreateNamespace()
+        public FormCreateSchema()
         {
             InitializeComponent();
         }
@@ -27,19 +27,19 @@ namespace LeafSQL.UI.Forms
 
         private void buttonCreate_Click(object sender, EventArgs e)
         {
-            if (textBoxNamespaceName.Text.Trim().Length == 0)
+            if (textBoxSchemaName.Text.Trim().Length == 0)
             {
-                MessageBox.Show("You must specify a namespace name.");
+                MessageBox.Show("You must specify a schema name.");
                 return;
             }
 
-            NamespaceName = textBoxNamespaceName.Text;
+            SchemaName = textBoxSchemaName.Text;
 
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void FormCreateNamespace_Load(object sender, EventArgs e)
+        private void FormCreateSchema_Load(object sender, EventArgs e)
         {
             this.AcceptButton = buttonCreate;
             this.CancelButton = buttonCancel;

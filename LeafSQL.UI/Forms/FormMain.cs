@@ -325,27 +325,25 @@ namespace LeafSQL.UI.Forms
 
         private void ContextMenu_CreateSchema(object sender, EventArgs e)
         {
-            /*
             using (FormCreateSchema form = new FormCreateSchema())
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    string SchemaName = GetFullSchemaNameFromNode(contextNode) + "/" + form.SchemaName;
+                    string SchemaName = GetFullSchemaNameFromNode(contextNode) + ":" + form.SchemaName;
 
-                    client.CreateSchemaAsync(SchemaName).ContinueWith((t) =>
+                    client.Schema.CreateAsync(SchemaName).ContinueWith((t) =>
                     {
                         FormProgress.WaitForVisible();
                         FormProgress.Complete();
 
-                        if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
+                        if (t.Status == TaskStatus.RanToCompletion)
                         {
-                            //Success
                             contextNode.Nodes.Clear();
                             PopulateSchemas(contextNode, true);
                         }
                         else
                         {
-                            Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
+                            Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                         }
 
                     }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
@@ -353,7 +351,6 @@ namespace LeafSQL.UI.Forms
                     FormProgress.Start("Creating Schema [" + SchemaName + "]...");
                 }
             }
-            */
         }
 
         private void FormMain_Shown(object sender, EventArgs e)
@@ -431,6 +428,13 @@ namespace LeafSQL.UI.Forms
             string SchemaName = GetFullSchemaNameFromNode(node);
 
             var schemas = client.Schema.List(SchemaName);
+
+            if (node.Nodes.OfType<TreeNode>().FirstOrDefault(o => o.Text == "Indexes") == null)
+            {
+                LSTreeNode parentIndexesNode = new LSTreeNode(Types.TreeNodeType.Indexes, "Indexes", "Indexes");
+                node.Nodes.Add(parentIndexesNode);
+                PopulateSchemaIndexes(parentIndexesNode);
+            }
 
             foreach (var schema in schemas)
             {

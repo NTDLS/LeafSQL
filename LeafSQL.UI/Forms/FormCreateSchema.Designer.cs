@@ -1,6 +1,6 @@
 ﻿namespace LeafSQL.UI.Forms
 {
-    partial class FormCreateNamespace
+    partial class FormCreateSchema
     {
         /// <summary>
         /// Required designer variable.
@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateNamespace));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateSchema));
             this.buttonCreate = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxNamespaceName = new System.Windows.Forms.TextBox();
+            this.textBoxSchemaName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonCreate
@@ -62,21 +62,21 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Namespace Name";
+            this.label1.Text = "Schema Name";
             // 
-            // textBoxNamespaceName
+            // textBoxSchemaName
             // 
-            this.textBoxNamespaceName.Location = new System.Drawing.Point(15, 25);
-            this.textBoxNamespaceName.Name = "textBoxNamespaceName";
-            this.textBoxNamespaceName.Size = new System.Drawing.Size(333, 20);
-            this.textBoxNamespaceName.TabIndex = 0;
+            this.textBoxSchemaName.Location = new System.Drawing.Point(15, 25);
+            this.textBoxSchemaName.Name = "textBoxSchemaName";
+            this.textBoxSchemaName.Size = new System.Drawing.Size(333, 20);
+            this.textBoxSchemaName.TabIndex = 0;
             // 
-            // FormCreateNamespace
+            // FormCreateSchema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(363, 93);
-            this.Controls.Add(this.textBoxNamespaceName);
+            this.Controls.Add(this.textBoxSchemaName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonCreate);
@@ -84,11 +84,11 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormCreateNamespace";
+            this.Name = "FormCreateSchema";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Create Namespace";
-            this.Load += new System.EventHandler(this.FormCreateNamespace_Load);
+            this.Text = "Create Schema";
+            this.Load += new System.EventHandler(this.FormCreateSchema_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -99,6 +99,6 @@
         private System.Windows.Forms.Button buttonCreate;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxNamespaceName;
+        private System.Windows.Forms.TextBox textBoxSchemaName;
     }
 }
