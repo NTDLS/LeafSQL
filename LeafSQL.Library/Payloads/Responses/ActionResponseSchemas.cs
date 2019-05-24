@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LeafSQL.Library.Payloads
+namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponseSchemas : ActionResponse
+    public class ActionResponseSchemas : IActionResponse
     {
         public List<Schema> List { get; set; }
 

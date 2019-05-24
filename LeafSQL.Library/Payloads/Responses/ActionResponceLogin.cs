@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace LeafSQL.Library.Payloads
+namespace LeafSQL.Library.Payloads.Responses
 {
-    public class LoginResponse
+    public class ActionResponceLogin : IActionResponse
     {
-        public bool Success { get; set; }
-        public string Message { get; set; }
         public Guid SessionId { get; set; }
         public UInt64 ProcessId { get; set; }
 

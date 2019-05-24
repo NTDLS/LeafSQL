@@ -1,5 +1,6 @@
 ﻿using LeafSQL.Library;
 using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
@@ -10,42 +11,33 @@ namespace LeafSQL.Service.Controllers
     public class SecurityController : ApiController
     {
         //api/Security/Login
-        public LoginResponse Login([FromBody]string value)
+        public ActionResponceLogin Login([FromBody]string value)
         {
+            var result = new ActionResponceLogin();
+
             try
             {
                 Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
                 var loginRequest = JsonConvert.DeserializeObject<LoginRequest>(value);
-
-                Guid sessionId = Program.Core.Security.Login(loginRequest.Username, loginRequest.PasswordHash);
-
-                var result = new LoginResponse
-                {
-                    Success = true,
-                    SessionId = sessionId,
-                    ProcessId = Program.Core.Sessions.SessionIdToProcessId(sessionId)
-                };
-
-                return result;
+                result.SessionId = Program.Core.Security.Login(loginRequest.Username, loginRequest.PasswordHash);
+                result.ProcessId = Program.Core.Sessions.SessionIdToProcessId(result.SessionId);
+                result.Success = true;
             }
             catch (Exception ex)
             {
-                var result = new LoginResponse
-                {
-                    Success = false,
-                    Message = "Login failed with an exception: " + ex.Message
-                };
-                return result;
+                result.Success = false;
+                result.Message = "Login failed with an exception: " + ex.Message;
             }
+            return result;
         }
 
         [HttpGet]
         //api/Security/{sessionId}/Logout
-        public ActionResponse Logout(Guid sessionId)
+        public IActionResponse Logout(Guid sessionId)
         {
-            ActionResponse result = new ActionResponse();
+            IActionResponse result = new IActionResponse();
 
             try
             {

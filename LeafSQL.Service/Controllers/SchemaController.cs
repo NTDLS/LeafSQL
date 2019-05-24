@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LeafSQL.Library;
+using LeafSQL.Library.Payloads.Responses;
+using System;
 using System.Threading;
 using System.Web.Http;
-using LeafSQL.Library;
-using LeafSQL.Library.Payloads;
 
 namespace LeafSQL.Service.Controllers
 {
@@ -48,13 +47,13 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         [HttpGet]
         //api/Namespace/{Namespace}/Create
-        public ActionResponse Create(Guid sessionId, string schema)
+        public IActionResponse Create(Guid sessionId, string schema)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponse result = new ActionResponse();
+            IActionResponse result = new IActionResponse();
 
             try
             {
@@ -102,13 +101,13 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         [HttpGet]
         //api/Namespace/{Namespace}/Drop
-        public ActionResponse Drop(Guid sessionId, string schema)
+        public IActionResponse Drop(Guid sessionId, string schema)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponse result = new ActionResponse();
+            IActionResponse result = new IActionResponse();
 
             try
             {

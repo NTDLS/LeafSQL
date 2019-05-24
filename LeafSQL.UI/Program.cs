@@ -1,8 +1,5 @@
-﻿using LeafSQL.Library.Payloads;
+﻿using LeafSQL.Library.Payloads.Responses;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LeafSQL.UI
@@ -20,8 +17,7 @@ namespace LeafSQL.UI
             Application.Run(new Forms.FormMain());
         }
 
-
-        public static void AsyncResultMessage(ActionResponse result, string defaultMessage)
+        public static void AsyncResultMessage(IActionResponse result, string defaultMessage)
         {
             string message = result == null || (result.Message == null || result.Message == string.Empty) ? defaultMessage : result.Message;
             MessageBox.Show(message, "LeafSQL", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);

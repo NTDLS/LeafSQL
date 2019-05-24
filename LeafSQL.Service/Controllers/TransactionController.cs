@@ -1,21 +1,21 @@
-﻿using System;
+﻿using LeafSQL.Library;
+using LeafSQL.Library.Payloads.Responses;
+using System;
 using System.Threading;
 using System.Web.Http;
-using LeafSQL.Library;
-using LeafSQL.Library.Payloads;
 
 namespace LeafSQL.Service.Controllers
 {
     public class TransactionController : ApiController
     {
         [HttpGet]
-        public ActionResponse Begin(Guid sessionId)
+        public IActionResponse Begin(Guid sessionId)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponse result = new ActionResponse();
+            IActionResponse result = new IActionResponse();
 
             try
             {
@@ -31,13 +31,13 @@ namespace LeafSQL.Service.Controllers
         }
 
         [HttpGet]
-        public ActionResponse Commit(Guid sessionId)
+        public IActionResponse Commit(Guid sessionId)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponse result = new ActionResponse();
+            IActionResponse result = new IActionResponse();
 
             try
             {
@@ -53,13 +53,13 @@ namespace LeafSQL.Service.Controllers
         }
 
         [HttpGet]
-        public ActionResponse Rollback(Guid sessionId)
+        public IActionResponse Rollback(Guid sessionId)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponse result = new ActionResponse();
+            IActionResponse result = new IActionResponse();
 
             try
             {

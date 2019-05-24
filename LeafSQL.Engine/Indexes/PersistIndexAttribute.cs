@@ -1,13 +1,9 @@
-﻿using LeafSQL.Library.Payloads;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LeafSQL.Engine.Interfaces;
+using LeafSQL.Library.Payloads;
 
 namespace LeafSQL.Engine.Indexes
 {
-    public class PersistIndexAttribute
+    public class PersistIndexAttribute : IPayloadCompatible<PersistIndexAttribute, IndexAttribute>
     {
         public string Name { get; set; }
 
@@ -27,7 +23,7 @@ namespace LeafSQL.Engine.Indexes
             };
         }
 
-        public Library.Payloads.IndexAttribute ToPayload()
+        public IndexAttribute ToPayload()
         {
             return new IndexAttribute()
             {

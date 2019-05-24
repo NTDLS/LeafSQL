@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using LeafSQL.Engine.Interfaces;
 using LeafSQL.Library.Payloads;
 using Newtonsoft.Json;
 
 namespace LeafSQL.Engine.Indexes
 {
     [Serializable]
-    public class PersistIndex
+    public class PersistIndex: IPayloadCompatible<PersistIndex, Index>
     {
         public List<PersistIndexAttribute> Attributes { get; set; }
         public string Name { get; set; }
@@ -37,7 +38,7 @@ namespace LeafSQL.Engine.Indexes
             };
         }
 
-        public Library.Payloads.Index ToPayload()
+        public Index ToPayload()
         {
             var result = new Library.Payloads.Index()
             {

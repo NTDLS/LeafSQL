@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using LeafSQL.Library.Payloads.Responses;
 using System;
 
 namespace LeafSQL.Library.Payloads
@@ -22,7 +22,7 @@ namespace LeafSQL.Library.Payloads
             SessionId = Guid.Empty;
         }
 
-        public LoginToken(LoginResponse response)
+        public LoginToken(ActionResponceLogin response)
         {
             if (response.Success == false)
             {

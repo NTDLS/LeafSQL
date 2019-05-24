@@ -43,7 +43,7 @@ namespace LeafSQL.Library.Client
 
         public LoginToken Login(string username, string password)
         {
-            return Security.Login(username, password).ToToken();
+            return Security.Login(username, password);
         }
 
         public void Logout()

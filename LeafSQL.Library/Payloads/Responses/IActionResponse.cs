@@ -1,6 +1,6 @@
-﻿namespace LeafSQL.Library.Payloads
+﻿namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponse
+    public class IActionResponse
     {
         public bool Success { get; set; }
         public string Message { get; set; }

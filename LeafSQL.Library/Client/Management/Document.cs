@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace LeafSQL.Library.Client.Management
             using (var response = client.Client.PostAsync(url, postContent))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponse>(resultText);
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
                     throw new Exception(result.Message);
@@ -50,7 +51,7 @@ namespace LeafSQL.Library.Client.Management
             using (var response = client.Client.GetAsync(url))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponse>(resultText);
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
                     throw new Exception(result.Message);
@@ -62,14 +63,21 @@ namespace LeafSQL.Library.Client.Management
         /// Lists the doucments within a given schema.
         /// </summary>
         /// <param name="schema"></param>
-        public List<DocumentCatalogItem> Catalog(string schema)
+        public List<DocumentMeta> Catalog(string schema)
         {
             string url = string.Format("api/Document/{0}/{1}/Catalog", client.Token.SessionId, schema);
 
             using (var response = client.Client.GetAsync(url))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                return JsonConvert.DeserializeObject<List<DocumentCatalogItem>>(resultText);
+                var result = JsonConvert.DeserializeObject<ActionResponseDocuments>(resultText);
+
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.List;
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace LeafSQL.Library.Payloads
+namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponseIndexes : ActionResponse
+    public class ActionResponseIndexes : IActionResponse
     {
         public List<Index> List { get; set; }
 

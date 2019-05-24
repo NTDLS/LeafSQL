@@ -10,6 +10,7 @@ namespace LeafSQL.Engine.Documents
         public Guid Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modfied { get; set; }
+
         public PersistDocument Clone()
         {
             return new PersistDocument
@@ -31,5 +32,17 @@ namespace LeafSQL.Engine.Documents
                 Content = document.Content
             };
         }
+
+        static public Document ToPayload(PersistDocument document)
+        {
+            return new Document()
+            {
+                Id = document.Id,
+                Created = document.Created,
+                Modfied = document.Modfied,
+                Content = document.Content
+            };
+        }
+
     }
 }

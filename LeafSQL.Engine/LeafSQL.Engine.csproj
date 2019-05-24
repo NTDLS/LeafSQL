@@ -76,6 +76,7 @@
     <Compile Include="Indexes\IndexManager.cs" />
     <Compile Include="Indexes\PersistIndexPageCatalog.cs" />
     <Compile Include="Indexes\PotentialIndex.cs" />
+    <Compile Include="Interfaces\IPayloadCompatible.cs" />
     <Compile Include="IO\IOManager.cs" />
     <Compile Include="Locking\LockIntention.cs" />
     <Compile Include="Locking\LockManager.cs" />
@@ -98,7 +99,7 @@
     <Compile Include="Schemas\PersistSchema.cs" />
     <Compile Include="Documents\PersistDocument.cs" />
     <Compile Include="Documents\PersistDocumentCatalog.cs" />
-    <Compile Include="Documents\PersistDocumentCatalogItem.cs" />
+    <Compile Include="Documents\PersistDocumentMeta.cs" />
     <Compile Include="Schemas\SchemaManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\SecurityManager.cs" />

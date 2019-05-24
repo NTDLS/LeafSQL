@@ -1,5 +1,6 @@
 ﻿using LeafSQL.Library;
 using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace LeafSQL.Service.Controllers
     {
         // GET api/Server/Settings
         [HttpGet]
-        public ServerSettingsResponse Settings(Guid sessionId)
+        public ActionResponseServerSettings Settings(Guid sessionId)
         {
-            ServerSettingsResponse result = new ServerSettingsResponse();
+            var result = new ActionResponseServerSettings();
 
             try
             {

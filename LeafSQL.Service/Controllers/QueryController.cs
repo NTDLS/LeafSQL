@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LeafSQL.Library;
+using LeafSQL.Library.Payloads.Responses;
+using Newtonsoft.Json;
+using System;
 using System.Threading;
 using System.Web.Http;
-using LeafSQL.Library.Payloads;
-using Newtonsoft.Json;
-using LeafSQL.Library;
 
 namespace LeafSQL.Service.Controllers
 {
     public class QueryController : ApiController
     {
-        public ActionResponse Execute(Guid sessionId, [FromBody]string value)
+        public IActionResponse Execute(Guid sessionId, [FromBody]string value)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponseID result = new ActionResponseID();
+            var result = new ActionResponseId();
 
             try
             {

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LeafSQL.Engine.Sessions
 {
-   public class SessionManager
+    public class SessionManager
     {
         private Core core;
 
@@ -62,6 +59,5 @@ namespace LeafSQL.Engine.Sessions
                 }
             }
         }
-
     }
 }

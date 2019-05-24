@@ -2,7 +2,7 @@
 
 namespace LeafSQL.Library.Payloads
 {
-    public class DocumentCatalogItem
+    public class DocumentMeta
     {
         public Guid Id { get; set; }
     }

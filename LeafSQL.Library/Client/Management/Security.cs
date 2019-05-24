@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -15,7 +16,7 @@ namespace LeafSQL.Library.Client.Management
             this.client = client;
         }
 
-        public LoginResponse Login(string username, string password)
+        public LoginToken Login(string username, string password)
         {
             string url = string.Format("api/Security/Login");
 
@@ -30,7 +31,7 @@ namespace LeafSQL.Library.Client.Management
             using (var response = client.Client.PostAsync(url, postContent))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<LoginResponse>(resultText);
+                var result = JsonConvert.DeserializeObject<ActionResponceLogin>(resultText);
                 if (result.Success == false)
                 {
                     throw new Exception(result.Message);
@@ -38,7 +39,7 @@ namespace LeafSQL.Library.Client.Management
 
                 client.Token = result.ToToken();
 
-                return result;
+                return client.Token;
             }
         }
 
@@ -51,7 +52,7 @@ namespace LeafSQL.Library.Client.Management
             using (var response = client.Client.GetAsync(url))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<LoginResponse>(resultText);
+                var result = JsonConvert.DeserializeObject<ActionResponceLogin>(resultText);
                 if (result.Success == false)
                 {
                     throw new Exception(result.Message);

@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using LeafSQL.Library.Payloads;
+using LeafSQL.Engine.Interfaces;
 
 namespace LeafSQL.Engine.Schemas
 {
-    public class PersistSchema
+    public class PersistSchema : IPayloadCompatible<PersistSchema, Schema>
     {
         public string Name { get; set; }
         public Guid Id { get; set; }

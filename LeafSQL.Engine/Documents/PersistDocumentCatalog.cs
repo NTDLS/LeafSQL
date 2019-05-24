@@ -7,11 +7,11 @@ namespace LeafSQL.Engine.Documents
     [Serializable]
     public class PersistDocumentCatalog
     {
-        public List<PersistDocumentCatalogItem> Collection = new List<PersistDocumentCatalogItem>();
+        public List<PersistDocumentMeta> Collection = new List<PersistDocumentMeta>();
 
-        public PersistDocumentCatalogItem Add(PersistDocument document)
+        public PersistDocumentMeta Add(PersistDocument document)
         {
-            var catalogItem = new PersistDocumentCatalogItem()
+            var catalogItem = new PersistDocumentMeta()
             {
                 Id = document.Id
             };
@@ -21,17 +21,17 @@ namespace LeafSQL.Engine.Documents
             return catalogItem;
         }
 
-        public void Remove(PersistDocumentCatalogItem item)
+        public void Remove(PersistDocumentMeta item)
         {
             Collection.Remove(item);
         }
 
-        public void Add(PersistDocumentCatalogItem item)
+        public void Add(PersistDocumentMeta item)
         {
             this.Collection.Add(item);
         }
 
-        public PersistDocumentCatalogItem GetById(Guid id)
+        public PersistDocumentMeta GetById(Guid id)
         {
             return (from o in Collection where o.Id == id select o).FirstOrDefault();
         }

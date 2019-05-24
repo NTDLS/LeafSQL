@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LeafSQL.Library;
+using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Responses;
+using Newtonsoft.Json;
+using System;
 using System.Threading;
 using System.Web.Http;
-using LeafSQL.Library.Payloads;
-using Newtonsoft.Json;
-using LeafSQL.Library;
 
 namespace LeafSQL.Service.Controllers
 {
     public class IndexesController : ApiController
     {
-        public ActionResponseID Create(Guid sessionId, string schema, [FromBody]string value)
+        public ActionResponseId Create(Guid sessionId, string schema, [FromBody]string value)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponseID result = new ActionResponseID();
+            var result = new ActionResponseId();
 
             try
             {
@@ -42,13 +42,13 @@ namespace LeafSQL.Service.Controllers
         /// </summary>
         /// <param name="schema"></param>
         [HttpGet]
-        public ActionResponse Rebuild(Guid sessionId, string schema, string byName)
+        public IActionResponse Rebuild(Guid sessionId, string schema, string byName)
         {
             UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
             Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            ActionResponse result = new ActionResponseBoolean();
+            IActionResponse result = new ActionResponseBoolean();
 
             try
             {

@@ -1,4 +1,4 @@
-﻿using LeafSQL.Library.Payloads;
+﻿using LeafSQL.Library.Payloads.Responses;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace LeafSQL.Library.Client.Management
             using (var response = client.Client.GetAsync(url))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponse>(resultText);
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
                     throw new Exception(result.Message);
@@ -68,7 +68,7 @@ namespace LeafSQL.Library.Client.Management
             using (var response = client.Client.GetAsync(url))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ActionResponse>(resultText);
+                var result = JsonConvert.DeserializeObject<IActionResponse>(resultText);
                 if (result.Success == false)
                 {
                     throw new Exception(result.Message);

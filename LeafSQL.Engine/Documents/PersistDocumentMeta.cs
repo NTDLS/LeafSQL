@@ -4,13 +4,13 @@ using LeafSQL.Library.Payloads;
 namespace LeafSQL.Engine.Documents
 {
     [Serializable]
-    public class PersistDocumentCatalogItem
+    public class PersistDocumentMeta
     {
         public Guid Id { get; set; }
 
-        public DocumentCatalogItem ToPayload()
+        public DocumentMeta ToPayload()
         {
-            return new DocumentCatalogItem()
+            return new DocumentMeta()
             {
                 Id = this.Id
             };
@@ -24,9 +24,9 @@ namespace LeafSQL.Engine.Documents
             }
         }
 
-        public PersistDocumentCatalogItem Clone()
+        public PersistDocumentMeta Clone()
         {
-            return new PersistDocumentCatalogItem
+            return new PersistDocumentMeta
             {
                 Id = this.Id
             };

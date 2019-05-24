@@ -542,7 +542,7 @@ namespace LeafSQL.Engine.Documents
             }
         }
 
-        public List<PersistDocumentCatalogItem> EnumerateCatalog(UInt64 processId, string schema)
+        public List<PersistDocumentMeta> EnumerateCatalog(UInt64 processId, string schema)
         {
             try
             {
@@ -554,7 +554,7 @@ namespace LeafSQL.Engine.Documents
                         throw new LeafSQLSchemaDoesNotExistException(schema);
                     }
 
-                    var list = new List<PersistDocumentCatalogItem>();
+                    var list = new List<PersistDocumentMeta>();
 
                     var filePath = Path.Combine(schemaMeta.DiskPath, Constants.DocumentCatalogFile);
                     var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(txRef.Transaction, filePath, LockOperation.Read);
