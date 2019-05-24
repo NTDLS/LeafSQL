@@ -88,5 +88,31 @@ namespace LeafSQL.Service.Controllers
 
             return result;
         }
+
+        /// <summary>
+        /// Gets a list of indexes for a specific schema.
+        /// </summary>
+        /// <param name="schema"></param>
+        [HttpGet]
+        public ActionResponseIndexes List(Guid sessionId, string schema)
+        {
+            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(sessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            Program.Core.Log.Trace(Thread.CurrentThread.Name);
+
+            var result = new ActionResponseIndexes();
+
+            try
+            {
+                result.List = Program.Core.Indexes.List(processId, schema);
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
     }
 }

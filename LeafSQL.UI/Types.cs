@@ -11,8 +11,8 @@ namespace LeafSQL.UI
         public enum TreeNodeType
         {
             Server,
-            Namespaces,
-            Namespace,
+            Schemas,
+            Schema,
             Logins,
             Login,
             Indexes,

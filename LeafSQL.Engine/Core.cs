@@ -27,7 +27,7 @@ namespace LeafSQL.Engine
         public SecurityManager Security { get; set; }
         public SessionManager Sessions { get; set; }
         public CacheManager Cache { get; set; }
-        public PersistIndexManager Indexes { get; set; }
+        public IndexManager Indexes { get; set; }
         public QueryManager Query { get; set; }
 
         public Core(Library.Payloads.ServerSettings settings)
@@ -56,7 +56,7 @@ namespace LeafSQL.Engine
             Health = new HealthManager(this);
 
             Log.Write("Initializing index manager.");
-            Indexes = new PersistIndexManager(this);
+            Indexes = new IndexManager(this);
 
             Log.Write("Initializing session manager.");
             Sessions = new SessionManager(this);

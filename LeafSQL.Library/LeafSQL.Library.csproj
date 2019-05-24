@@ -51,6 +51,7 @@
     <Compile Include="Client\Management\Indexes.cs" />
     <Compile Include="Client\Management\Query.cs" />
     <Compile Include="Client\Management\Transaction.cs" />
+    <Compile Include="Payloads\ActionResponseIndexes.cs" />
     <Compile Include="Payloads\ServerSettingsResponse.cs" />
     <Compile Include="Payloads\LoginToken.cs" />
     <Compile Include="Payloads\LoginResponse.cs" />

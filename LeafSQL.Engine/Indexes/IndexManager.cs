@@ -18,10 +18,10 @@ using LeafSQL.Engine.Query;
 
 namespace LeafSQL.Engine.Indexes
 {
-    public class PersistIndexManager
+    public class IndexManager
     {
         private Core core;
-        public PersistIndexManager(Core core)
+        public IndexManager(Core core)
         {
             this.core = core;
         }
@@ -89,6 +89,38 @@ namespace LeafSQL.Engine.Indexes
             indexSelections.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
 
             return indexSelections;
+        }
+
+        public List<Library.Payloads.Index> List(UInt64 processId, string schema)
+        {
+            var result = new List<Library.Payloads.Index>();
+            try
+            {
+                using (var txRef = core.Transactions.Begin(processId))
+                {
+                    var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
+                    if (schemaMeta != null && schemaMeta.Exists)
+                    {
+                        var indexCatalog = GetIndexCatalog(txRef.Transaction, schemaMeta, LockOperation.Read);
+                        if (indexCatalog != null)
+                        {
+                            foreach (var index in indexCatalog.Collection)
+                            {
+                                result.Add(index.ToPayload());
+                            }
+                        }
+                    }
+
+                    txRef.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                core.Log.Write(String.Format("Failed to list indexes for process {0}.", processId), ex);
+                throw;
+            }
+
+            return result;
         }
 
 

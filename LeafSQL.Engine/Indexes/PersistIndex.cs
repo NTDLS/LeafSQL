@@ -37,6 +37,25 @@ namespace LeafSQL.Engine.Indexes
             };
         }
 
+        public Library.Payloads.Index ToPayload()
+        {
+            var result = new Library.Payloads.Index()
+            {
+                Name = this.Name,
+                Created = this.Created,
+                Id = this.Id,
+                IsUnique = this.IsUnique,
+                Modfied = this.Modfied
+            };
+
+            foreach (var att in this.Attributes)
+            {
+                result.Attributes.Add(att.ToPayload());
+            }
+
+            return result;
+        }
+
         public void AddAttribute(string name)
         {
             AddAttribute(new PersistIndexAttribute()

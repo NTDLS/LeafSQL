@@ -19,8 +19,6 @@ namespace LeafSQL.Library.Client.Management
         {
             string url = string.Format("api/Server/{0}/Settings", client.Token.SessionId);
 
-            client.Token = new LoginToken();
-
             using (var response = client.Client.GetAsync(url))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;

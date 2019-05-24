@@ -26,5 +26,14 @@ namespace LeafSQL.Engine.Indexes
                 Name = Name
             };
         }
+
+        public Library.Payloads.IndexAttribute ToPayload()
+        {
+            return new IndexAttribute()
+            {
+                 Name = this.Name
+            };
+        }
+
     }
 }

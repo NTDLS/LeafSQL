@@ -85,8 +85,8 @@
             this.imageListTreeView.Images.SetKeyName(1, "Document");
             this.imageListTreeView.Images.SetKeyName(2, "Documents");
             this.imageListTreeView.Images.SetKeyName(3, "Logins");
-            this.imageListTreeView.Images.SetKeyName(4, "Namespace");
-            this.imageListTreeView.Images.SetKeyName(5, "Namespaces");
+            this.imageListTreeView.Images.SetKeyName(4, "Schema");
+            this.imageListTreeView.Images.SetKeyName(5, "Schemas");
             this.imageListTreeView.Images.SetKeyName(6, "Login");
             this.imageListTreeView.Images.SetKeyName(7, "Index");
             this.imageListTreeView.Images.SetKeyName(8, "Indexes");

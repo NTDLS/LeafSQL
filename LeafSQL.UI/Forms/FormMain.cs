@@ -23,14 +23,14 @@ namespace LeafSQL.UI.Forms
 
         LeafSQLClient client;
 
-        private LSDBTreeNode contextNode = null;
-        private LSDBTreeNode ServerNode = null;
-        private LSDBTreeNode NamespacesNode = null;
-        private LSDBTreeNode LoginsNode = null;
+        private LSTreeNode contextNode = null;
+        private LSTreeNode ServerNode = null;
+        private LSTreeNode SchemaNode = null;
+        private LSTreeNode LoginsNode = null;
 
-        bool ContainsNodeOfType(LSDBTreeNode node, Types.TreeNodeType type)
+        bool ContainsNodeOfType(LSTreeNode node, Types.TreeNodeType type)
         {
-            foreach (LSDBTreeNode n in node.Nodes)
+            foreach (LSTreeNode n in node.Nodes)
             {
                 if (n.Type == type)
                 {
@@ -51,17 +51,17 @@ namespace LeafSQL.UI.Forms
 
             if (e.Node != null)
             {
-                LSDBTreeNode selectedNode = (LSDBTreeNode)e.Node;
+                LSTreeNode selectedNode = (LSTreeNode)e.Node;
 
-                if (selectedNode.Type == Types.TreeNodeType.Namespace || selectedNode.Type == Types.TreeNodeType.Namespaces)
+                if (selectedNode.Type == Types.TreeNodeType.Schema || selectedNode.Type == Types.TreeNodeType.Schemas)
                 {
-                    foreach (LSDBTreeNode node in selectedNode.Nodes)
+                    foreach (LSTreeNode node in selectedNode.Nodes)
                     {
-                        if (node.Type == Types.TreeNodeType.Namespace || node.Type == Types.TreeNodeType.Namespaces)
+                        if (node.Type == Types.TreeNodeType.Schema || node.Type == Types.TreeNodeType.Schemas)
                         {
-                            if (ContainsNodeOfType(node, Types.TreeNodeType.Namespace) == false)
+                            if (ContainsNodeOfType(node, Types.TreeNodeType.Schema) == false)
                             {
-                                PopulateNamespaces(node);
+                                PopulateSchemas(node);
                             }
                         }
                     }
@@ -72,13 +72,13 @@ namespace LeafSQL.UI.Forms
         {
             ContextMenu menu = new ContextMenu();
 
-            contextNode = (LSDBTreeNode)e.Node;
+            contextNode = (LSTreeNode)e.Node;
 
             if (e.Button == MouseButtons.Right)
             {
-                if (contextNode.Type == Types.TreeNodeType.Namespace)
+                if (contextNode.Type == Types.TreeNodeType.Schema)
                 {
-                    menu.MenuItems.Add("Create Namespace", ContextMenu_CreateNamespace);
+                    menu.MenuItems.Add("Create Schema", ContextMenu_CreateSchema);
 
                     if (contextNode.Text != "/")
                     {
@@ -115,13 +115,13 @@ namespace LeafSQL.UI.Forms
         private void ContextMenu_CreateIndex(object sender, EventArgs e)
         {
             /*
-            string namespaceName = GetFullNamespaceNameFromNode(contextNode);
+            string SchemaName = GetFullSchemaNameFromNode(contextNode);
 
             using (FormCreateIndex form = new FormCreateIndex())
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    client.CreateNamespaceIndexAsync(namespaceName,
+                    client.CreateSchemaIndexAsync(SchemaName,
                                 new Index
                                 {
                                     Name = form.IndexName,
@@ -142,7 +142,7 @@ namespace LeafSQL.UI.Forms
                             Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
                         }
 
-                        PopulateNamespaceIndexes(contextNode);
+                        PopulateSchemaIndexes(contextNode);
 
                     }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -161,9 +161,9 @@ namespace LeafSQL.UI.Forms
                 return;
             }
 
-            string namespaceName = GetFullNamespaceNameFromNode(contextNode);
+            string SchemaName = GetFullSchemaNameFromNode(contextNode);
 
-            client.RebuildIndexAsync(namespaceName, contextNode.Value.ToString()).ContinueWith((t) =>
+            client.RebuildIndexAsync(SchemaName, contextNode.Value.ToString()).ContinueWith((t) =>
                         {
                             FormProgress.WaitForVisible();
                             FormProgress.Complete();
@@ -191,9 +191,9 @@ namespace LeafSQL.UI.Forms
                 return;
             }
 
-            string namespaceName = GetFullNamespaceNameFromNode(contextNode);
+            string SchemaName = GetFullSchemaNameFromNode(contextNode);
 
-            client.DropNamespaceIndexAsync(namespaceName, contextNode.Value.ToString()).ContinueWith((t) =>
+            client.DropSchemaIndexAsync(SchemaName, contextNode.Value.ToString()).ContinueWith((t) =>
             {
                 FormProgress.WaitForVisible();
                 FormProgress.Complete();
@@ -217,13 +217,13 @@ namespace LeafSQL.UI.Forms
         private void ContextMenu_BrowseDocuments(object sender, EventArgs e)
         {
             /*
-            string namespaceName = GetFullNamespaceNameFromNode(contextNode);
+            string SchemaName = GetFullSchemaNameFromNode(contextNode);
 
-            string key = String.Format("BrowseDocuments_{0}", namespaceName);
+            string key = String.Format("BrowseDocuments_{0}", SchemaName);
 
             if (SelectTab(key) == false)
             {
-                AddNewTab(key, contextNode.Text, new Controls.BrowseDocuments(client, namespaceName));
+                AddNewTab(key, contextNode.Text, new Controls.BrowseDocuments(client, SchemaName));
             }
             */
         }
@@ -231,13 +231,13 @@ namespace LeafSQL.UI.Forms
         private void ContextMenu_QueryDocuments(object sender, EventArgs e)
         {
             /*
-            string namespaceName = GetFullNamespaceNameFromNode(contextNode);
+            string SchemaName = GetFullSchemaNameFromNode(contextNode);
 
-            string key = String.Format("QueryDocuments_{0}", namespaceName);
+            string key = String.Format("QueryDocuments_{0}", SchemaName);
 
             if (SelectTab(key) == false)
             {
-                AddNewTab(key, contextNode.Text, new Controls.QueryDocuments(client, namespaceName));
+                AddNewTab(key, contextNode.Text, new Controls.QueryDocuments(client, SchemaName));
             }
             */
         }
@@ -334,16 +334,16 @@ namespace LeafSQL.UI.Forms
             */
         }
 
-        private void ContextMenu_CreateNamespace(object sender, EventArgs e)
+        private void ContextMenu_CreateSchema(object sender, EventArgs e)
         {
             /*
-            using (FormCreateNamespace form = new FormCreateNamespace())
+            using (FormCreateSchema form = new FormCreateSchema())
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    string namespaceName = GetFullNamespaceNameFromNode(contextNode) + "/" + form.NamespaceName;
+                    string SchemaName = GetFullSchemaNameFromNode(contextNode) + "/" + form.SchemaName;
 
-                    client.CreateNamespaceAsync(namespaceName).ContinueWith((t) =>
+                    client.CreateSchemaAsync(SchemaName).ContinueWith((t) =>
                     {
                         FormProgress.WaitForVisible();
                         FormProgress.Complete();
@@ -352,7 +352,7 @@ namespace LeafSQL.UI.Forms
                         {
                             //Success
                             contextNode.Nodes.Clear();
-                            PopulateNamespaces(contextNode, true);
+                            PopulateSchemas(contextNode, true);
                         }
                         else
                         {
@@ -361,7 +361,7 @@ namespace LeafSQL.UI.Forms
 
                     }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
-                    FormProgress.Start("Creating namespace [" + namespaceName + "]...");
+                    FormProgress.Start("Creating Schema [" + SchemaName + "]...");
                 }
             }
             */
@@ -435,62 +435,58 @@ namespace LeafSQL.UI.Forms
             InitializeComponent();
         }
 
-        void PopulateNamespaces(LSDBTreeNode node)
+        void PopulateSchemas(LSTreeNode node)
         {
-            PopulateNamespaces(node, false);
+            PopulateSchemas(node, false);
         }
 
-        void PopulateNamespaces(LSDBTreeNode node, bool populateOneLevelDeeper)
+        void PopulateSchemas(LSTreeNode node, bool populateOneLevelDeeper)
         {
-            /*
-            string namespaceName = GetFullNamespaceNameFromNode(node);
+            string SchemaName = GetFullSchemaNameFromNode(node);
 
-            NamespaceResult result = client.GetNamespaces(namespaceName);
+            var schemas = client.Schema.List(SchemaName);
 
-            foreach (var ns in result.Collection)
+            foreach (var schema in schemas)
             {
-                LSDBTreeNode namespaceNode = new LSDBTreeNode(Types.TreeNodeType.Namespace, ns.Name, ns.Name);
-                LSDBTreeNode indexesNode = new LSDBTreeNode(Types.TreeNodeType.Indexes, "Indexes", "Indexes");
+                LSTreeNode SchemaNode = new LSTreeNode(Types.TreeNodeType.Schema, schema.Name, schema.Name);
+                LSTreeNode indexesNode = new LSTreeNode(Types.TreeNodeType.Indexes, "Indexes", "Indexes");
 
-                namespaceNode.Nodes.Add(indexesNode);
-                node.Nodes.Add(namespaceNode);
+                SchemaNode.Nodes.Add(indexesNode);
+                node.Nodes.Add(SchemaNode);
 
-                PopulateNamespaceIndexes(indexesNode);
+                PopulateSchemaIndexes(indexesNode);
             }
 
             if (populateOneLevelDeeper)
             {
-                foreach (LSDBTreeNode subNode in node.Nodes)
+                foreach (LSTreeNode subNode in node.Nodes)
                 {
-                    if (subNode.Type == Types.TreeNodeType.Namespace)
+                    if (subNode.Type == Types.TreeNodeType.Schema)
                     {
-                        PopulateNamespaces(subNode, false);
+                        PopulateSchemas(subNode, false);
                     }
                 }
             }
-            */
         }
 
-        void PopulateNamespaceIndexes(LSDBTreeNode node)
+        void PopulateSchemaIndexes(LSTreeNode node)
         {
-            /*
             node.Nodes.Clear();
 
-            string namespaceName = GetFullNamespaceNameFromNode(node);
+            string SchemaName = GetFullSchemaNameFromNode(node);
 
-            IndexsResult indexes = client.GetNamespaceIndexes(namespaceName);
-            foreach (Index index in indexes.Collection.OrderBy(o => o.Name))
+            var indexes = client.Schema.Indexes.List(SchemaName);
+            foreach (Index index in indexes.OrderBy(o => o.Name))
             {
-                LSDBTreeNode indexNode = new LSDBTreeNode(Types.TreeNodeType.Index, index.Name);
+                var indexNode = new LSTreeNode(Types.TreeNodeType.Index, index.Name);
 
                 foreach (IndexAttribute attribute in index.Attributes)
                 {
-                    indexNode.Nodes.Add( new LSDBTreeNode(Types.TreeNodeType.IndexAttribute, attribute.Name));
+                    indexNode.Nodes.Add( new LSTreeNode(Types.TreeNodeType.IndexAttribute, attribute.Name));
                 }
 
                 node.Nodes.Add(indexNode);
             }
-            */
         }
 
         void PopulateLogins()
@@ -507,34 +503,34 @@ namespace LeafSQL.UI.Forms
             */
         }
 
-        string GetFullNamespaceNameFromNode(LSDBTreeNode node)
+        string GetFullSchemaNameFromNode(LSTreeNode node)
         {
-            string namespaceName = string.Empty;
+            string SchemaName = string.Empty;
 
-            if (node.Type == Types.TreeNodeType.Namespace)
+            if (node.Type == Types.TreeNodeType.Schema)
             {
-                namespaceName = node.Value.ToString();
+                SchemaName = node.Value.ToString();
             }
 
-            LSDBTreeNode current = (LSDBTreeNode)node.Parent;
+            LSTreeNode current = (LSTreeNode)node.Parent;
 
-            while (current.Type != Types.TreeNodeType.Namespaces)
+            while (current.Type != Types.TreeNodeType.Schemas)
             {
-                if (current.Type == Types.TreeNodeType.Namespace)
+                if (current.Type == Types.TreeNodeType.Schema)
                 {
-                    if (current.Text == "/")
+                    if (current.Text == ":")
                     {
-                        namespaceName = "/" + namespaceName;
+                        SchemaName = ":" + SchemaName;
                     }
                     else
                     {
-                        namespaceName = current.Value.ToString() + "/" + namespaceName;
+                        SchemaName = current.Value.ToString() + ":" + SchemaName;
                     }
                 }
-                current = (LSDBTreeNode)current.Parent;
+                current = (LSTreeNode)current.Parent;
             }
 
-            return namespaceName;
+            return SchemaName;
         }
 
         private void PopulateServerExplorer()
@@ -545,16 +541,16 @@ namespace LeafSQL.UI.Forms
 
             var settings = client.Settings.Get();
 
-            ServerNode = new LSDBTreeNode(Types.TreeNodeType.Server, settings.Name, settings.Name);
+            ServerNode = new LSTreeNode(Types.TreeNodeType.Server, settings.Name, settings.Name);
 
-            NamespacesNode = new LSDBTreeNode(Types.TreeNodeType.Namespaces, "Namespaces", "Namespaces");
-            NamespacesNode.Nodes.Add(new LSDBTreeNode(Types.TreeNodeType.Namespace, "/", "/"));
-            NamespacesNode.Expand();
-            ServerNode.Nodes.Add(NamespacesNode);
-            NamespacesNode.Nodes[0].Expand();
-            PopulateNamespaces((LSDBTreeNode)NamespacesNode.Nodes[0], true);
+            SchemaNode = new LSTreeNode(Types.TreeNodeType.Schemas, "Schemas", "Schemas");
+            SchemaNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Schema, "<root>", ":"));
+            SchemaNode.Expand();
+            ServerNode.Nodes.Add(SchemaNode);
+            SchemaNode.Nodes[0].Expand();
+            PopulateSchemas((LSTreeNode)SchemaNode.Nodes[0], true);
 
-            LoginsNode = new LSDBTreeNode(Types.TreeNodeType.Logins, "Logins");
+            LoginsNode = new LSTreeNode(Types.TreeNodeType.Logins, "Logins");
             LoginsNode.ImageKey = "Logins";
             LoginsNode.Expand();
             ServerNode.Nodes.Add(LoginsNode);

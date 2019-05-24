@@ -1,6 +1,7 @@
 ﻿using LeafSQL.Library.Payloads;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace LeafSQL.Library.Client.Management
 {
@@ -79,15 +80,23 @@ namespace LeafSQL.Library.Client.Management
         /// Lists the existing schemas within a given schema.
         /// </summary>
         /// <param name="schema"></param>
-        public ActionResponseSchemas List(string schema)
+        public List<Payloads.Schema> List(string schema)
         {
             string url = string.Format("api/Schema/{0}/{1}/List", client.Token.SessionId, schema);
 
             using (var response = client.Client.GetAsync(url))
             {
                 string resultText = response.Result.Content.ReadAsStringAsync().Result;
-                return JsonConvert.DeserializeObject<ActionResponseSchemas>(resultText);
+                var result = JsonConvert.DeserializeObject<ActionResponseSchemas>(resultText);
+
+                if (result.Success == false)
+                {
+                    throw new Exception(result.Message);
+                }
+
+                return result.List;
             }
         }
     }
 }
+

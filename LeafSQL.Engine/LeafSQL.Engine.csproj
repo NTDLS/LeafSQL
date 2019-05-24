@@ -73,7 +73,7 @@
     <Compile Include="Indexes\PersistIndexLeaf.cs" />
     <Compile Include="Indexes\PersistIndexAttribute.cs" />
     <Compile Include="Indexes\PersistIndexLeaves.cs" />
-    <Compile Include="Indexes\PersistIndexManager.cs" />
+    <Compile Include="Indexes\IndexManager.cs" />
     <Compile Include="Indexes\PersistIndexPageCatalog.cs" />
     <Compile Include="Indexes\PotentialIndex.cs" />
     <Compile Include="IO\IOManager.cs" />
