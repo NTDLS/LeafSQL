@@ -12,7 +12,7 @@ namespace LeafSQL.TestHarness.ADORepository
 	{        
 		public void Export_Sales_CreditCard()
 		{
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
 
             if(client.Schema.Exists("AdventureWorks2012:Sales:CreditCard"))
 			{

@@ -12,7 +12,7 @@ namespace LeafSQL.TestHarness.ADORepository
 	{        
 		public void Export_Purchasing_PurchaseOrderDetail()
 		{
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
 
             if(client.Schema.Exists("AdventureWorks2012:Purchasing:PurchaseOrderDetail"))
 			{

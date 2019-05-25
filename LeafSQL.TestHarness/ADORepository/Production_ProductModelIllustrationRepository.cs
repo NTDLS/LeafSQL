@@ -12,7 +12,7 @@ namespace LeafSQL.TestHarness.ADORepository
 	{        
 		public void Export_Production_ProductModelIllustration()
 		{
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
 
             if(client.Schema.Exists("AdventureWorks2012:Production:ProductModelIllustration"))
 			{

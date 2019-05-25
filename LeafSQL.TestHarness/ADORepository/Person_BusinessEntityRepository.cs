@@ -12,7 +12,7 @@ namespace LeafSQL.TestHarness.ADORepository
 	{        
 		public void Export_Person_BusinessEntity()
 		{
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "admin");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
 
             if(client.Schema.Exists("AdventureWorks2012:Person:BusinessEntity"))
 			{

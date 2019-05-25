@@ -9,7 +9,7 @@ namespace LeafSQL.TestHarness
     public static partial class Exporter
     {
         public static void ExportAll()
-        {/*
+        {
             (new ADORepository.dbo_AWBuildVersionRepository()).Export_dbo_AWBuildVersion();
             (new ADORepository.dbo_DatabaseLogRepository()).Export_dbo_DatabaseLog();
             (new ADORepository.dbo_ErrorLogRepository()).Export_dbo_ErrorLog();
@@ -53,7 +53,7 @@ namespace LeafSQL.TestHarness
             (new ADORepository.Production_ProductSubcategoryRepository()).Export_Production_ProductSubcategory();
             (new ADORepository.Production_ScrapReasonRepository()).Export_Production_ScrapReason();
             (new ADORepository.Production_TransactionHistoryRepository()).Export_Production_TransactionHistory();
-            */
+
             (new ADORepository.Production_TransactionHistoryArchiveRepository()).Export_Production_TransactionHistoryArchive();
             (new ADORepository.Production_UnitMeasureRepository()).Export_Production_UnitMeasure();
             (new ADORepository.Production_WorkOrderRepository()).Export_Production_WorkOrder();
