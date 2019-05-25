@@ -29,7 +29,7 @@ namespace LeafSQL.Engine.Documents
             {
                 using (var txRef = core.Transactions.Begin(session))
                 {
-                    var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, preparedQuery.Schema, LockOperation.Write);
+                    var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, preparedQuery.Schema, LockOperation.Read);
                     if (schemaMeta == null || schemaMeta.Exists == false)
                     {
                         throw new LeafSQLSchemaDoesNotExistException(preparedQuery.Schema);
@@ -87,17 +87,109 @@ namespace LeafSQL.Engine.Documents
                     fieldList.Insert(0, "#RID");
                 }
 
+                bool hasFieldList = fieldList != null && fieldList.Count > 0;
+
                 var indexSelections = core.Indexes.SelectIndexes(transaction, schemaMeta, conditions);
 
                 Console.WriteLine(indexSelections.UnhandledKeys.Count());
 
-                return;
-
-                /*
+                string documentCatalogDiskPath = Path.Combine(schemaMeta.DiskPath, Constants.DocumentCatalogFile);
 
                 List<List<String>> rowValues = new List<List<string>>();
-                int rowCount = 0;
 
+
+                if (indexSelections.Count == 0)
+                {
+                    var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(transaction, documentCatalogDiskPath, LockOperation.Read);
+
+                    int rowCount = 0;
+
+                    foreach (var documentMeta in documentCatalog.Collection)
+                    {
+                        string documentDiskPath = Path.Combine(schemaMeta.DiskPath, Helpers.GetDocumentModFilePath(documentMeta.Id));
+
+                        PersistDocument persistDocument = core.IO.GetJson<PersistDocument>(transaction, documentDiskPath, LockOperation.Read);
+
+                        JObject jsonContent = JObject.Parse(persistDocument.Content);
+
+                        bool fullAttributeMatch = true;
+
+                        foreach (Condition condition in conditions.Collection)
+                        {
+                            JToken jToken = null;
+
+                            if (jsonContent.TryGetValue(condition.Key, StringComparison.CurrentCultureIgnoreCase, out jToken))
+                            {
+                                if (condition.IsMatch(jToken.ToString().ToLower()) == false)
+                                {
+                                    fullAttributeMatch = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (fullAttributeMatch)
+                        {
+                            List<string> fieldValues = new List<string>();
+
+                            rowCount++;
+                            if (rowLimit > 0 && rowCount > rowLimit)
+                            {
+                                break;
+                            }
+
+                            if (hasFieldList)
+                            {
+                                if (jsonContent == null)
+                                {
+                                    jsonContent = JObject.Parse(persistDocument.Content);
+                                }
+
+                                foreach (string fieldName in fieldList)
+                                {
+                                    if (fieldName == "#RID")
+                                    {
+                                        fieldValues.Add(persistDocument.Id.ToString());
+                                    }
+                                    else
+                                    {
+                                        JToken fieldToken = null;
+                                        if (jsonContent.TryGetValue(fieldName, StringComparison.CurrentCultureIgnoreCase, out fieldToken))
+                                        {
+                                            fieldValues.Add(fieldToken.ToString());
+                                        }
+                                        else
+                                        {
+                                            fieldValues.Add(string.Empty);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //If no fields "*" was specified as the seelct list, just return the content of each document and some metadata.
+                                fieldValues.Add(persistDocument.Id.ToString());
+                                fieldValues.Add(persistDocument.Created.ToString());
+                                fieldValues.Add(persistDocument.Modfied.ToString());
+                                fieldValues.Add(persistDocument.Content);
+                            }
+
+                            rowValues.Add(fieldValues);
+
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO: USe indexes.
+                }
+
+                return;
+
+
+                /*
+                List<List<String>> rowValues = new List<List<string>>();
+                int rowCount = 0;
 
                 using (serverCore.ObjectLocks.Obtain(sessionId, LockType.Namespace, LockAccessType.Read, namespacePath))
                 {

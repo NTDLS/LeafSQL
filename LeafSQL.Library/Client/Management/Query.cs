@@ -15,24 +15,24 @@ namespace LeafSQL.Library.Client.Management
             this.client = client;
         }
 
-        public async Task ExecuteAsync(string statement)
+        public async Task ExecuteNonQueryAsync(string statement)
         {
             var action = new ActionRequestExecuteNonQuery(client.Token.SessionId)
             {
                 Statement = statement
             };
 
-            await SubmitAsync<ActionRequestExecuteNonQuery, IActionResponse>("api/Query/Execute", action);
+            await SubmitAsync<ActionRequestExecuteNonQuery, IActionResponse>("api/Query/ExecuteNonQuery", action);
         }
 
-        public void Execute(string statement)
+        public void ExecuteNonQuery(string statement)
         {
             var action = new ActionRequestExecuteNonQuery(client.Token.SessionId)
             {
                 Statement = statement
             };
 
-            Submit<ActionRequestExecuteNonQuery, IActionResponse>("api/Query/Execute", action);
+            Submit<ActionRequestExecuteNonQuery, IActionResponse>("api/Query/ExecuteNonQuery", action);
         }
     }
 }

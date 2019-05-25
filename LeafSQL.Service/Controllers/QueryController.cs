@@ -11,7 +11,7 @@ namespace LeafSQL.Service.Controllers
     public class QueryController : ApiController
     {
         [HttpPost]
-        public IActionResponse Execute([FromBody]ActionRequestExecuteNonQuery action)
+        public IActionResponse ExecuteNonQuery([FromBody]ActionRequestExecuteNonQuery action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -21,9 +21,7 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                var statement = JsonConvert.DeserializeObject<string>(action.Statement);
-
-                Program.Core.Query.Execute(session, statement);
+                Program.Core.Query.Execute(session, action.Statement);
 
                 result.Success = true;
             }

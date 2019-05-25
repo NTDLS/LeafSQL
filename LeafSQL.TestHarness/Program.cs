@@ -16,18 +16,18 @@ namespace LeafSQL.TestHarness
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             Console.WriteLine("{0} v{1}", fileVersionInfo.FileDescription, fileVersionInfo.ProductVersion);
 
-            Exporter.ExportAll();
-            TestCreateAllAdventureWorks2012Indexes();
+            //Exporter.ExportAll();
+            //TestCreateAllAdventureWorks2012Indexes();
             //TestServerStress();
 
             //TestCreateIndexAddDocuments();
             //TestAddDocumentsCreateIndex();
             //TestIndexDocumentDeletion();
 
-            //LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "username", "password");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
 
-            //string query = "SELECT TOP 100 ProductID, Name, ModifiedDate FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 Color = 'Silver'";
-            //client.Query.Execute(query);
+            string query = "SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'";
+            client.Query.ExecuteNonQuery(query);
 
             Console.WriteLine("Complete");
             Console.ReadLine();

@@ -280,6 +280,8 @@ namespace LeafSQL.Engine.Query
                 }
             }
 
+            result.Conditions.MakeLowerCase();
+
             return result;
         }
 
@@ -426,8 +428,6 @@ namespace LeafSQL.Engine.Query
                     conditions.Add(condition);
                 }
             }
-
-            conditions.MakeLowerCase();
 
             return conditions;
         }
