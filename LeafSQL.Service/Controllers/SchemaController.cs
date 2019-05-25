@@ -17,15 +17,15 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public ActionResponseSchemas List([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             ActionResponseSchemas result = new ActionResponseSchemas();
 
             try
             {
-                var persistSchemas = Program.Core.Schemas.GetList(processId, action.SchemaName);
+                var persistSchemas = Program.Core.Schemas.GetList(session, action.SchemaName);
 
                 foreach (var persistSchema in persistSchemas)
                 {
@@ -50,15 +50,15 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public IActionResponse Create([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();
 
             try
             {
-                Program.Core.Schemas.Create(processId, action.SchemaName);
+                Program.Core.Schemas.Create(session, action.SchemaName);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -77,15 +77,15 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public ActionResponseBoolean Exists([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             ActionResponseBoolean result = new ActionResponseBoolean();
 
             try
             {
-                result.Value = Program.Core.Schemas.Exists(processId, action.SchemaName);
+                result.Value = Program.Core.Schemas.Exists(session, action.SchemaName);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -104,15 +104,15 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public IActionResponse Drop([FromBody]ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();
 
             try
             {
-                Program.Core.Schemas.Drop(processId, action.SchemaName);
+                Program.Core.Schemas.Drop(session, action.SchemaName);
                 result.Success = true;
             }
             catch (Exception ex)

@@ -13,8 +13,8 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public IActionResponse Execute([FromBody]ActionRequestExecuteNonQuery action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             var result = new ActionResponseId();
@@ -23,7 +23,7 @@ namespace LeafSQL.Service.Controllers
             {
                 var statement = JsonConvert.DeserializeObject<string>(action.Statement);
 
-                Program.Core.Query.Execute(processId, statement);
+                Program.Core.Query.Execute(session, statement);
 
                 result.Success = true;
             }

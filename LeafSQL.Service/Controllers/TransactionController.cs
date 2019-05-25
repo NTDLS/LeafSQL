@@ -12,15 +12,15 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public IActionResponse Begin([FromBody]ActionGeneric action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();
 
             try
             {
-                Program.Core.Transactions.Begin(processId, true);
+                Program.Core.Transactions.Begin(session, true);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -34,15 +34,15 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public IActionResponse Commit([FromBody]ActionGeneric action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();
 
             try
             {
-                Program.Core.Transactions.Commit(processId);
+                Program.Core.Transactions.Commit(session);
                 result.Success = true;
             }
             catch (Exception ex)
@@ -56,15 +56,15 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public IActionResponse Rollback([FromBody]ActionGeneric action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();
 
             try
             {
-                Program.Core.Transactions.Rollback(processId);
+                Program.Core.Transactions.Rollback(session);
                 result.Success = true;
             }
             catch (Exception ex)

@@ -7,6 +7,7 @@ using LeafSQL.Engine.Locking;
 using LeafSQL.Engine.Logging;
 using LeafSQL.Engine.Query;
 using LeafSQL.Engine.Schemas;
+using LeafSQL.Engine.Security;
 using LeafSQL.Engine.Sessions;
 using LeafSQL.Engine.Transactions;
 using System.Diagnostics;

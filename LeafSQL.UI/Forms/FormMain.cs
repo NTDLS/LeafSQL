@@ -487,9 +487,9 @@ namespace LeafSQL.UI.Forms
 
             var logins = client.Security.GetLogins();
 
-            foreach (var login in logins.OrderBy(o => o.Username))
+            foreach (var login in logins.OrderBy(o => o.Name))
             {
-                LoginsNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Login, login.Username, login.Id));
+                LoginsNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Login, login.Name, login.Id));
             }
         }
 

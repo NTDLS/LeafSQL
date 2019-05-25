@@ -15,6 +15,7 @@ using LeafSQL.Engine.Documents;
 using LeafSQL.Engine.Exceptions;
 using System.Threading;
 using LeafSQL.Engine.Query;
+using LeafSQL.Engine.Sessions;
 
 namespace LeafSQL.Engine.Indexes
 {
@@ -91,12 +92,12 @@ namespace LeafSQL.Engine.Indexes
             return indexSelections;
         }
 
-        public List<Library.Payloads.Models.Index> List(UInt64 processId, string schema)
+        public List<Library.Payloads.Models.Index> List(Session session, string schema)
         {
             var result = new List<Library.Payloads.Models.Index>();
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta != null && schemaMeta.Exists)
@@ -116,7 +117,7 @@ namespace LeafSQL.Engine.Indexes
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to list indexes for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to list indexes for process {0}.", session.ProcessId), ex);
                 throw;
             }
 
@@ -124,12 +125,12 @@ namespace LeafSQL.Engine.Indexes
         }
 
 
-        public bool Exists(UInt64 processId, string schema, string indexName)
+        public bool Exists(Session session, string schema, string indexName)
         {
             bool result = false;
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta != null && schemaMeta.Exists)
@@ -146,14 +147,14 @@ namespace LeafSQL.Engine.Indexes
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to create index for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to create index for process {0}.", session.ProcessId), ex);
                 throw;
             }
 
             return result;
         }
 
-        public void Create(UInt64 processId, string schema, Library.Payloads.Models.Index index, out Guid newId)
+        public void Create(Session session, string schema, Library.Payloads.Models.Index index, out Guid newId)
         {
             try
             {
@@ -172,7 +173,7 @@ namespace LeafSQL.Engine.Indexes
                     persistIndex.Modfied = DateTime.UtcNow;
                 }
 
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -196,16 +197,16 @@ namespace LeafSQL.Engine.Indexes
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to create index for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to create index for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
-        public void DeleteById(UInt64 processId, string schema, Guid indexId)
+        public void DeleteById(Session session, string schema, Guid indexId)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -232,16 +233,16 @@ namespace LeafSQL.Engine.Indexes
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to create index for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to create index for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
-        public void DeleteByName(UInt64 processId, string schema, string indexName)
+        public void DeleteByName(Session session, string schema, string indexName)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -268,17 +269,17 @@ namespace LeafSQL.Engine.Indexes
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to create index for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to create index for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
 
-        public void Rebuild(UInt64 processId, string schema, string indexName)
+        public void Rebuild(Session session, string schema, string indexName)
         {
             try
             {           
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -303,7 +304,7 @@ namespace LeafSQL.Engine.Indexes
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to rebuild index for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to rebuild index for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }

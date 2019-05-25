@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LeafSQL.Engine.Sessions
 {
@@ -9,27 +10,35 @@ namespace LeafSQL.Engine.Sessions
 
         private UInt64 nextProcessId = 1;
 
-        public Dictionary<Guid, UInt64> Collection { get; set; }
+        public List<Session> Collection { get; set; }
 
         public SessionManager(Core core)
         {
             this.core = core;
-            Collection = new Dictionary<Guid, ulong>();
+            Collection = new List<Session>();
         }
 
-        public UInt64 LoginSession(Guid sessionId)
+        public Session LoginSession(Guid loginId, Guid sessionId)
         {
             lock (Collection)
             {
-                if (Collection.ContainsKey(sessionId))
+                var session = Collection.Where(o => o.SessionId == sessionId).FirstOrDefault();
+                if (session != null)
                 {
-                    return Collection[sessionId];
+                    return session;
                 }
                 else
                 {
-                    UInt64 processId = nextProcessId++;
-                    Collection.Add(sessionId, processId);
-                    return processId;
+                    session = new Session()
+                    {
+                        LoginId = loginId,
+                        SessionId = sessionId,
+                        ProcessId = nextProcessId++
+                    };
+
+                    Collection.Add(session);
+
+                    return session;
                 }
             }
         }
@@ -38,20 +47,22 @@ namespace LeafSQL.Engine.Sessions
         {
             lock (Collection)
             {
-                if (Collection.ContainsKey(sessionId))
+                var session = Collection.Where(o => o.SessionId == sessionId).FirstOrDefault();
+                if(session != null)
                 {
-                    Collection.Remove(sessionId);
+                    Collection.Remove(session);
                 }
             }
         }
 
-        public UInt64 SessionIdToProcessId(Guid sessionId)
+        public Session GetSession(Guid sessionId)
         {
             lock (Collection)
             {
-                if (Collection.ContainsKey(sessionId))
+                var session = Collection.Where(o => o.SessionId == sessionId).FirstOrDefault();
+                if (session != null)
                 {
-                    return Collection[sessionId];
+                    return session;
                 }
                 else
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeafSQL.Engine.Sessions;
+using System;
 
 namespace LeafSQL.Engine.Query
 {
@@ -11,17 +12,17 @@ namespace LeafSQL.Engine.Query
             this.core = core;
         }
 
-        public void Execute(UInt64 processId, string statement)
+        public void Execute(Session session, string statement)
         {
             var preparedQuery = ParserEngine.ParseQuery(statement);
-            Execute(processId, preparedQuery);
+            Execute(session, preparedQuery);
         }
 
-        public void Execute(UInt64 processId, PreparedQuery preparedQuery)
+        public void Execute(Session session, PreparedQuery preparedQuery)
         {
             if (preparedQuery.QueryType == Constants.QueryType.Select)
             {
-                core.Documents.ExecuteSelect(processId, preparedQuery);
+                core.Documents.ExecuteSelect(session, preparedQuery);
             }
         }
     }

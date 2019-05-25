@@ -59,6 +59,7 @@
     <Compile Include="Documents\DocumentManager.cs" />
     <Compile Include="Exceptions\LeafSQLDuplicateObjectException.cs" />
     <Compile Include="Exceptions\LeafSQLIndexDoesNotExistException.cs" />
+    <Compile Include="Exceptions\LeafSQLInvalidUsernameOrPassword.cs" />
     <Compile Include="Exceptions\LeafSQLSchemaDoesNotExistException.cs" />
     <Compile Include="Exceptions\LeafSQLDuplicateKeyViolation.cs" />
     <Compile Include="Exceptions\LeafSQLInvalidSchemaException.cs" />
@@ -103,7 +104,10 @@
     <Compile Include="Documents\PersistDocumentMeta.cs" />
     <Compile Include="Schemas\SchemaManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\PersistLogin.cs" />
+    <Compile Include="Security\PersistLoginCatalog.cs" />
     <Compile Include="Security\SecurityManager.cs" />
+    <Compile Include="Sessions\Session.cs" />
     <Compile Include="Sessions\SessionManager.cs" />
     <Compile Include="Transactions\DeferredDiskIO.cs" />
     <Compile Include="Transactions\DeferredDiskIOObject.cs" />

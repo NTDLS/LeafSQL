@@ -1,13 +1,14 @@
-﻿using System;
+﻿using LeafSQL.Engine.Documents;
+using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Indexes;
+using LeafSQL.Engine.Sessions;
+using LeafSQL.Engine.Transactions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using static LeafSQL.Engine.Constants;
-using LeafSQL.Engine.Transactions;
-using LeafSQL.Engine.Exceptions;
-using LeafSQL.Engine.Indexes;
-using LeafSQL.Engine.Documents;
 
 namespace LeafSQL.Engine.Schemas
 {
@@ -158,11 +159,11 @@ namespace LeafSQL.Engine.Schemas
             }
         }
 
-        public List<PersistSchema> GetList(UInt64 processId, string schema)
+        public List<PersistSchema> GetList(Session session, string schema)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     PersistSchema schemaMeta = VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -187,16 +188,16 @@ namespace LeafSQL.Engine.Schemas
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to get namespace list for session {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to get namespace list for session {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
-        private void CreateSingle(UInt64 processId, string schema)
+        private void CreateSingle(Session session, string schema)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     Guid newSchemaId = Guid.NewGuid();
 
@@ -260,7 +261,7 @@ namespace LeafSQL.Engine.Schemas
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to create single namespace for session {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to create single namespace for session {0}.", session.ProcessId), ex);
                 throw;
             }
         }
@@ -269,7 +270,7 @@ namespace LeafSQL.Engine.Schemas
         /// Creates a structure of namespaces, denotaed by colons.
         /// </summary>
         /// <param name="namespacePath"></param>
-        public void Create(UInt64 processId, string schemaPath)
+        public void Create(Session session, string schemaPath)
         {
             try
             {
@@ -280,13 +281,13 @@ namespace LeafSQL.Engine.Schemas
                 foreach (string name in segments)
                 {
                     pathBuilder.Append(name);
-                    CreateSingle(processId, pathBuilder.ToString());
+                    CreateSingle(session, pathBuilder.ToString());
                     pathBuilder.Append(":");
                 }
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to create namespace lineage for session {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to create namespace lineage for session {0}.", session.ProcessId), ex);
                 throw;
             }
         }
@@ -295,13 +296,13 @@ namespace LeafSQL.Engine.Schemas
         /// Returns true if the schema exists.
         /// </summary>
         /// <param name="namespacePath"></param>
-        public bool Exists(UInt64 processId, string schemaPath)
+        public bool Exists(Session session, string schemaPath)
         {
             try
             {
                 bool result = false;
 
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var segments = schemaPath.Split(':');
 
@@ -328,7 +329,7 @@ namespace LeafSQL.Engine.Schemas
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to confirm namespace for session {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to confirm namespace for session {0}.", session.ProcessId), ex);
                 throw;
             }
         }
@@ -337,11 +338,11 @@ namespace LeafSQL.Engine.Schemas
         /// Drops a single namespace or an entire namespace path.
         /// </summary>
         /// <param name="schema"></param>
-        public void Drop(UInt64 processId, string schema)
+        public void Drop(Session session, string schema)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var segments = schema.Split(':');
                     string schemaName = segments[segments.Count() - 1];
@@ -372,7 +373,7 @@ namespace LeafSQL.Engine.Schemas
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to drop namespace for session {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to drop namespace for session {0}.", session.ProcessId), ex);
                 throw;
             }
         }

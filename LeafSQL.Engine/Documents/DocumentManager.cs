@@ -10,6 +10,7 @@ using LeafSQL.Engine.Query;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using LeafSQL.Engine.Transactions;
+using LeafSQL.Engine.Sessions;
 
 namespace LeafSQL.Engine.Documents
 {
@@ -22,11 +23,11 @@ namespace LeafSQL.Engine.Documents
             this.core = core;
         }
 
-        public void ExecuteSelect(UInt64 processId, PreparedQuery preparedQuery)
+        public void ExecuteSelect(Session session, PreparedQuery preparedQuery)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, preparedQuery.Schema, LockOperation.Write);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -62,7 +63,7 @@ namespace LeafSQL.Engine.Documents
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to delete document by ID for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to delete document by ID for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
@@ -451,7 +452,7 @@ namespace LeafSQL.Engine.Documents
 
         }
 
-        public void Store(UInt64 processId, string schema, Library.Payloads.Models.Document document, out Guid newId)
+        public void Store(Session session, string schema, Library.Payloads.Models.Document document, out Guid newId)
         {
             try
             {
@@ -470,7 +471,7 @@ namespace LeafSQL.Engine.Documents
                     persistDocument.Modfied = DateTime.UtcNow;
                 }
 
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Write);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -497,16 +498,16 @@ namespace LeafSQL.Engine.Documents
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to store document for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to store document for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
-        public void DeleteById(UInt64 processId, string schema, Guid newId)
+        public void DeleteById(Session session, string schema, Guid newId)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     var schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Write);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -537,16 +538,16 @@ namespace LeafSQL.Engine.Documents
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to delete document by ID for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to delete document by ID for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
-        public List<PersistDocumentMeta> EnumerateCatalog(UInt64 processId, string schema)
+        public List<PersistDocumentMeta> EnumerateCatalog(Session session, string schema)
         {
             try
             {
-                using (var txRef = core.Transactions.Begin(processId))
+                using (var txRef = core.Transactions.Begin(session))
                 {
                     PersistSchema schemaMeta = core.Schemas.VirtualPathToMeta(txRef.Transaction, schema, LockOperation.Read);
                     if (schemaMeta == null || schemaMeta.Exists == false)
@@ -571,7 +572,7 @@ namespace LeafSQL.Engine.Documents
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to get catalog for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to get catalog for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }

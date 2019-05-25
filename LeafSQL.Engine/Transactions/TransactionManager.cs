@@ -1,8 +1,9 @@
-﻿using System;
+﻿using LeafSQL.Engine.Sessions;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace LeafSQL.Engine.Transactions
 {
@@ -89,16 +90,16 @@ namespace LeafSQL.Engine.Transactions
         /// </summary>
         /// <param name="processId"></param>
         /// <returns></returns>
-        public TransactionReference Begin(UInt64 processId, bool isLongLived)
+        public TransactionReference Begin(Session session, bool isLongLived)
         {
             try
             {
                 lock (Collection)
                 {
-                    Transaction transaction = GetByProcessId(processId);
+                    Transaction transaction = GetByProcessId(session.ProcessId);
                     if (transaction == null)
                     {
-                        transaction = new Transaction(core, this, processId, false)
+                        transaction = new Transaction(core, this, session.ProcessId, false)
                         {
                             IsLongLived = isLongLived
                         };
@@ -113,21 +114,21 @@ namespace LeafSQL.Engine.Transactions
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to begin transaction for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to begin transaction for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
-        public TransactionReference Begin(UInt64 processId)
+        public TransactionReference Begin(Session session)
         {
-            return Begin(processId, false);
+            return Begin(session, false);
         }
 
-        public void Commit(UInt64 processId)
+        public void Commit(Session session)
         {
             try
             {
-                var transaction = GetByProcessId(processId);
+                var transaction = GetByProcessId(session.ProcessId);
                 if (transaction != null)
                 {
                     transaction.Commit();
@@ -135,16 +136,16 @@ namespace LeafSQL.Engine.Transactions
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to commit transaction for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to commit transaction for process {0}.", session.ProcessId), ex);
                 throw;
             }
         }
 
-        public void Rollback(UInt64 processId)
+        public void Rollback(Session session)
         {
             try
             {
-                var transaction = GetByProcessId(processId);
+                var transaction = GetByProcessId(session.ProcessId);
                 if (transaction != null)
                 {
                     transaction.Rollback();
@@ -152,7 +153,7 @@ namespace LeafSQL.Engine.Transactions
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to rollback transaction for process {0}.", processId), ex);
+                core.Log.Write(String.Format("Failed to rollback transaction for process {0}.", session.ProcessId), ex);
                 throw;
             }
 

@@ -1,4 +1,5 @@
-﻿using LeafSQL.Library;
+﻿using LeafSQL.Engine.Sessions;
+using LeafSQL.Library;
 using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
@@ -18,11 +19,11 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public ActionResponseDocuments List([FromBody] ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            Session session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            var persistCatalog = Program.Core.Documents.EnumerateCatalog(processId, action.SchemaName);
+            var persistCatalog = Program.Core.Documents.EnumerateCatalog(session, action.SchemaName);
 
             var result = new ActionResponseDocuments();
 
@@ -37,8 +38,8 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public ActionResponseId Store([FromBody] ActionRequestStoreDocument action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             var result = new ActionResponseId();
@@ -47,7 +48,7 @@ namespace LeafSQL.Service.Controllers
             {
                 Guid newId = Guid.Empty;
 
-                Program.Core.Documents.Store(processId, action.SchemaName, action.Object, out newId);
+                Program.Core.Documents.Store(session, action.SchemaName, action.Object, out newId);
 
                 result.Id = newId;
                 result.Success = true;
@@ -68,16 +69,16 @@ namespace LeafSQL.Service.Controllers
         [HttpPost]
         public IActionResponse DeleteById([FromBody] ActionGenericObject action)
         {
-            UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
+            var session = Program.Core.Sessions.GetSession(action.SessionId);
 
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", processId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();
 
             try
             {
-                Program.Core.Documents.DeleteById(processId, action.SchemaName, action.ObjectId);
+                Program.Core.Documents.DeleteById(session, action.SchemaName, action.ObjectId);
                 result.Success = true;
             }
             catch (Exception ex)

@@ -23,8 +23,11 @@ namespace LeafSQL.Service.Controllers
                 Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-                result.SessionId = Program.Core.Security.Login(action.Username, action.PasswordHash);
-                result.ProcessId = Program.Core.Sessions.SessionIdToProcessId(result.SessionId);
+                var session = Program.Core.Security.Login(action.Username, action.PasswordHash);
+
+                result.SessionId = session.SessionId;
+                result.LoginId = session.LoginId;
+                result.ProcessId = session.ProcessId;
                 result.Success = true;
             }
             catch (Exception ex)
@@ -68,12 +71,15 @@ namespace LeafSQL.Service.Controllers
                 Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-                result.List = new List<Login>(); //TODO: Implment users/roles.
+                result.List = new List<Login>();
 
-                result.List.Add(new Login() { Id = Guid.NewGuid(), Username = "admin" });
-                result.List.Add(new Login() { Id = Guid.NewGuid(), Username = "Dummy1" });
-                result.List.Add(new Login() { Id = Guid.NewGuid(), Username = "Dummy2" });
-                result.List.Add(new Login() { Id = Guid.NewGuid(), Username = "Dummy3" });
+                lock (Program.Core.Security.Catalog.Collection)
+                {
+                    foreach (var login in Program.Core.Security.Catalog.Collection)
+                    {
+                        result.List.Add(login.ToPayload());
+                    }
+                }
 
                 result.Success = true;
             }

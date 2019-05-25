@@ -17,8 +17,8 @@ namespace LeafSQL.Service.Controllers
 
             try
             {
-                UInt64 processId = Program.Core.Sessions.SessionIdToProcessId(action.SessionId);
-                Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
+                var session = Program.Core.Sessions.GetSession(action.SessionId);
+                Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
                 result.Settings = Program.Core.Settings;
