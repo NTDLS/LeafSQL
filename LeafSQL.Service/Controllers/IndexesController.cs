@@ -15,7 +15,7 @@ namespace LeafSQL.Service.Controllers
         public ActionResponseId Create([FromBody] ActionRequestCreateIndex action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             var result = new ActionResponseId();
@@ -50,7 +50,7 @@ namespace LeafSQL.Service.Controllers
         public IActionResponse DeleteByName([FromBody] ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new ActionResponseBoolean();
@@ -76,7 +76,7 @@ namespace LeafSQL.Service.Controllers
         public IActionResponse RebuildByName([FromBody] ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new ActionResponseBoolean();
@@ -103,7 +103,7 @@ namespace LeafSQL.Service.Controllers
         public ActionResponseBoolean ExistsByName([FromBody] ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             ActionResponseBoolean result = new ActionResponseBoolean();
@@ -129,7 +129,7 @@ namespace LeafSQL.Service.Controllers
         public ActionResponseIndexes List([FromBody] ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             var result = new ActionResponseIndexes();

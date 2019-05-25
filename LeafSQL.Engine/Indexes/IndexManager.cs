@@ -622,7 +622,7 @@ namespace LeafSQL.Engine.Indexes
             {
                 threadMod = param.State.ThreadsStarted;
                 param.State.ThreadsStarted++;
-                Thread.CurrentThread.Name = "RebuildIndexItemThreadProc_" + param.State.ThreadsStarted;
+                Thread.CurrentThread.Name = $"IDXTHD_{param.Transaction.Session.InstanceKey}_{param.State.ThreadsStarted}";
                 param.Initialized.Set();
             }
 
@@ -649,7 +649,7 @@ namespace LeafSQL.Engine.Indexes
         /// <param name="transaction"></param>
         /// <param name="schemaMeta"></param>
         /// <param name="indexMeta"></param>
-        private void RebuildIndex(Transaction transaction,  PersistSchema schemaMeta, PersistIndex indexMeta)
+        private void RebuildIndex(Transaction transaction, PersistSchema schemaMeta, PersistIndex indexMeta)
         {
             try
             {

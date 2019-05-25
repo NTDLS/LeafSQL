@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using static LeafSQL.Engine.Constants;
 using System.Text.RegularExpressions;
+using LeafSQL.Engine.Sessions;
 
 namespace LeafSQL.Engine.Transactions
 {
@@ -20,6 +21,14 @@ namespace LeafSQL.Engine.Transactions
         public List<ObjectLockKey> HeldLockKeys { get; set; }
         public bool IsLongLived { get; set; } //True if the transaction was created by the user, otherwise false;
         public DeferredDiskIO DeferredIOs { get; set; }
+
+        public Session Session
+        {
+            get
+            {
+                return core.Sessions.GetSession(this.ProcessId);
+            }
+        }
 
         private Core core;
         private TransactionManager transactionManager;

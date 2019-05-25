@@ -20,7 +20,7 @@ namespace LeafSQL.Service.Controllers
         public ActionResponseDocuments List([FromBody] ActionGenericObject action)
         {
             Session session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             var persistCatalog = Program.Core.Documents.EnumerateCatalog(session, action.SchemaName);
@@ -39,7 +39,7 @@ namespace LeafSQL.Service.Controllers
         public ActionResponseId Store([FromBody] ActionRequestStoreDocument action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             var result = new ActionResponseId();
@@ -71,7 +71,7 @@ namespace LeafSQL.Service.Controllers
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
 
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();

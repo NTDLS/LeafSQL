@@ -18,7 +18,7 @@ namespace LeafSQL.Service.Controllers
         public ActionResponseSchemas List([FromBody]ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             ActionResponseSchemas result = new ActionResponseSchemas();
@@ -51,7 +51,7 @@ namespace LeafSQL.Service.Controllers
         public IActionResponse Create([FromBody]ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();
@@ -78,7 +78,7 @@ namespace LeafSQL.Service.Controllers
         public ActionResponseBoolean Exists([FromBody]ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             ActionResponseBoolean result = new ActionResponseBoolean();
@@ -105,7 +105,7 @@ namespace LeafSQL.Service.Controllers
         public IActionResponse Drop([FromBody]ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             IActionResponse result = new IActionResponse();

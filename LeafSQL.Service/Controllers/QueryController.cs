@@ -14,7 +14,7 @@ namespace LeafSQL.Service.Controllers
         public IActionResponse Execute([FromBody]ActionRequestExecuteNonQuery action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
-            Thread.CurrentThread.Name = string.Format("API:{0}:{1}", session.ProcessId, Utility.GetCurrentMethod());
+            Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
             var result = new ActionResponseId();

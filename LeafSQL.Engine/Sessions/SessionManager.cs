@@ -55,6 +55,22 @@ namespace LeafSQL.Engine.Sessions
             }
         }
 
+        public Session GetSession(UInt64 processId)
+        {
+            lock (Collection)
+            {
+                var session = Collection.Where(o => o.ProcessId == processId).FirstOrDefault();
+                if (session != null)
+                {
+                    return session;
+                }
+                else
+                {
+                    throw new Exception("The sesson was not found because either the user has not logged in or the session has expired.");
+                }
+            }
+        }
+
         public Session GetSession(Guid sessionId)
         {
             lock (Collection)
