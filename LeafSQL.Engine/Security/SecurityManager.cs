@@ -62,7 +62,7 @@ namespace LeafSQL.Engine.Security
                 throw new Exceptions.LeafSQLInvalidUsernameOrPassword();
             }
 
-            return core.Sessions.LoginSession(sessionId, foundLogin.Id);
+            return core.Sessions.LoginSession(foundLogin.Id, sessionId);
         }
 
         /// <summary>
