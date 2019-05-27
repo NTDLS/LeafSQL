@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using LeafSQL.Engine.Transactions;
 using LeafSQL.Engine.Sessions;
 using LeafSQL.Library.Payloads.Models;
+using LeafSQL.Engine.Indexes;
 
 namespace LeafSQL.Engine.Documents
 {
@@ -177,268 +178,142 @@ namespace LeafSQL.Engine.Documents
                 }
                 else
                 {
-                    throw new LeafSQLExecutionException("Indexed operarions are not implemented");
+                    foreach (var selectedIndex in indexSelections)
+                    {
+                        var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, selectedIndex.Index.DiskPath, LockOperation.Read);
+
+                        Console.WriteLine(selectedIndex.Index.DiskPath);
+
+
+                    }
+
                 }
 
-                return results;
+                return null;
 
                 /*
-                List<List<String>> rowValues = new List<List<string>>();
-                int rowCount = 0;
+                var indexCatalog = GetIndexCatalog(txRef.Transaction, schemaMeta, LockOperation.Write);
+                indexCatalog.Add(persistIndex);
+                core.IO.PutJson(txRef.Transaction, indexCatalog.DiskPath, indexCatalog);
 
-                using (serverCore.ObjectLocks.Obtain(sessionId, LockType.Namespace, LockAccessType.Read, namespacePath))
-                {
-                    IndexSelections indexSelections = serverCore.IndexOperations.SelectIndex(namespacePath, conditions, explanation);
+                persistIndex.DiskPath = Path.Combine(schemaMeta.DiskPath, MakeIndexFileName(index.Name));
+                core.IO.PutPBuf(txRef.Transaction, persistIndex.DiskPath, new PersistIndexPageCatalog());
 
-                    if (indexSelections != null && indexSelections.Count > 0)
+
+
+                List<int> intersectedDocuments = new List<int>();
+                    bool firstLookup = true;
+
+                    foreach (var indexSelection in indexSelections)
                     {
-                        #region Index Scan, this is going to be quick!
+                        string indexPageCatalogFileName = Utility.MakePath(serverCore.Configuration.NamespacesPath, namespacePath, indexSelection.Index.Filename);
+                        PersistIndexPageCatalog IndexPageCatalog = serverCore.IO.DeserializeFromProtoBufFile<PersistIndexPageCatalog>(indexPageCatalogFileName);
 
-                        List<int> intersectedDocuments = new List<int>();
-                        bool firstLookup = true;
+                        List<Condition> keyValues = new List<Condition>();
 
-                        foreach (var indexSelection in indexSelections)
+                        foreach (string attributeName in indexSelection.HandledKeyNames)
                         {
-                            string indexPageCatalogFileName = Utility.MakePath(serverCore.Configuration.NamespacesPath, namespacePath, indexSelection.Index.Filename);
-                            PersistIndexPageCatalog IndexPageCatalog = serverCore.IO.DeserializeFromProtoBufFile<PersistIndexPageCatalog>(indexPageCatalogFileName);
-
-                            List<Condition> keyValues = new List<Condition>();
-
-                            foreach (string attributeName in indexSelection.HandledKeyNames)
-                            {
-                                keyValues.Add((from o in conditions.Collection where o.Key == attributeName select o).First());
-                            }
-
-                            List<int> foundIndexPages = null;
-
-                            //Get all index pages that match the key values.
-                            if (indexSelection.Index.Attributes.Count == keyValues.Count)
-                            {
-                                if (indexSelection.Index.IndexType == IndexType.Unique)
-                                {
-                                    planExplanationNode.Operation = PlanOperation.FullUniqueIndexMatchScan;
-                                }
-                                else
-                                {
-                                    planExplanationNode.Operation = PlanOperation.FullIndexMatchScan;
-                                }
-
-                                foundIndexPages = IndexPageCatalog.FindDocuments(keyValues, planExplanationNode);
-                            }
-                            else
-                            {
-                                planExplanationNode.Operation = PlanOperation.PartialIndexMatchScan;
-                                foundIndexPages = IndexPageCatalog.FindDocuments(keyValues, planExplanationNode);
-                            }
-
-                            //By default, FindPagesByPartialKey and FindPageByExactKey report ResultingNodes in "pages". Convert to documents.
-                            planExplanationNode.ResultingNodes = foundIndexPages.Count;
-
-                            if (firstLookup)
-                            {
-                                firstLookup = false;
-                                //If we do not currently have any items in the result, then add the ones we just found.
-                                intersectedDocuments.AddRange(foundIndexPages);
-                            }
-                            else
-                            {
-                                //Each time we do a subsequent lookup, find the intersection of the IDs from
-                                //  this lookup and the previous looksup and make it our result.
-                                //In this way, we continue to limit down the resulting rows by each subsequent index lookup.
-                                intersectedDocuments = foundIndexPages.Intersect(intersectedDocuments).ToList();
-                            }
-
-                            planExplanationNode.IntersectedNodes = intersectedDocuments.Count;
-                            planExplanationNode.Duration = explainStepDuration.Elapsed;
-                            explanation.Steps.Add(planExplanationNode);
-
-                            if (intersectedDocuments.Count == 0)
-                            {
-                                break; //Early termination, all rows eliminated.
-                            }
+                            keyValues.Add((from o in conditions.Collection where o.Key == attributeName select o).First());
                         }
 
-                        List<Document> resultDocuments = new List<Document>();
+                        List<int> foundIndexPages = null;
 
-                        var unindexedConditions = conditions.Collection.Where(p => indexSelections.UnhandledKeys.Any(p2 => p2 == p.Key)).ToList();
-
-                        bool foundKey = false;
-                        Stopwatch documentScanExplanationDuration = new Stopwatch();
-
-                        PlanExplanationNode documentScanExplanationNode = null;
-
-                        if (unindexedConditions.Count == 0 || intersectedDocuments.Count == 0)
+                        //Get all index pages that match the key values.
+                        if (indexSelection.Index.Attributes.Count == keyValues.Count)
                         {
-                            foundKey = true;
+                            if (indexSelection.Index.IndexType == IndexType.Unique)
+                            {
+                                planExplanationNode.Operation = PlanOperation.FullUniqueIndexMatchScan;
+                            }
+                            else
+                            {
+                                planExplanationNode.Operation = PlanOperation.FullIndexMatchScan;
+                            }
+
+                            foundIndexPages = IndexPageCatalog.FindDocuments(keyValues, planExplanationNode);
                         }
                         else
                         {
-                            documentScanExplanationDuration.Start();
-                            documentScanExplanationNode = new PlanExplanationNode()
-                            {
-                                CoveredAttributes = (from o in unindexedConditions select o.Key).ToList(),
-                                Operation = PlanOperation.DocumentScan
-                            };
+                            planExplanationNode.Operation = PlanOperation.PartialIndexMatchScan;
+                            foundIndexPages = IndexPageCatalog.FindDocuments(keyValues, planExplanationNode);
                         }
 
-                        foreach (int documentId in intersectedDocuments)
+                        //By default, FindPagesByPartialKey and FindPageByExactKey report ResultingNodes in "pages". Convert to documents.
+                        planExplanationNode.ResultingNodes = foundIndexPages.Count;
+
+                        if (firstLookup)
                         {
-                            if (documentScanExplanationNode != null)
-                            {
-                                documentScanExplanationNode.ScannedNodes++;
-                            }
-
-                            string persistDocumentFile = Utility.MakePath(serverCore.Configuration.NamespacesPath,
-                                namespacePath,
-                                PersistIndexPageCatalog.DocumentFileName(documentId));
-
-                            timer.Restart();
-                            PersistDocument persistDocument = serverCore.IO.DeserializeFromJsonFile<PersistDocument>(persistDocumentFile);
-                            timer.Stop();
-                            serverCore.PerformaceMetrics.AddDeserializeDocumentMs(timer.ElapsedMilliseconds);
-
-                            bool fullAttributeMatch = true;
-
-                            JObject jsonContent = null;
-
-                            //If we have unindexed attributes, then open each of the documents from the previous index scans and compare the remining values.
-                            if (unindexedConditions.Count > 0)
-                            {
-                                jsonContent = JObject.Parse(persistDocument.Text);
-
-                                foreach (Condition condition in unindexedConditions)
-                                {
-                                    JToken jToken = null;
-
-                                    if (jsonContent.TryGetValue(condition.Key, StringComparison.CurrentCultureIgnoreCase, out jToken))
-                                    {
-                                        foundKey = true; //TODO: Implement this on the index scan!
-
-                                        if (condition.IsMatch(jToken.ToString().ToLower()) == false)
-                                        {
-                                            fullAttributeMatch = false;
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        fullAttributeMatch = false;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (fullAttributeMatch)
-                            {
-                                rowCount++;
-                                if (rowLimit > 0 && rowCount > rowLimit)
-                                {
-                                    break;
-                                }
-
-                                if (documentScanExplanationNode != null)
-                                {
-                                    documentScanExplanationNode.ResultingNodes++;
-                                }
-
-                                if (hasFieldList)
-                                {
-                                    if (jsonContent == null)
-                                    {
-                                        jsonContent = JObject.Parse(persistDocument.Text);
-                                    }
-
-                                    List<string> fieldValues = new List<string>();
-
-                                    foreach (string fieldName in fieldList)
-                                    {
-                                        if (fieldName == "#RID")
-                                        {
-                                            fieldValues.Add(persistDocument.Id.ToString());
-                                        }
-                                        else
-                                        {
-                                            JToken fieldToken = null;
-                                            if (jsonContent.TryGetValue(fieldName, StringComparison.CurrentCultureIgnoreCase, out fieldToken))
-                                            {
-                                                fieldValues.Add(fieldToken.ToString());
-                                            }
-                                            else
-                                            {
-                                                fieldValues.Add(string.Empty);
-                                            }
-                                        }
-                                    }
-
-                                    rowValues.Add(fieldValues);
-                                }
-                                else
-                                {
-                                    resultDocuments.Add(new Document
-                                    {
-                                        Id = persistDocument.Id,
-                                        OriginalType = persistDocument.OriginalType,
-                                        Bytes = persistDocument.Bytes
-                                    });
-                                }
-                            }
+                            firstLookup = false;
+                            //If we do not currently have any items in the result, then add the ones we just found.
+                            intersectedDocuments.AddRange(foundIndexPages);
+                        }
+                        else
+                        {
+                            //Each time we do a subsequent lookup, find the intersection of the IDs from
+                            //  this lookup and the previous looksup and make it our result.
+                            //In this way, we continue to limit down the resulting rows by each subsequent index lookup.
+                            intersectedDocuments = foundIndexPages.Intersect(intersectedDocuments).ToList();
                         }
 
-                        if (documentScanExplanationNode != null)
+                        planExplanationNode.IntersectedNodes = intersectedDocuments.Count;
+                        planExplanationNode.Duration = explainStepDuration.Elapsed;
+                        explanation.Steps.Add(planExplanationNode);
+
+                        if (intersectedDocuments.Count == 0)
                         {
-                            documentScanExplanationNode.Duration = documentScanExplanationDuration.Elapsed;
-                            documentScanExplanationNode.IntersectedNodes = resultDocuments.Count;
-                            explanation.Steps.Add(documentScanExplanationNode);
+                            break; //Early termination, all rows eliminated.
                         }
+                    }
 
-                        #endregion
+                    List<Document> resultDocuments = new List<Document>();
 
-                        return new QueryResult
-                        {
-                            Message = foundKey ? string.Empty : "No attribute was found matching the given key(s).",
-                            Success = true,
-                            Documents = resultDocuments,
-                            ExecutionTime = executionTime.Elapsed,
-                            Explanation = explanation,
-                            Columns = fieldList == null ? null : fieldList.ToList(),
-                            Rows = rowValues,
-                            RowCount = rowCount
-                        };
+                    var unindexedConditions = conditions.Collection.Where(p => indexSelections.UnhandledKeys.Any(p2 => p2 == p.Key)).ToList();
+
+                    bool foundKey = false;
+                    Stopwatch documentScanExplanationDuration = new Stopwatch();
+
+                    PlanExplanationNode documentScanExplanationNode = null;
+
+                    if (unindexedConditions.Count == 0 || intersectedDocuments.Count == 0)
+                    {
+                        foundKey = true;
                     }
                     else
                     {
-                        #region Document scan.... this is going to be tuff!
-
-                        PlanExplanationNode planExplanationNode = new PlanExplanationNode(PlanOperation.FullDocumentScan)
+                        documentScanExplanationDuration.Start();
+                        documentScanExplanationNode = new PlanExplanationNode()
                         {
-                            CoveredAttributes = (from o in conditions.Collection select o.Key).ToList()
+                            CoveredAttributes = (from o in unindexedConditions select o.Key).ToList(),
+                            Operation = PlanOperation.DocumentScan
                         };
+                    }
 
-                        List<Document> resultDocuments = new List<Document>();
+                    foreach (int documentId in intersectedDocuments)
+                    {
+                        if (documentScanExplanationNode != null)
+                        {
+                            documentScanExplanationNode.ScannedNodes++;
+                        }
 
-                        bool foundKey = false;
-
-                        string documentCatalogFileName = Utility.MakePath(serverCore.Configuration.NamespacesPath, namespacePath, PersistDocumentCatalog.FileName);
+                        string persistDocumentFile = Utility.MakePath(serverCore.Configuration.NamespacesPath,
+                            namespacePath,
+                            PersistIndexPageCatalog.DocumentFileName(documentId));
 
                         timer.Restart();
-                        PersistDocumentCatalog documentCatalog = serverCore.IO.DeserializeFromJsonFile<PersistDocumentCatalog>(documentCatalogFileName);
+                        PersistDocument persistDocument = serverCore.IO.DeserializeFromJsonFile<PersistDocument>(persistDocumentFile);
                         timer.Stop();
-                        serverCore.PerformaceMetrics.AddDeserializeDocumentCatalogMs(timer.ElapsedMilliseconds);
+                        serverCore.PerformaceMetrics.AddDeserializeDocumentMs(timer.ElapsedMilliseconds);
 
-                        foreach (PersistDocumentCatalogItem documentCatalogItem in documentCatalog.Collection)
+                        bool fullAttributeMatch = true;
+
+                        JObject jsonContent = null;
+
+                        //If we have unindexed attributes, then open each of the documents from the previous index scans and compare the remining values.
+                        if (unindexedConditions.Count > 0)
                         {
-                            string persistDocumentFile = Utility.MakePath(serverCore.Configuration.NamespacesPath, namespacePath, documentCatalogItem.DocumentFileName);
+                            jsonContent = JObject.Parse(persistDocument.Text);
 
-                            timer.Restart();
-                            PersistDocument persistDocument = serverCore.IO.DeserializeFromJsonFile<PersistDocument>(persistDocumentFile);
-                            timer.Stop();
-                            serverCore.PerformaceMetrics.AddDeserializeDocumentMs(timer.ElapsedMilliseconds);
-
-                            JObject jsonContent = JObject.Parse(persistDocument.Text);
-
-                            bool fullAttributeMatch = true;
-
-                            foreach (Condition condition in conditions.Collection)
+                            foreach (Condition condition in unindexedConditions)
                             {
                                 JToken jToken = null;
 
@@ -452,85 +327,77 @@ namespace LeafSQL.Engine.Documents
                                         break;
                                     }
                                 }
-                            }
-
-                            if (fullAttributeMatch)
-                            {
-                                rowCount++;
-                                if (rowLimit > 0 && rowCount > rowLimit)
+                                else
                                 {
+                                    fullAttributeMatch = false;
                                     break;
                                 }
+                            }
+                        }
 
-                                if (hasFieldList)
+                        if (fullAttributeMatch)
+                        {
+                            rowCount++;
+                            if (rowLimit > 0 && rowCount > rowLimit)
+                            {
+                                break;
+                            }
+
+                            if (documentScanExplanationNode != null)
+                            {
+                                documentScanExplanationNode.ResultingNodes++;
+                            }
+
+                            if (hasFieldList)
+                            {
+                                if (jsonContent == null)
                                 {
-                                    if (jsonContent == null)
+                                    jsonContent = JObject.Parse(persistDocument.Text);
+                                }
+
+                                List<string> fieldValues = new List<string>();
+
+                                foreach (string fieldName in fieldList)
+                                {
+                                    if (fieldName == "#RID")
                                     {
-                                        jsonContent = JObject.Parse(persistDocument.Text);
+                                        fieldValues.Add(persistDocument.Id.ToString());
                                     }
-
-                                    List<string> fieldValues = new List<string>();
-
-                                    foreach (string fieldName in fieldList)
+                                    else
                                     {
-                                        if (fieldName == "#RID")
+                                        JToken fieldToken = null;
+                                        if (jsonContent.TryGetValue(fieldName, StringComparison.CurrentCultureIgnoreCase, out fieldToken))
                                         {
-                                            fieldValues.Add(persistDocument.Id.ToString());
+                                            fieldValues.Add(fieldToken.ToString());
                                         }
                                         else
                                         {
-                                            JToken fieldToken = null;
-                                            if (jsonContent.TryGetValue(fieldName, StringComparison.CurrentCultureIgnoreCase, out fieldToken))
-                                            {
-                                                fieldValues.Add(fieldToken.ToString());
-                                            }
-                                            else
-                                            {
-                                                fieldValues.Add(string.Empty);
-                                            }
+                                            fieldValues.Add(string.Empty);
                                         }
                                     }
-
-                                    rowValues.Add(fieldValues);
-                                }
-                                else
-                                {
-                                    resultDocuments.Add(new Document
-                                    {
-                                        Id = persistDocument.Id,
-                                        OriginalType = persistDocument.OriginalType,
-                                        Bytes = persistDocument.Bytes
-                                    });
                                 }
 
-                                planExplanationNode.ResultingNodes++;
+                                rowValues.Add(fieldValues);
                             }
-
-                            planExplanationNode.ScannedNodes++;
-
-                            //------------------------------------------------------------------------------------------------------------------------------------------------
+                            else
+                            {
+                                resultDocuments.Add(new Document
+                                {
+                                    Id = persistDocument.Id,
+                                    OriginalType = persistDocument.OriginalType,
+                                    Bytes = persistDocument.Bytes
+                                });
+                            }
                         }
-
-                        #endregion
-
-                        planExplanationNode.IntersectedNodes = planExplanationNode.ScannedNodes;
-
-                        explanation.Steps.Add(planExplanationNode);
-
-                        return new QueryResult
-                        {
-                            Message = foundKey ? string.Empty : "No attribute was found matching the given key(s).",
-                            Success = true,
-                            Documents = resultDocuments,
-                            ExecutionTime = executionTime.Elapsed,
-                            Explanation = explanation,
-                            Columns = fieldList == null ? null : fieldList.ToList(),
-                            Rows = rowValues,
-                            RowCount = rowCount
-                        };
                     }
-                } //End lock.
-                            */
+
+                    if (documentScanExplanationNode != null)
+                    {
+                        documentScanExplanationNode.Duration = documentScanExplanationDuration.Elapsed;
+                        documentScanExplanationNode.IntersectedNodes = resultDocuments.Count;
+                        explanation.Steps.Add(documentScanExplanationNode);
+                    }
+                    */
             }
             catch (Exception ex)
             {
