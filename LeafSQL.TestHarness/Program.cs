@@ -1205,59 +1205,8 @@ namespace LeafSQL.TestHarness
                 client.Schema.Indexes.Create("AdventureWorks2012:Production:Culture", index);
             }
             client.Transaction.Commit();
-            client.Transaction.Begin();
-            if (client.Schema.Indexes.Exists("AdventureWorks2012:Production:Document", "PK_Document") == false)
-            {
-                Console.WriteLine("Creating index: AdventureWorks2012:Production:Document PK_Document");
-                Index index = new Index()
-                {
-                    Name = "PK_Document",
-                    IsUnique = true
-                };
-                index.AddAttribute("Id");
-                client.Schema.Indexes.Create("AdventureWorks2012:Production:Document", index);
-            }
-            client.Transaction.Commit();
-            client.Transaction.Begin();
-            if (client.Schema.Indexes.Exists("AdventureWorks2012:Production:Document", "UQ__Document__F73921F7BAEE5BF6") == false)
-            {
-                Console.WriteLine("Creating index: AdventureWorks2012:Production:Document UQ__Document__F73921F7BAEE5BF6");
-                Index index = new Index()
-                {
-                    Name = "UQ__Document__F73921F7BAEE5BF6",
-                    IsUnique = true
-                };
-                index.AddAttribute("rowguid");
-                client.Schema.Indexes.Create("AdventureWorks2012:Production:Document", index);
-            }
-            client.Transaction.Commit();
-            client.Transaction.Begin();
-            if (client.Schema.Indexes.Exists("AdventureWorks2012:Production:Document", "AK_Document_rowguid") == false)
-            {
-                Console.WriteLine("Creating index: AdventureWorks2012:Production:Document AK_Document_rowguid");
-                Index index = new Index()
-                {
-                    Name = "AK_Document_rowguid",
-                    IsUnique = true
-                };
-                index.AddAttribute("rowguid");
-                client.Schema.Indexes.Create("AdventureWorks2012:Production:Document", index);
-            }
-            client.Transaction.Commit();
-            client.Transaction.Begin();
-            if (client.Schema.Indexes.Exists("AdventureWorks2012:Production:Document", "IX_Document_FileName_Revision") == false)
-            {
-                Console.WriteLine("Creating index: AdventureWorks2012:Production:Document IX_Document_FileName_Revision");
-                Index index = new Index()
-                {
-                    Name = "IX_Document_FileName_Revision",
-                    IsUnique = false
-                };
-                index.AddAttribute("FileName");
-                index.AddAttribute("Revision");
-                client.Schema.Indexes.Create("AdventureWorks2012:Production:Document", index);
-            }
-            client.Transaction.Commit();
+
+
             client.Transaction.Begin();
             if (client.Schema.Indexes.Exists("AdventureWorks2012:Production:Illustration", "PK_Illustration_IllustrationID") == false)
             {
@@ -1428,19 +1377,7 @@ namespace LeafSQL.TestHarness
                 client.Schema.Indexes.Create("AdventureWorks2012:Production:ProductDescription", index);
             }
             client.Transaction.Commit();
-            client.Transaction.Begin();
-            if (client.Schema.Indexes.Exists("AdventureWorks2012:Production:ProductDocument", "PK_ProductDocument") == false)
-            {
-                Console.WriteLine("Creating index: AdventureWorks2012:Production:ProductDocument PK_ProductDocument");
-                Index index = new Index()
-                {
-                    Name = "PK_ProductDocument",
-                    IsUnique = true
-                };
-                index.AddAttribute("Id");
-                client.Schema.Indexes.Create("AdventureWorks2012:Production:ProductDocument", index);
-            }
-            client.Transaction.Commit();
+
             client.Transaction.Begin();
             if (client.Schema.Indexes.Exists("AdventureWorks2012:Production:ProductInventory", "PK_ProductInventory_ProductID_LocationID") == false)
             {
