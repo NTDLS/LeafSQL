@@ -16,29 +16,20 @@ namespace LeafSQL.Library.Client.Management
 
         public void Begin()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
-
-            Submit<ActionGeneric, IActionResponse>("api/Transaction/Begin", action);
+            Submit<ActionGeneric, IActionResponse>
+                ("api/Transaction/Begin", new ActionGeneric(client.Token.SessionId));
         }
 
         public void Commit()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
-
-            Submit<ActionGeneric, IActionResponse>("api/Transaction/Commit", action);
+            Submit<ActionGeneric, IActionResponse>
+                ("api/Transaction/Commit", new ActionGeneric(client.Token.SessionId));
         }
 
         public void Rollback()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
-
-            Submit<ActionGeneric, IActionResponse>("api/Transaction/Rollback", action);
+            Submit<ActionGeneric, IActionResponse>
+                ("api/Transaction/Rollback", new ActionGeneric(client.Token.SessionId));
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
-using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
@@ -11,6 +10,7 @@ namespace LeafSQL.Library.Client.Management
     {
         private LeafSQLClient client;
 
+
         public Settings(LeafSQLClient client)
             : base(client)
         {
@@ -19,20 +19,26 @@ namespace LeafSQL.Library.Client.Management
 
         public async Task<ServerSettings> GetAsync()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
-
-            return (await SubmitAsync<ActionGeneric, ActionResponseServerSettings>("api/Server/Settings", action)).Settings;
+            return (await SubmitAsync<ActionGeneric, ActionResponseServerSettings>
+                ("api/Server/Settings", new ActionGeneric(client.Token.SessionId))).Settings;
         }
 
         public ServerSettings Get()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
+            return Submit<ActionGeneric, ActionResponseServerSettings>
+                ("api/Server/Settings", new ActionGeneric(client.Token.SessionId)).Settings;
+        }
 
-            return Submit<ActionGeneric, ActionResponseServerSettings>("api/Server/Settings", action).Settings;
+        public async Task<ServerVersion> GetVersionAsync()
+        {
+            return (await SubmitAsync<ActionGeneric, ActionResponseServerVersion>
+                ("api/Server/Version", new ActionGeneric(client.Token.SessionId))).Version;
+        }
+
+        public ServerVersion GetVersion()
+        {
+            return Submit<ActionGeneric, ActionResponseServerVersion>
+                ("api/Server/Version", new ActionGeneric(client.Token.SessionId)).Version;
         }
     }
 }

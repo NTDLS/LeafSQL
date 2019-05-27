@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client\Management\Base\ManagementBase.cs" />
+    <Compile Include="Client\Management\Server.cs" />
+    <Compile Include="Client\Management\State.cs" />
     <Compile Include="Client\Management\Settings.cs" />
     <Compile Include="Client\Management\Security.cs" />
     <Compile Include="Client\Management\Document.cs" />
@@ -58,10 +60,12 @@
     <Compile Include="Payloads\Actions\ActionRequestStoreDocument.cs" />
     <Compile Include="Payloads\Actions\Base\ActionGenericObject.cs" />
     <Compile Include="Payloads\Actions\Base\ActionGeneric.cs" />
+    <Compile Include="Payloads\Models\ServerVersion.cs" />
     <Compile Include="Payloads\Responses\ActionResponceLogins.cs" />
     <Compile Include="Payloads\Responses\ActionResponseIndexes.cs" />
     <Compile Include="Payloads\Responses\ActionResponseDocuments.cs" />
     <Compile Include="Payloads\Models\DocumentMeta.cs" />
+    <Compile Include="Payloads\Responses\ActionResponseServerVersion.cs" />
     <Compile Include="Payloads\Responses\ActionResponseServerSettings.cs" />
     <Compile Include="Payloads\Models\LoginToken.cs" />
     <Compile Include="Payloads\Responses\ActionResponceLogin.cs" />

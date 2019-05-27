@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LeafSQL")]
+[assembly: AssemblyProduct("LeafSQL Server")]
 [assembly: AssemblyCopyright("Copyright © 2018 NetworkDLS")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

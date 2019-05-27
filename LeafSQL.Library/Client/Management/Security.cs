@@ -43,11 +43,8 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         public void Logout()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
-
-            Submit<ActionGeneric, IActionResponse>("api/Security/Logout", action);
+            Submit<ActionGeneric, IActionResponse>
+                ("api/Security/Logout", new ActionGeneric(client.Token.SessionId));
 
             client.Token = new Payloads.Models.LoginToken();
         }
@@ -58,20 +55,15 @@ namespace LeafSQL.Library.Client.Management
         /// <returns></returns>
         public async Task<List<Payloads.Models.Login>> GetLoginsAsync()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
 
-            return (await SubmitAsync<ActionGeneric, ActionResponceLogins>("api/Security/ListLogins", action)).List;
+            return (await SubmitAsync<ActionGeneric, ActionResponceLogins>
+                ("api/Security/ListLogins", new ActionGeneric(client.Token.SessionId))).List;
         }
 
         public List<Payloads.Models.Login> GetLogins()
         {
-            var action = new ActionGeneric(client.Token.SessionId)
-            {
-            };
-
-            return Submit<ActionGeneric, ActionResponceLogins>("api/Security/ListLogins", action).List;
+            return Submit<ActionGeneric, ActionResponceLogins>
+                ("api/Security/ListLogins", new ActionGeneric(client.Token.SessionId)).List;
         }
     }
 }

@@ -12,19 +12,22 @@ namespace LeafSQL.TestHarness
     {
         static void Main(string[] args)
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            Console.WriteLine($"{fileVersionInfo.FileDescription} v{fileVersionInfo.ProductVersion}");
+            //Assembly assembly = Assembly.GetExecutingAssembly();
+            //FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            //Console.WriteLine($"{fileVersionInfo.FileDescription} v{fileVersionInfo.ProductVersion}");
 
-            Exporter.ExportAll();
-            TestCreateAllAdventureWorks2012Indexes();
+            //Exporter.ExportAll();
+            //TestCreateAllAdventureWorks2012Indexes();
             //TestServerStress();
 
             //TestCreateIndexAddDocuments();
             //TestAddDocumentsCreateIndex();
             //TestIndexDocumentDeletion();
 
-            //LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
+            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
+            var serverVersion = client.Server.Settings.GetVersion();
+            Console.WriteLine($"{serverVersion.Name} v{serverVersion.Version}");
+
             //string query = "SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'";
             //client.Query.ExecuteNonQuery(query);
 

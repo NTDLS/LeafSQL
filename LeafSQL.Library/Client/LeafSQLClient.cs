@@ -14,7 +14,7 @@ namespace LeafSQL.Library.Client
         public Management.Transaction Transaction { get; set; }
         public Management.Query Query { get; set; }
         public Management.Security Security { get; set; }
-        public Management.Settings Settings { get; set; }
+        public Management.Server Server { get; set; }
 
         #region CTor.
 
@@ -64,7 +64,7 @@ namespace LeafSQL.Library.Client
             Transaction = new Management.Transaction(this);
             Query = new Management.Query(this);
             Security = new Management.Security(this);
-            Settings = new Management.Settings(this);
+            Server = new Management.Server(this);
         }
 
         public void Dispose()
