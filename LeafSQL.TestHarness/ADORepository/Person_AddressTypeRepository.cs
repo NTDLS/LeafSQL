@@ -44,7 +44,7 @@ namespace LeafSQL.TestHarness.ADORepository
 							int rowCount = 0;
 
 
-							while (dataReader.Read() /*&& rowCount++ < 10000*/)
+							while (dataReader.Read() && rowCount++ < 1000 /*easy replace*/)
 							{
 								if(rowCount > 0 && (rowCount % 100) == 0)
 								{

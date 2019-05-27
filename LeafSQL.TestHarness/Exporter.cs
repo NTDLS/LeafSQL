@@ -19,6 +19,7 @@ namespace LeafSQL.TestHarness
             (new ADORepository.HumanResources_EmployeePayHistoryRepository()).Export_HumanResources_EmployeePayHistory();
             (new ADORepository.HumanResources_JobCandidateRepository()).Export_HumanResources_JobCandidate();
             (new ADORepository.HumanResources_ShiftRepository()).Export_HumanResources_Shift();
+
             (new ADORepository.Person_AddressRepository()).Export_Person_Address();
             (new ADORepository.Person_AddressTypeRepository()).Export_Person_AddressType();
             (new ADORepository.Person_BusinessEntityRepository()).Export_Person_BusinessEntity();

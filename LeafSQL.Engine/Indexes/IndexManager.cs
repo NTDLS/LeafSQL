@@ -523,6 +523,12 @@ namespace LeafSQL.Engine.Indexes
                 var searchTokens = GetIndexSearchTokens(transaction, indexMeta, document);
                 var findResult = FindKeyPage(transaction, indexMeta, searchTokens, indexPageCatalog);
 
+                if (searchTokens.Count == 0)
+                {
+                    //None of the supplied index attributes could be found on this document.
+                    return;
+                }
+
                 //If we found a full match for all supplied key values - add the document to the leaf collection.
                 if (findResult.IsFullMatch)
                 {
@@ -545,7 +551,7 @@ namespace LeafSQL.Engine.Indexes
                         core.IO.PutPBuf(transaction, indexMeta.DiskPath, findResult.Catalog);
                     }
                 }
-                else if(findResult.IsPartialMatch)
+                else
                 {
                     //If we didn't find a full match for all supplied key values,
                     //  then create the tree and add the document to the lowest leaf.
