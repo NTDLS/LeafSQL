@@ -1,5 +1,6 @@
-﻿using LeafSQL.Engine.Sessions;
-using System;
+﻿using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Sessions;
+using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.Engine.Query
 {
@@ -12,18 +13,20 @@ namespace LeafSQL.Engine.Query
             this.core = core;
         }
 
-        public void Execute(Session session, string statement)
+        public QueryResult Execute(Session session, string statement)
         {
             var preparedQuery = ParserEngine.ParseQuery(statement);
-            Execute(session, preparedQuery);
+            return Execute(session, preparedQuery);
         }
 
-        public void Execute(Session session, PreparedQuery preparedQuery)
+        public QueryResult Execute(Session session, PreparedQuery preparedQuery)
         {
             if (preparedQuery.QueryType == Constants.QueryType.Select)
             {
-                core.Documents.ExecuteSelect(session, preparedQuery);
+                return core.Documents.ExecuteSelect(session, preparedQuery);
             }
+
+            throw new LeafSQLExecutionException("The query type has not been implemented.");
         }
     }
 }

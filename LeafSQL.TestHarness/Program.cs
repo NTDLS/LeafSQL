@@ -1,21 +1,45 @@
 ﻿using LeafSQL.Library.Client;
 using LeafSQL.Library.Payloads.Models;
 using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 
 namespace LeafSQL.TestHarness
 {
     class Program
     {
+        static void ExecuteAndPrint(string statement)
+        {
+            using (LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", ""))
+            {
+                //var serverVersion = client.Server.Settings.GetVersion();
+                //Console.WriteLine($"{serverVersion.Name} v{serverVersion.Version}");
+
+                var results = client.Query.ExecuteQuery(statement);
+
+                Console.WriteLine($"Rows {results.Rows.Count}");
+
+                foreach (var column in results.Columns)
+                {
+                    Console.Write($"{column.Name}\t");
+                }
+                Console.WriteLine(string.Empty);
+
+                foreach (var row in results.Rows)
+                {
+                    foreach (var value in row.Values)
+                    {
+                        Console.Write($"{value}\t");
+                    }
+                    Console.WriteLine(string.Empty);
+                }
+
+                client.Logout();
+            }
+        }
+
         static void Main(string[] args)
         {
-            //Assembly assembly = Assembly.GetExecutingAssembly();
-            //FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            //Console.WriteLine($"{fileVersionInfo.FileDescription} v{fileVersionInfo.ProductVersion}");
-
             //Exporter.ExportAll();
             //TestCreateAllAdventureWorks2012Indexes();
             //TestServerStress();
@@ -24,12 +48,15 @@ namespace LeafSQL.TestHarness
             //TestAddDocumentsCreateIndex();
             //TestIndexDocumentDeletion();
 
-            LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", "");
-            var serverVersion = client.Server.Settings.GetVersion();
-            Console.WriteLine($"{serverVersion.Name} v{serverVersion.Version}");
+            using (LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", ""))
+            {
+                var serverVersion = client.Server.Settings.GetVersion();
+                Console.WriteLine($"{serverVersion.Name} v{serverVersion.Version}");
+                client.Logout();
+            }
 
-            //string query = "SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'";
-            //client.Query.ExecuteNonQuery(query);
+            //ExecuteAndPrint("SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
+            ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
 
             Console.WriteLine("Complete");
             Console.ReadLine();

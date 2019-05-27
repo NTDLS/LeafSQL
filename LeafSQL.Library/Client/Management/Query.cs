@@ -1,5 +1,6 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
 using LeafSQL.Library.Payloads;
+using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
 using System.Threading.Tasks;
 
@@ -33,6 +34,26 @@ namespace LeafSQL.Library.Client.Management
             };
 
             Submit<ActionRequestExecuteNonQuery, IActionResponse>("api/Query/ExecuteNonQuery", action);
+        }
+
+        public async Task<QueryResult> ExecuteQueryAsync(string statement)
+        {
+            var action = new ActionRequestExecuteQuery(client.Token.SessionId)
+            {
+                Statement = statement
+            };
+
+            return (await SubmitAsync<ActionRequestExecuteQuery, ActionResponseQuery>("api/Query/ExecuteQuery", action)).Result;
+        }
+
+        public QueryResult ExecuteQuery(string statement)
+        {
+            var action = new ActionRequestExecuteQuery(client.Token.SessionId)
+            {
+                Statement = statement
+            };
+
+            return Submit<ActionRequestExecuteQuery, ActionResponseQuery>("api/Query/ExecuteQuery", action).Result;
         }
     }
 }

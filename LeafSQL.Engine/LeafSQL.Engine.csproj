@@ -59,6 +59,7 @@
     <Compile Include="Documents\DocumentManager.cs" />
     <Compile Include="Exceptions\LeafSQLDuplicateObjectException.cs" />
     <Compile Include="Exceptions\LeafSQLIndexDoesNotExistException.cs" />
+    <Compile Include="Exceptions\LeafSQLExecutionException.cs" />
     <Compile Include="Exceptions\LeafSQLInvalidUsernameOrPassword.cs" />
     <Compile Include="Exceptions\LeafSQLSchemaDoesNotExistException.cs" />
     <Compile Include="Exceptions\LeafSQLDuplicateKeyViolation.cs" />

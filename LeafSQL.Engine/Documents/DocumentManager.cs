@@ -11,6 +11,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using LeafSQL.Engine.Transactions;
 using LeafSQL.Engine.Sessions;
+using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.Engine.Documents
 {
@@ -23,7 +24,7 @@ namespace LeafSQL.Engine.Documents
             this.core = core;
         }
 
-        public void ExecuteSelect(Session session, PreparedQuery preparedQuery)
+        public QueryResult ExecuteSelect(Session session, PreparedQuery preparedQuery)
         {
             try
             {
@@ -37,8 +38,7 @@ namespace LeafSQL.Engine.Documents
 
                     string documentCatalogDiskPath = Path.Combine(schemaMeta.DiskPath, Constants.DocumentCatalogFile);
 
-
-                    FindDocuments(txRef.Transaction, schemaMeta, preparedQuery.Conditions, preparedQuery.RowLimit, preparedQuery.SelectFields);
+                    return FindDocuments(txRef.Transaction, schemaMeta, preparedQuery.Conditions, preparedQuery.RowLimit, preparedQuery.SelectFields);
 
                     /*
                     var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(txRef.Transaction, documentCatalogDiskPath, LockOperation.Write);
@@ -63,55 +63,53 @@ namespace LeafSQL.Engine.Documents
             }
             catch (Exception ex)
             {
-                core.Log.Write(String.Format("Failed to delete document by ID for process {0}.", session.ProcessId), ex);
-                throw;
+                throw new LeafSQLExecutionException($"Failed to execute statement: {ex.Message}");
             }
         }
 
-        private void /*QueryResult*/ FindDocuments(Transaction transaction, PersistSchema schemaMeta, Conditions conditions, int rowLimit, List<string> fieldList)
+        private QueryResult FindDocuments(Transaction transaction, PersistSchema schemaMeta, Conditions conditions, int rowLimit, List<string> fieldList)
         {
+            QueryResult results = new QueryResult();
+
             try
             {
                 conditions.MakeLowerCase();
 
-                if (fieldList.Count == 1)
+                if (fieldList.Count == 1 && fieldList[0] == "*")
                 {
-                    if (fieldList[0] == "*")
-                    {
-                        fieldList = null;
-                    }
+                    fieldList = null;
                 }
 
-                if (fieldList != null && fieldList.Count() > 0)
+                if (fieldList?.Count() > 0)
                 {
-                    fieldList.Insert(0, "#RID");
+                    foreach (var field in fieldList)
+                    {
+                        results.Columns.Add(new QueryColumn(field));
+                    }
+                }
+                else
+                {
+                    results.Columns.Add(new QueryColumn("Id"));
+                    results.Columns.Add(new QueryColumn("Created"));
+                    results.Columns.Add(new QueryColumn("Modfied"));
+                    results.Columns.Add(new QueryColumn("Content"));
                 }
 
                 bool hasFieldList = fieldList != null && fieldList.Count > 0;
-
                 var indexSelections = core.Indexes.SelectIndexes(transaction, schemaMeta, conditions);
 
-                Console.WriteLine(indexSelections.UnhandledKeys.Count());
-
                 string documentCatalogDiskPath = Path.Combine(schemaMeta.DiskPath, Constants.DocumentCatalogFile);
-
-                List<List<String>> rowValues = new List<List<string>>();
-
 
                 if (indexSelections.Count == 0)
                 {
                     var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(transaction, documentCatalogDiskPath, LockOperation.Read);
 
-                    int rowCount = 0;
-
                     foreach (var documentMeta in documentCatalog.Collection)
                     {
                         string documentDiskPath = Path.Combine(schemaMeta.DiskPath, Helpers.GetDocumentModFilePath(documentMeta.Id));
-
                         PersistDocument persistDocument = core.IO.GetJson<PersistDocument>(transaction, documentDiskPath, LockOperation.Read);
 
                         JObject jsonContent = JObject.Parse(persistDocument.Content);
-
                         bool fullAttributeMatch = true;
 
                         foreach (Condition condition in conditions.Collection)
@@ -130,10 +128,9 @@ namespace LeafSQL.Engine.Documents
 
                         if (fullAttributeMatch)
                         {
-                            List<string> fieldValues = new List<string>();
+                            QueryRow rowValues = new QueryRow();
 
-                            rowCount++;
-                            if (rowLimit > 0 && rowCount > rowLimit)
+                            if (rowLimit > 0 && results.Rows.Count > rowLimit)
                             {
                                 break;
                             }
@@ -149,43 +146,41 @@ namespace LeafSQL.Engine.Documents
                                 {
                                     if (fieldName == "#RID")
                                     {
-                                        fieldValues.Add(persistDocument.Id.ToString());
+                                        rowValues.Add(persistDocument.Id.ToString());
                                     }
                                     else
                                     {
                                         JToken fieldToken = null;
                                         if (jsonContent.TryGetValue(fieldName, StringComparison.CurrentCultureIgnoreCase, out fieldToken))
                                         {
-                                            fieldValues.Add(fieldToken.ToString());
+                                            rowValues.Add(fieldToken.ToString());
                                         }
                                         else
                                         {
-                                            fieldValues.Add(string.Empty);
+                                            rowValues.Add(string.Empty);
                                         }
                                     }
                                 }
                             }
                             else
                             {
-                                //If no fields "*" was specified as the seelct list, just return the content of each document and some metadata.
-                                fieldValues.Add(persistDocument.Id.ToString());
-                                fieldValues.Add(persistDocument.Created.ToString());
-                                fieldValues.Add(persistDocument.Modfied.ToString());
-                                fieldValues.Add(persistDocument.Content);
+                                //If no fields "*" was specified as the select list, just return the content of each document and some metadata.
+                                rowValues.Add(persistDocument.Id.ToString());
+                                rowValues.Add(persistDocument.Created.ToString());
+                                rowValues.Add(persistDocument.Modfied.ToString());
+                                rowValues.Add(persistDocument.Content);
                             }
 
-                            rowValues.Add(fieldValues);
-
+                            results.Rows.Add(rowValues);
                         }
                     }
                 }
                 else
                 {
-                    //TODO: USe indexes.
+                    throw new LeafSQLExecutionException("Indexed operarions are not implemented");
                 }
 
-                return;
-
+                return results;
 
                 /*
                 List<List<String>> rowValues = new List<List<string>>();
@@ -539,9 +534,8 @@ namespace LeafSQL.Engine.Documents
             }
             catch (Exception ex)
             {
-                // return new QueryResult { Message = ex.Message };
+                throw new LeafSQLExecutionException(ex.Message);
             }
-
         }
 
         public void Store(Session session, string schema, Library.Payloads.Models.Document document, out Guid newId)

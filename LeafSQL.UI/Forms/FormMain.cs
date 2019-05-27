@@ -536,9 +536,10 @@ namespace LeafSQL.UI.Forms
 
             treeViewDatabase.ImageList = imageListTreeView;
 
-            var settings = client.Settings.Get();
+            var serverSettings = client.Server.Settings.Get();
+            var serverVersion = client.Server.Settings.GetVersion();
 
-            ServerNode = new LSTreeNode(Types.TreeNodeType.Server, settings.Name, settings.Name);
+            ServerNode = new LSTreeNode(Types.TreeNodeType.Server, $"{serverSettings.Name} ({serverVersion.Version})", serverSettings.Name);
 
             SchemaNode = new LSTreeNode(Types.TreeNodeType.Schemas, "Schemas", "Schemas");
             SchemaNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Schema, "<root>", ":"));
