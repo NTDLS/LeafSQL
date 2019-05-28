@@ -1,21 +1,17 @@
-﻿using System;
+﻿using LeafSQL.Engine.Documents;
+using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Query;
+using LeafSQL.Engine.Schemas;
+using LeafSQL.Engine.Sessions;
+using LeafSQL.Engine.Transactions;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using LeafSQL.Library.Payloads;
-using static LeafSQL.Engine.Constants;
-using LeafSQL.Engine.Transactions;
-using LeafSQL.Engine.Schemas;
-using LeafSQL.Library;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using LeafSQL.Engine.Documents;
-using LeafSQL.Engine.Exceptions;
 using System.Threading;
-using LeafSQL.Engine.Query;
-using LeafSQL.Engine.Sessions;
+using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Indexes
 {
@@ -41,13 +37,9 @@ namespace LeafSQL.Engine.Indexes
 
             IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions);
 
+            //Loop though each index in the schema and create a list of all indexes which could potentially be used to match the conditions.
             var indexCatalog = GetIndexCatalog(transaction, schemaMeta, LockOperation.Read);
-
-            IndexSelections indexSelections = new IndexSelections();
-
-            //Loop though each index in the schema.
             List<PotentialIndex> potentialIndexs = new List<PotentialIndex>();
-
             foreach (var indexMeta in indexCatalog.Collection)
             {
                 List<string> handledKeyNames = new List<string>();
@@ -70,64 +62,28 @@ namespace LeafSQL.Engine.Indexes
                 }
             }
 
-            //1. Find potential duplicate indexes.
-            //2. Determine if any set of duplicates fully coveres the some other index and eliminate it.
-            //3. Determine if the "duplicate" index is covering something that the others arent.
+            IndexSelections indexSelections = new IndexSelections();
 
-            foreach (var potentialIndex in potentialIndexs)
+            //Group the indxes by their first attribute.
+            var distinctFirstAttributes = potentialIndexs.Select(o => o.Index.Attributes[0].Name).Distinct();
+            foreach (var distinctFirstAttribute in distinctFirstAttributes)
             {
-                foreach (var possibleDuplicate in potentialIndexs)
-                {
-                    if (potentialIndex != possibleDuplicate && potentialIndex.Key.StartsWith(possibleDuplicate.Key))
-                    {
-                        if (possibleDuplicate.IsFullyCoveredBy(potentialIndex))
-                        {
-                            var ds = potentialIndex.GetDifferenceOfAttributes(possibleDuplicate);
+                //Find all idexes with the same first attribute:
+                var indexGroup = potentialIndexs.Where(o => o.FirstAttributeName == distinctFirstAttribute);
 
-                            //var possibleDuplicateAttributes = possibleDuplicate.Index.Attributes.Select(o => o.Name);
-                            //var otherAttributes = other.Index.Attributes.Select(o => o.Name);
+                //For the group of indexes, find the one index that handles the most keys but also has the fewest atributes.
+                var firstIndexInGroup = (from o in indexGroup select o)
+                    .OrderByDescending(s => s.HandledKeyNames.Count)
+                    .ThenBy(t => t.Index.Attributes.Count).FirstOrDefault();
 
-                            //return otherAttributes.Where(p => !thisAttributes.Any(p2 => p2 == p)).ToList();
-
-
-                            //use:  GetDifferenceOfAttributes() to determine if we even need to use any of the attributed on the "bigger" index.
-
-                            possibleDuplicate.Eliminate = true;
-                        }
-                    }
-                }
-            }
-
-            //TODO: Need to eliminate duplicate index work: the below is not at all ok...
-            //Grab the index that matches the most of our supplied keys but also has the least attributes.
-            /*
-            var firstIndex = (from o in potentialIndexs where o.Tried == false select o)
-                .OrderByDescending(s => s.HandledKeyNames.Count)
-                .ThenBy(t => t.Index.Attributes.Count).FirstOrDefault();
-            if (firstIndex != null)
-            {
-                var handledKeys = (from o in indexKeyMatches where firstIndex.HandledKeyNames.Contains(o.Key) select o).ToList();
+                //Mark the keys which are handled by this index as "handled".
+                var handledKeys = (from o in indexKeyMatches where firstIndexInGroup.HandledKeyNames.Contains(o.Key) select o).ToList();
                 foreach (var handledKey in handledKeys)
                 {
                     handledKey.Handled = true;
                 }
 
-                firstIndex.Tried = true;
-
-                indexSelections.Add(new IndexSelection(firstIndex.Index, firstIndex.HandledKeyNames));
-            }
-            */
-
-            //This is just to get some working indexes back to the document matching code. This does not handle duplicate index elimimation nor does it select "good" indexes.
-            foreach (var potentialIndex in potentialIndexs)
-            {
-                var handledConditions = from o in indexKeyMatches where potentialIndex.HandledKeyNames.Contains(o.Key) select o;
-                foreach (var handledCondition in handledConditions)
-                {
-                    handledCondition.Handled = true; 
-                }
-
-                indexSelections.Add(new IndexSelection(potentialIndex.Index, potentialIndex.HandledKeyNames));
+                indexSelections.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames));
             }
 
             indexSelections.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
