@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Library.Client;
+using LeafSQL.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,16 @@ namespace LeafSQL.UI
         public TabManager(TabControl tabControlPages)
         {
             this.tabControlPages = tabControlPages;
+        }
+
+        public TabPage CurrentTab()
+        {
+            return tabControlPages.SelectedTab;
+        }
+
+        public QueryDocument CurrentQueryDocument()
+        {
+            return tabControlPages?.SelectedTab.Controls.OfType<QueryDocument>().FirstOrDefault();
         }
 
         public TabPage FindTab(string key)
@@ -42,7 +53,7 @@ namespace LeafSQL.UI
             return false;
         }
 
-        public void AddTab(string key, string text, Control control)
+        public void AddTab(string key, string text, QueryDocument control)
         {
             TabPage tab = new TabPage(text);
             control.Parent = tab;
@@ -55,7 +66,7 @@ namespace LeafSQL.UI
 
         public void AddNewTab()
         {
-            AddTab(Utility.GetNextFileName(), "", new Controls.QueryDocuments());
+            AddTab(Utility.GetNextFileName(), "", new Controls.QueryDocument());
         }
     }
 }

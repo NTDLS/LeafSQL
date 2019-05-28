@@ -541,5 +541,75 @@ namespace LeafSQL.UI.Forms
 
         #endregion
 
+        #region Toolbar.
+
+        private void CmdRun_Click(object sender, EventArgs e)
+        {
+            var queryDocument = tabManager.CurrentQueryDocument();
+
+            queryDocument.ExecuteAsync(client).ContinueWith((t) =>
+            {
+                FormProgress.WaitForVisible();
+                FormProgress.Complete();
+
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    PopulateResultsGrid(t.Result);
+                }
+                else
+                {
+                    Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
+                }
+
+            }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+
+            //FormProgress.Instance.CanCancel = true;
+
+            if (FormProgress.Start("Executing query...") == DialogResult.Cancel)
+            {
+                //cancellationToken.Cancel();
+            }
+        }
+
+        #endregion
+
+        private void PopulateResultsGrid(QueryResult queryResult)
+        {
+            ClearResults();
+
+            foreach (var column in queryResult.Columns)
+            {
+                dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = column.Name,
+                    HeaderText = column.Name,
+                    ReadOnly = true,
+                    Frozen = false
+                });
+            }
+
+            foreach (var row in queryResult.Rows)
+            {
+                dataGridSearchDocuments.Rows.Add(row.Values.ToArray()); 
+            }
+        }
+
+        private void ClearResults()
+        {
+            if (dataGridSearchDocuments.Rows != null)
+            {
+                dataGridSearchDocuments.Rows.Clear();
+            }
+            if (dataGridSearchDocuments.Columns != null)
+            {
+                dataGridSearchDocuments.Columns.Clear();
+            }
+            if (dataGridViewPlan.Rows != null)
+            {
+                dataGridViewPlan.Rows.Clear();
+            }
+            textBoxOutput.Text = string.Empty;
+        }
+
     }
 }

@@ -117,78 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="ColumnOrdinal.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnId.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnOriginalType.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnLength.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnText.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="toolStripButtonRun.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADTSURBVDhPY6AJ+P77eyeUSR64+ezm3O+/v3ZBuaSDybsm
-        369eXHz/ybt7V6BCpIHJu7rub7ix4D/YkFf3L0OFiQdVa6ueFxwo+A8z5MWH5wegUsSBqiX5YANAOGFB
-        wP/8qXEv3n5+uw4qTRgUzyt+VrAhAazZocHgv0GBwn/7Mt2PUGnCIG5+3AtkzbplGh8/fnm3EipNGAT1
-        Ob9D0fzx3QqoFHHAvs3+I0Lzm+VQYeIByL8gze8/viZdMwi0rWs7/f371yYol3QA1NwIZQ56wMAAAOwf
-        evT8ex/TAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="toolStripButtonPreview.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIKSURBVDhPrVK7aipRFPUP8gn5ASFIsBIZRDCFaHymvRB8
-        gYVio4U432BhKaI2FkIwEISoJD6w8MGAtRpUEHyjELRb9+yTMXdCcrnNXbCYw9l7rf04o1Li/v7+0uv1
-        hnw+n0j0+/1XcujfYMJfTLRjhJLs/oWM5bSfwSrdKgXsyzuQz3S/oxw5/StY8IISGDM/VZLjZLijLuXr
-        PyChMuByuQRGUaYgX/P9sFzpmwm74El3d3dXdrv9zWAwQKvVQqPRQKfTwWw2v7ndbi6ibmisb8t1Op23
-        LBFqtRrxeByDwQDJZBKRSARnQ5vN9sKMaJwLj8fzQF8udjgclzc3NzuLxYLn52eMx2MQHh8fUalUUCwW
-        kUgkuAnLk84mjCI3oFlNJhNWqxXq9Tre398hSRJEUUQsFsPr6yvS6TQmkwmN82lCY/CXIQOqfDqd0Ov1
-        eBfUuiAIuL6+RrfbRTab5QWm0+kXE74/OkSjUWmz2YBIyUQSs92g0+kgl8vhcDhgu91iOBzCaDTSTh74
-        CISzyXq9RqPRQLlcRrVa5aPUajWUSiXs93tQfD6f85herwfrPiRbfCAQCIitVgv9fh+FQgH5fB5PT098
-        L1R9sVhgNpthNBohGAzCarV+LFIJepVUKpVpNpu74/H4KV4ul7x9epVwOJxR/mR/BRMKjKF2uy2ypwyR
-        iMaVw/8DKtVvmiOOGLY4fQEAAAAASUVORK5CYII=
-</value>
-  </data>
   <metadata name="syntaxDocument.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>269, 17</value>
-  </metadata>
-  <metadata name="ColumnPlanOrdinal.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnOperation.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnIndex.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnCoveredAttributes.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnScannedNodes.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnResultingNodes.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnIntersectedNodes.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ColumnDuration.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="statusStripResults.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>412, 17</value>
   </metadata>
 </root>

@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using LeafSQL.Library.Client;
+using LeafSQL.Library.Payloads.Models;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LeafSQL.Library.Client;
-using LeafSQL.Library.Payloads;
-using LeafSQL.UI.Forms;
 
 namespace LeafSQL.UI.Controls
 {
-    public partial class QueryDocuments : UserControl
+    public partial class QueryDocument : UserControl
     {
         private int currentPage = 0;
 
-        public QueryDocuments()
+        public QueryDocument()
         {
             InitializeComponent();
         }
@@ -40,31 +37,18 @@ namespace LeafSQL.UI.Controls
             */
         }
 
-        void DoSearch()
+        public async Task<QueryResult> ExecuteAsync(LeafSQLClient client)
         {
-            if (dataGridSearchDocuments.Rows != null && dataGridSearchDocuments.Rows.Count > 0)
-            {
-                dataGridSearchDocuments.Rows.Clear();
-            }
-            if (dataGridSearchDocuments.Columns != null && dataGridSearchDocuments.Rows.Count > 0)
-            {
-                dataGridSearchDocuments.Columns.Clear();
-            }
-            if (dataGridViewPlan.Rows != null && dataGridViewPlan.Rows.Count > 0)
-            {
-                dataGridViewPlan.Rows.Clear();
-            }
-
-            textBoxOutput.Text = string.Empty;
-
             string queryText = codeEditor.Document.Text;
             if (codeEditor.Selection != null && codeEditor.Selection.Text.Length > 0)
             {
                 queryText = codeEditor.Selection.Text;
             }
+            return await client.Query.ExecuteQueryAsync(queryText);
+        }
 
-
-            FormProgress.Reset();
+        void DoSearch()
+        {
 
             //CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
@@ -183,6 +167,7 @@ namespace LeafSQL.UI.Controls
             */
         }
 
+        /*
         private void PopulateDefaultResultColumns()
         {
             dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
@@ -221,24 +206,7 @@ namespace LeafSQL.UI.Controls
                 Frozen = false
             });
         }
-
-        private void toolStripButtonRun_Click(object sender, EventArgs e)
-        {
-            DoSearch();
-        }
-
-        private void toolStripButtonPreview_Click(object sender, EventArgs e)
-        {
-            Preview();
-        }
-
-        private void codeEditor_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F5)
-            {
-                DoSearch();
-            }
-        }
+        */
 
         private void QueryDocuments_Load(object sender, EventArgs e)
         {
@@ -259,6 +227,11 @@ namespace LeafSQL.UI.Controls
             + "\tAND SafetyStockLevel = 500\r\n"
             + "\tAND ProductLine = 'M '\r\n"
             + "\tAND Class = 'L '\r\n";
+        }
+
+        private void CodeEditor_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
