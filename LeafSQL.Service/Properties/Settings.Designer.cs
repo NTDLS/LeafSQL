@@ -71,18 +71,18 @@ namespace LeafSQL.Service.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AllowIOCaching {
+        public bool EnableIOCaching {
             get {
-                return ((bool)(this["AllowIOCaching"]));
+                return ((bool)(this["EnableIOCaching"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AllowDeferredIO {
+        public bool EnableDeferredIO {
             get {
-                return ((bool)(this["AllowDeferredIO"]));
+                return ((bool)(this["EnableDeferredIO"]));
             }
         }
         

@@ -17,10 +17,10 @@
     <Setting Name="FlushLog" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="AllowIOCaching" Type="System.Boolean" Scope="Application">
+    <Setting Name="EnableIOCaching" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="AllowDeferredIO" Type="System.Boolean" Scope="Application">
+    <Setting Name="EnableDeferredIO" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="WriteTraceData" Type="System.Boolean" Scope="Application">
@@ -43,3 +43,4 @@
     </Setting>
   </Settings>
 </SettingsFile>
+

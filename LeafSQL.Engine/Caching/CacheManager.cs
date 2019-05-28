@@ -96,6 +96,12 @@ namespace LeafSQL.Engine.Caching
                                     {
                                         if (deferredIo.Key == itemToRemove.Key)
                                         {
+                                            /*
+                                             * We cant remove an item from cache if it is in a defered IO state (because it only exists in memory).
+                                             *  So we have two options: (1) preserve it in cache or (2) flush it to disk and remove it from cache.
+                                             *  We'll try first without comitting to disk - but if the only items available to flush are deferred items
+                                             *  then we'll have no choice but to commit some of them and remove them from cache.
+                                            */
                                             if (allowDeferredIOCommit)
                                             {
                                                 core.Log.Trace("Comitting " + tx.DeferredIOs.Collection.Count + " deferred IOs for process: " + tx.ProcessId);

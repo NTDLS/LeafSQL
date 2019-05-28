@@ -45,11 +45,11 @@
         /// <summary>
         /// If true, the all applicable IO operations will be cached on read and write.
         /// </summary>
-        public bool AllowIOCaching { get; set; }
+        public bool EnableIOCaching { get; set; }
         /// <summary>
         /// When true, IO operations that occur in a transaction will be deferred until transaction commit.
         /// </summary>
-        public bool AllowDeferredIO { get; set; }
+        public bool EnableDeferredIO { get; set; }
 
         /// <summary>
         /// Causes the server to write super-verbose information about almost every internal operation.
