@@ -20,6 +20,8 @@ namespace LeafSQL.UI.Forms
 {
     public partial class FormMain : Form
     {
+        private TabManager tabManager;
+
         private bool isInitializing = true;
         private LeafSQLClient client;
         private LSTreeNode contextNode = null;
@@ -30,6 +32,7 @@ namespace LeafSQL.UI.Forms
         public FormMain()
         {
             InitializeComponent();
+            tabManager = new TabManager(tabControlPages);
         }
 
         bool ContainsNodeOfType(LSTreeNode node, Types.TreeNodeType type)
@@ -376,46 +379,6 @@ namespace LeafSQL.UI.Forms
 
         #endregion
 
-        #region Tabs.
-
-        private TabPage FindTab(string key)
-        {
-            foreach (TabPage tab in tabControlPages.TabPages)
-            {
-                if (tab.Name == key)
-                {
-                    return tab;
-                }
-            }
-            return null;
-        }
-
-        private bool SelectTab(string key)
-        {
-            TabPage page = FindTab(key);
-
-            if (page != null)
-            {
-                tabControlPages.SelectedTab = page;
-                return true;
-            }
-
-            return false;
-        }
-
-        private void AddNewTab(string key, string text, Control control)
-        {
-            TabPage tab = new TabPage(text);
-            control.Parent = tab;
-            control.Visible = true;
-            control.Dock = DockStyle.Fill;
-            tab.Name = key;
-            tabControlPages.TabPages.Add(tab);
-            tabControlPages.SelectedTab = tab;
-        }
-
-        #endregion
-
         #region Tree Population.
 
         void PopulateSchemas(LSTreeNode node)
@@ -559,5 +522,24 @@ namespace LeafSQL.UI.Forms
         }
 
         #endregion
+
+        #region Toolstrip.
+
+        private void CmdNewFile_Click(object sender, EventArgs e)
+        {
+            tabManager.AddNewTab();
+        }
+
+        #endregion
+
+        #region Menu.
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
     }
 }

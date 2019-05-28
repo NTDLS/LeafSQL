@@ -121,4 +121,139 @@
   <data name="Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="TabErrors" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TabErrors.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TabOutput" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TabOutput.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TabWatch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TabWatch.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolBreakpoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolBreakpoint.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolClearBookmarks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolClearBookmarks.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolClearBreakpoints" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolClearBreakpoints.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolCloseFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolCloseFile.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolCommentLines" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolCommentLines.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolCopy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolCopy.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolCut" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolCut.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolDecreaseIndent" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolDecreaseIndent.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolDelete.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolErrors" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolErrors.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolExamples" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolExamples.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolExistingItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolExistingItem.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolFind" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolFind.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolGoToLine" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolGoToLine.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolHelp.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolIncreaseIndent" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolIncreaseIndent.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolLibrary.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolNewFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolNewFile.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolNewItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolNewItem.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolNewProject" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolNewProject.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolOpenFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolOpenFile.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolOptions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Options.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolOutputPanel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolOutputPanel.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolPaste" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolPaste.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolPause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolPause.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolProjectPanel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolProjectPanel.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolRedo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolRedo.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolRemove" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolRemove.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolReplace" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolReplace.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolRestart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolRestart.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolRun" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolRun.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolSave" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolSave.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolSaveAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolSaveAll.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolSnippets" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolSnippets.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolStepInto" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolStepInto.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolStepOut" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolStepOut.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolStepOver" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolStepOver.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolStop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolStop.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolToolsPanel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolToolsPanel.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolUnCommentLines" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolUnCommentLines.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolUndo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolUndo.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToolWebRun" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ToolWebRun.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

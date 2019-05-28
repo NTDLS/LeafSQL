@@ -205,16 +205,7 @@
             // syntaxDocument
             // 
             this.syntaxDocument.Lines = new string[] {
-                "select top 1000",
-                "    *",
-                "from",
-                "    /Company",
-                "where",
-                "    and IsVip = 'True'",
-                "    and SalesRegion = 'North'",
-                "    and State = 'NC'",
-                "    and Type = 'Lead'"
-            };
+        ""};
             this.syntaxDocument.MaxUndoBufferSize = 1000;
             this.syntaxDocument.Modified = true;
             this.syntaxDocument.UndoStep = 0;

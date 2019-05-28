@@ -11,21 +11,11 @@ namespace LeafSQL.UI.Controls
 {
     public partial class QueryDocuments : UserControl
     {
-        private LeafSQLClient client;
-        private string namespaceName = null;
         private int currentPage = 0;
 
         public QueryDocuments()
         {
             InitializeComponent();
-        }
-
-        public QueryDocuments(LeafSQLClient client, string namespaceName)
-        {
-            InitializeComponent();
-
-            this.client = client;
-            this.namespaceName = namespaceName;
         }
 
         void Preview()
@@ -252,7 +242,23 @@ namespace LeafSQL.UI.Controls
 
         private void QueryDocuments_Load(object sender, EventArgs e)
         {
-            codeEditor.Document.SyntaxFile = @"C:\NTDLS\ClosedSource\LeafSQL\Setup\Highlighters\LSQL.syn";
+            string syntaxtFileName = RegistryHelper.GetRegistryString("", "Path") + "\\IDE\\Highlighters\\LSQL.syn";
+            codeEditor.Document.SyntaxFile = syntaxtFileName;
+
+            codeEditor.Document.Text =
+            "SELECT TOP 100\r\n"
+            + "\tProductID,\r\n"
+            + "\tName,\r\n"
+            + "\tProductNumber,\r\n"
+            + "\tColor,\r\n"
+            + "\tSafetyStockLevel\r\n"
+            + "FROM\r\n"
+            + "\t:AdventureWorks2012:Production:Product\r\n"
+            + "WHERE\r\n"
+            + "\tcolor = 'Black'\r\n"
+            + "\tAND SafetyStockLevel = 500\r\n"
+            + "\tAND ProductLine = 'M '\r\n"
+            + "\tAND Class = 'L '\r\n";
         }
     }
 }

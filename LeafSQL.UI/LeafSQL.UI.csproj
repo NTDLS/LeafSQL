@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>LeafSQL.ico</ApplicationIcon>
@@ -70,6 +72,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="RegistryHelper.cs" />
+    <Compile Include="TabManager.cs" />
+    <Compile Include="Utility.cs" />
     <Compile Include="Controls\QueryDocuments.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -207,6 +213,51 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LeafSQL.ico" />
+    <None Include="Resources\ToolWebRun.bmp" />
+    <None Include="Resources\ToolUndo.bmp" />
+    <None Include="Resources\ToolUnCommentLines.bmp" />
+    <None Include="Resources\ToolToolsPanel.bmp" />
+    <None Include="Resources\ToolStop.bmp" />
+    <None Include="Resources\ToolStepOver.bmp" />
+    <None Include="Resources\ToolStepOut.bmp" />
+    <None Include="Resources\ToolStepInto.bmp" />
+    <None Include="Resources\ToolSnippets.bmp" />
+    <None Include="Resources\ToolSaveAll.bmp" />
+    <None Include="Resources\ToolSave.bmp" />
+    <None Include="Resources\ToolRun.bmp" />
+    <None Include="Resources\ToolRestart.bmp" />
+    <None Include="Resources\ToolReplace.bmp" />
+    <None Include="Resources\ToolRemove.bmp" />
+    <None Include="Resources\ToolRedo.bmp" />
+    <None Include="Resources\ToolProjectPanel.bmp" />
+    <None Include="Resources\ToolPause.bmp" />
+    <None Include="Resources\ToolPaste.bmp" />
+    <None Include="Resources\ToolOutputPanel.bmp" />
+    <None Include="Resources\Options.bmp" />
+    <None Include="Resources\ToolOpenFile.bmp" />
+    <None Include="Resources\ToolNewProject.bmp" />
+    <None Include="Resources\ToolNewItem.bmp" />
+    <None Include="Resources\ToolNewFile.bmp" />
+    <None Include="Resources\ToolLibrary.bmp" />
+    <None Include="Resources\ToolIncreaseIndent.bmp" />
+    <None Include="Resources\ToolHelp.bmp" />
+    <None Include="Resources\ToolGoToLine.bmp" />
+    <None Include="Resources\ToolFind.bmp" />
+    <None Include="Resources\ToolExistingItem.bmp" />
+    <None Include="Resources\ToolExamples.bmp" />
+    <None Include="Resources\ToolErrors.bmp" />
+    <None Include="Resources\ToolDelete.bmp" />
+    <None Include="Resources\ToolDecreaseIndent.bmp" />
+    <None Include="Resources\ToolCut.bmp" />
+    <None Include="Resources\ToolCopy.bmp" />
+    <None Include="Resources\ToolCommentLines.bmp" />
+    <None Include="Resources\ToolCloseFile.bmp" />
+    <None Include="Resources\ToolClearBreakpoints.bmp" />
+    <None Include="Resources\ToolClearBookmarks.bmp" />
+    <None Include="Resources\ToolBreakpoint.bmp" />
+    <None Include="Resources\TabWatch.bmp" />
+    <None Include="Resources\TabOutput.bmp" />
+    <None Include="Resources\TabErrors.bmp" />
     <None Include="Resources\Key.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
