@@ -63,8 +63,6 @@
             // checkBoxIsUnique
             // 
             this.checkBoxIsUnique.AutoSize = true;
-            this.checkBoxIsUnique.Checked = true;
-            this.checkBoxIsUnique.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxIsUnique.Location = new System.Drawing.Point(15, 256);
             this.checkBoxIsUnique.Name = "checkBoxIsUnique";
             this.checkBoxIsUnique.Size = new System.Drawing.Size(77, 17);

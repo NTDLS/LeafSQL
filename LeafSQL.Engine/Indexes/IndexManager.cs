@@ -70,8 +70,35 @@ namespace LeafSQL.Engine.Indexes
                 }
             }
 
-            //TODO: Need to eliminate duplicate index work: the below is not at all ok...
+            //1. Find potential duplicate indexes.
+            //2. Determine if any set of duplicates fully coveres the some other index and eliminate it.
+            //3. Determine if the "duplicate" index is covering something that the others arent.
 
+            foreach (var potentialIndex in potentialIndexs)
+            {
+                foreach (var possibleDuplicate in potentialIndexs)
+                {
+                    if (potentialIndex != possibleDuplicate && potentialIndex.Key.StartsWith(possibleDuplicate.Key))
+                    {
+                        if (possibleDuplicate.IsFullyCoveredBy(potentialIndex))
+                        {
+                            var ds = potentialIndex.GetDifferenceOfAttributes(possibleDuplicate);
+
+                            //var possibleDuplicateAttributes = possibleDuplicate.Index.Attributes.Select(o => o.Name);
+                            //var otherAttributes = other.Index.Attributes.Select(o => o.Name);
+
+                            //return otherAttributes.Where(p => !thisAttributes.Any(p2 => p2 == p)).ToList();
+
+
+                            //use:  GetDifferenceOfAttributes() to determine if we even need to use any of the attributed on the "bigger" index.
+
+                            possibleDuplicate.Eliminate = true;
+                        }
+                    }
+                }
+            }
+
+            //TODO: Need to eliminate duplicate index work: the below is not at all ok...
             //Grab the index that matches the most of our supplied keys but also has the least attributes.
             /*
             var firstIndex = (from o in potentialIndexs where o.Tried == false select o)
@@ -383,10 +410,19 @@ namespace LeafSQL.Engine.Indexes
         public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, List<Condition> conditions, HashSet<Guid> intersectedDocumentIds)
         {
             HashSet<Guid> foundDocumentIds = new HashSet<Guid>();
-
             MatchDocuments(indexPageCatalog.Leaves, conditions, foundDocumentIds, intersectedDocumentIds);
-
             return foundDocumentIds;
+        }
+
+        /// <summary>
+        /// Finds document IDs given a set of conditions.
+        /// </summary>
+        /// <param name="indexPageCatalog"></param>
+        /// <param name="conditions"></param>
+        /// <returns></returns>
+        public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, List<Condition> conditions)
+        {
+            return MatchDocuments(indexPageCatalog, conditions, null);
         }
 
         /// <summary>
@@ -409,7 +445,7 @@ namespace LeafSQL.Engine.Indexes
                             {
                                 //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that colection.
                                 //  this is how we incrementally filter documents with each successive index scan.
-                                if (intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                                if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
                                 {
                                     foundDocumentIds.Add(documentId);
                                 }
@@ -423,7 +459,6 @@ namespace LeafSQL.Engine.Indexes
                 }
             }
         }
-
 
         /// <summary>
         // Finds the appropriate index page for a set of key values.
