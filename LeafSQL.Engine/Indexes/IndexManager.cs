@@ -590,6 +590,9 @@ namespace LeafSQL.Engine.Indexes
             public int ThreadsCompleted { get; set; }
             public int ThreadsStarted { get; set; }
             public int TargetThreadCount { get; set; }
+            public bool Success { get; set; }
+            public StringBuilder Exception { get; set; } = new StringBuilder();
+            public bool Cancel { get; set; }
 
             public bool IsComplete
             {
@@ -622,24 +625,42 @@ namespace LeafSQL.Engine.Indexes
         {
             RebuildIndexItemThreadProc_Params param = (RebuildIndexItemThreadProc_Params)oParam;
 
-            int threadMod = 0;
-
-            lock (param.State)
+            try
             {
-                threadMod = param.State.ThreadsStarted;
-                param.State.ThreadsStarted++;
-                Thread.CurrentThread.Name = $"IDXTHD_{param.Transaction.Session.InstanceKey}_{param.State.ThreadsStarted}";
-                param.Initialized.Set();
-            }
+                int threadMod = 0;
 
-            for (int i = 0; i < param.DocumentCatalog.Collection.Count; i++)
-            {
-                if ((i % param.State.TargetThreadCount) == threadMod)
+                lock (param.State)
                 {
-                    var documentCatalogItem = param.DocumentCatalog.Collection[i];
-                    string documentDiskPath = Path.Combine(param.SchemaMeta.DiskPath, documentCatalogItem.FileName);
-                    var persistDocument = core.IO.GetJson<PersistDocument>(param.Transaction, documentDiskPath, LockOperation.Read);
-                    InsertDocumentIntoIndex(param.Transaction, param.SchemaMeta, param.IndexMeta, persistDocument, param.IndexPageCatalog, false);
+                    threadMod = param.State.ThreadsStarted;
+                    param.State.ThreadsStarted++;
+                    Thread.CurrentThread.Name = $"IDXTHD_{param.Transaction.Session.InstanceKey}_{param.State.ThreadsStarted}";
+                    param.Initialized.Set();
+                }
+
+                for (int i = 0; i < param.DocumentCatalog.Collection.Count; i++)
+                {
+                    if ((i % param.State.TargetThreadCount) == threadMod)
+                    {
+                        var documentCatalogItem = param.DocumentCatalog.Collection[i];
+                        string documentDiskPath = Path.Combine(param.SchemaMeta.DiskPath, documentCatalogItem.FileName);
+                        var persistDocument = core.IO.GetJson<PersistDocument>(param.Transaction, documentDiskPath, LockOperation.Read);
+                        InsertDocumentIntoIndex(param.Transaction, param.SchemaMeta, param.IndexMeta, persistDocument, param.IndexPageCatalog, false);
+                    }
+
+                    if (param.State.Cancel)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                param.State.Success = false;
+                param.State.Cancel = true;
+
+                lock (param.State.Exception)
+                {
+                    param.State.Exception.Append(ex.Message);
                 }
             }
 
@@ -669,7 +690,8 @@ namespace LeafSQL.Engine.Indexes
 
                 var state = new RebuildIndexItemThreadProc_ParallelState()
                 {
-                    TargetThreadCount = Environment.ProcessorCount * 2
+                    TargetThreadCount = Environment.ProcessorCount * 2,
+
                 };
 
                 //state.TargetThreadCount = 1;
@@ -693,6 +715,11 @@ namespace LeafSQL.Engine.Indexes
                 while (state.IsComplete == false)
                 {
                     Thread.Sleep(1);
+                }
+
+                if (state.Success == false)
+                {
+                    throw new LeafSQLExceptionBase($"Failed to build index: {state.Exception.ToString()}");
                 }
 
                 core.IO.PutPBuf(transaction, indexMeta.DiskPath, indexPageCatalog);

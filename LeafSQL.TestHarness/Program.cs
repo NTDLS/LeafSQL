@@ -40,8 +40,8 @@ namespace LeafSQL.TestHarness
 
         static void Main(string[] args)
         {
-            Exporter.ExportAll();
-            TestCreateAllAdventureWorks2012Indexes();
+            //Exporter.ExportAll();
+            //TestCreateAllAdventureWorks2012Indexes();
             //TestServerStress();
 
             //TestCreateIndexAddDocuments();

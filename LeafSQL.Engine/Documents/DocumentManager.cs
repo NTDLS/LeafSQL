@@ -183,13 +183,10 @@ namespace LeafSQL.Engine.Documents
                         var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, selectedIndex.Index.DiskPath, LockOperation.Read);
 
                         Console.WriteLine(selectedIndex.Index.DiskPath);
-
-
                     }
-
                 }
 
-                return null;
+                return results;
 
                 /*
                 var indexCatalog = GetIndexCatalog(txRef.Transaction, schemaMeta, LockOperation.Write);
