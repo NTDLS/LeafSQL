@@ -17,6 +17,19 @@ namespace LeafSQL.Engine.Indexes
         [ProtoMember(3)]
         public PersistIndexLeaves Leaves = new PersistIndexLeaves();
 
+
+        /// <summary>
+        /// Returns true if this is the level of the index that contains the document IDs.
+        /// </summary>
+        [ProtoIgnore]
+        public bool IsBottom
+        {
+            get
+            {
+                return (DocumentIDs != null && DocumentIDs.FirstOrDefault() != null);
+            }
+        }
+
         public PersistIndexLeaf()
         {
 

@@ -56,7 +56,8 @@ namespace LeafSQL.TestHarness
             }
 
             //ExecuteAndPrint("SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
-            ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
+            //ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
+            ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product where color = 'Black' and SafetyStockLevel = 500 and ProductLine = 'M ' and Class = 'L '");
 
             Console.WriteLine("Complete");
             Console.ReadLine();

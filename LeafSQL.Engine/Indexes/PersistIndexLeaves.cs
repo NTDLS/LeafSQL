@@ -25,6 +25,7 @@ namespace LeafSQL.Engine.Indexes
 
         public PersistIndexLeaf AddNewleaf(string key)
         {
+            key = key.ToLower(); //TODO: Make this optional for selective case sensitivity?
             var leaf = new PersistIndexLeaf(key);
             Entries.Add(leaf);
             return leaf;

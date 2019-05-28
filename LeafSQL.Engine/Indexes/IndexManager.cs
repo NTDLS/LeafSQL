@@ -70,7 +70,10 @@ namespace LeafSQL.Engine.Indexes
                 }
             }
 
+            //TODO: Need to eliminate duplicate index work: the below is not at all ok...
+
             //Grab the index that matches the most of our supplied keys but also has the least attributes.
+            /*
             var firstIndex = (from o in potentialIndexs where o.Tried == false select o)
                 .OrderByDescending(s => s.HandledKeyNames.Count)
                 .ThenBy(t => t.Index.Attributes.Count).FirstOrDefault();
@@ -85,6 +88,19 @@ namespace LeafSQL.Engine.Indexes
                 firstIndex.Tried = true;
 
                 indexSelections.Add(new IndexSelection(firstIndex.Index, firstIndex.HandledKeyNames));
+            }
+            */
+
+            //This is just to get some working indexes back to the document matching code. This does not handle duplicate index elimimation nor does it select "good" indexes.
+            foreach (var potentialIndex in potentialIndexs)
+            {
+                var handledConditions = from o in indexKeyMatches where potentialIndex.HandledKeyNames.Contains(o.Key) select o;
+                foreach (var handledCondition in handledConditions)
+                {
+                    handledCondition.Handled = true; 
+                }
+
+                indexSelections.Add(new IndexSelection(potentialIndex.Index, potentialIndex.HandledKeyNames));
             }
 
             indexSelections.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
@@ -357,6 +373,57 @@ namespace LeafSQL.Engine.Indexes
                 throw;
             }
         }
+
+        /// <summary>
+        /// Finds document IDs given a set of conditions.
+        /// </summary>
+        /// <param name="indexPageCatalog"></param>
+        /// <param name="conditions"></param>
+        /// <returns></returns>
+        public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, List<Condition> conditions, HashSet<Guid> intersectedDocumentIds)
+        {
+            HashSet<Guid> foundDocumentIds = new HashSet<Guid>();
+
+            MatchDocuments(indexPageCatalog.Leaves, conditions, foundDocumentIds, intersectedDocumentIds);
+
+            return foundDocumentIds;
+        }
+
+        /// <summary>
+        /// Finds document IDs given a set of conditions.
+        /// </summary>
+        /// <param name="persistIndexLeaves"></param>
+        /// <param name="conditions"></param>
+        /// <param name="foundDocumentIds"></param>
+        private void MatchDocuments(PersistIndexLeaves persistIndexLeaves, List<Condition> conditions, HashSet<Guid> foundDocumentIds, HashSet<Guid> intersectedDocumentIds)
+        {
+            foreach (var leaf in persistIndexLeaves.Entries)
+            {
+                foreach (Condition condition in conditions)
+                {
+                    if (condition.IsMatch(leaf.Key) == true)
+                    {
+                        if (leaf.IsBottom) //This is the bottom of the index, where the doucment IDs are stored.
+                        {
+                            foreach (var documentId in leaf.DocumentIDs)
+                            {
+                                //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that colection.
+                                //  this is how we incrementally filter documents with each successive index scan.
+                                if (intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                                {
+                                    foundDocumentIds.Add(documentId);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MatchDocuments(leaf.Leaves, conditions, foundDocumentIds, intersectedDocumentIds);
+                        }
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         // Finds the appropriate index page for a set of key values.

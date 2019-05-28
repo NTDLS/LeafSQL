@@ -39,27 +39,11 @@ namespace LeafSQL.Engine.Documents
 
                     string documentCatalogDiskPath = Path.Combine(schemaMeta.DiskPath, Constants.DocumentCatalogFile);
 
-                    return FindDocuments(txRef.Transaction, schemaMeta, preparedQuery.Conditions, preparedQuery.RowLimit, preparedQuery.SelectFields);
-
-                    /*
-                    var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(txRef.Transaction, documentCatalogDiskPath, LockOperation.Write);
-
-                    var persistDocument = documentCatalog.GetById(newId);
-                    if (persistDocument != null)
-                    {
-                        string documentDiskPath = Path.Combine(schemaMeta.DiskPath, Helpers.GetDocumentModFilePath(persistDocument.Id));
-
-                        core.IO.DeleteFile(txRef.Transaction, documentDiskPath);
-
-                        documentCatalog.Remove(persistDocument);
-
-                        core.Indexes.DeleteDocumentFromIndexes(txRef.Transaction, schemaMeta, persistDocument.Id);
-
-                        core.IO.PutJson(txRef.Transaction, documentCatalogDiskPath, documentCatalog);
-                    }
-                    */
+                    var result = FindDocuments(txRef.Transaction, schemaMeta, preparedQuery.Conditions, preparedQuery.RowLimit, preparedQuery.SelectFields);
 
                     txRef.Commit();
+
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -178,16 +162,104 @@ namespace LeafSQL.Engine.Documents
                 }
                 else
                 {
+                    List<string> intersectingDocumentIds = new List<string>();
+                    HashSet<Guid> intersectedDocumentIds = new HashSet<Guid>();
+
                     foreach (var selectedIndex in indexSelections)
                     {
                         var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, selectedIndex.Index.DiskPath, LockOperation.Read);
+                        var targetedIndexConditions = (from o in conditions.Collection.Where(o => selectedIndex.HandledKeyNames.Contains(o.Key)) select o).ToList();
+                        intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);
+                    }
 
-                        Console.WriteLine(selectedIndex.Index.DiskPath);
+                    //Now that we have elimiated all but the document IDs that we care about, all we
+                    //  have to do is open each of them up and pull the content requeted in the field list.
+                    if (intersectedDocumentIds.Count > 0)
+                    {
+                        var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(transaction, documentCatalogDiskPath, LockOperation.Read);
+
+                        foreach (var intersectedDocumentId in intersectedDocumentIds)
+                        {
+                            var documentMeta = documentCatalog.GetById(intersectedDocumentId);
+
+                            string documentDiskPath = Path.Combine(schemaMeta.DiskPath, Helpers.GetDocumentModFilePath(documentMeta.Id));
+                            PersistDocument persistDocument = core.IO.GetJson<PersistDocument>(transaction, documentDiskPath, LockOperation.Read);
+                            JObject jsonContent = JObject.Parse(persistDocument.Content);
+                            QueryRow rowValues = new QueryRow();
+
+                            if (rowLimit > 0 && results.Rows.Count > rowLimit)
+                            {
+                                break;
+                            }
+
+                            bool fullAttributeMatch = true;
+
+                            //If we have any conditions that were not indexes, open the remainder
+                            //  of the documents and do additonal document-level filtering.
+                            if (indexSelections.UnhandledKeys?.Count > 0)
+                            {
+                                foreach (Condition condition in conditions.Collection)
+                                {
+                                    JToken jToken = null;
+
+                                    if (jsonContent.TryGetValue(condition.Key, StringComparison.CurrentCultureIgnoreCase, out jToken))
+                                    {
+                                        if (condition.IsMatch(jToken.ToString().ToLower()) == false)
+                                        {
+                                            fullAttributeMatch = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (fullAttributeMatch)
+                            {
+                                if (hasFieldList)
+                                {
+                                    if (jsonContent == null)
+                                    {
+                                        jsonContent = JObject.Parse(persistDocument.Content);
+                                    }
+
+                                    foreach (string fieldName in fieldList)
+                                    {
+                                        if (fieldName == "#RID")
+                                        {
+                                            rowValues.Add(persistDocument.Id.ToString());
+                                        }
+                                        else
+                                        {
+                                            JToken fieldToken = null;
+                                            if (jsonContent.TryGetValue(fieldName, StringComparison.CurrentCultureIgnoreCase, out fieldToken))
+                                            {
+                                                rowValues.Add(fieldToken.ToString());
+                                            }
+                                            else
+                                            {
+                                                rowValues.Add(string.Empty);
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //If no fields "*" was specified as the select list, just return the content of each document and some metadata.
+                                    rowValues.Add(persistDocument.Id.ToString());
+                                    rowValues.Add(persistDocument.Created.ToString());
+                                    rowValues.Add(persistDocument.Modfied.ToString());
+                                    rowValues.Add(persistDocument.Content);
+                                }
+
+                                results.Rows.Add(rowValues);
+                            }
+                        }
                     }
                 }
 
                 return results;
 
+                #region Old Code..
                 /*
                 var indexCatalog = GetIndexCatalog(txRef.Transaction, schemaMeta, LockOperation.Write);
                 indexCatalog.Add(persistIndex);
@@ -395,12 +467,15 @@ namespace LeafSQL.Engine.Documents
                         explanation.Steps.Add(documentScanExplanationNode);
                     }
                     */
+
+                #endregion
             }
             catch (Exception ex)
             {
                 throw new LeafSQLExecutionException(ex.Message);
             }
         }
+
 
         public void Store(Session session, string schema, Library.Payloads.Models.Document document, out Guid newId)
         {

@@ -6,7 +6,6 @@ namespace LeafSQL.Engine.Indexes
     {
         public List<string> HandledKeyNames { get; set; }
         public PersistIndex Index { get; set; }
-        public bool Tried { get; set; }
 
         public PotentialIndex(PersistIndex index, List<string> handledKeyNames)
         {
