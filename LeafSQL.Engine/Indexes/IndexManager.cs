@@ -274,7 +274,6 @@ namespace LeafSQL.Engine.Indexes
             }
         }
 
-
         public void Rebuild(Session session, string schema, string indexName)
         {
             try
@@ -409,7 +408,7 @@ namespace LeafSQL.Engine.Indexes
                     {
                         bool locatedExtent = false;
 
-                        foreach (var leaf in result.Leaves)
+                        foreach (var leaf in result.Leaves.Entries)
                         {
                             if (leaf.Key == token)
                             {
@@ -590,7 +589,7 @@ namespace LeafSQL.Engine.Indexes
             public int ThreadsCompleted { get; set; }
             public int ThreadsStarted { get; set; }
             public int TargetThreadCount { get; set; }
-            public bool Success { get; set; }
+            public bool Success { get; set; } = true;
             public StringBuilder Exception { get; set; } = new StringBuilder();
             public bool Cancel { get; set; }
 
@@ -694,7 +693,7 @@ namespace LeafSQL.Engine.Indexes
 
                 };
 
-                //state.TargetThreadCount = 1;
+                state.TargetThreadCount = 8;
 
                 var param = new RebuildIndexItemThreadProc_Params()
                 {
