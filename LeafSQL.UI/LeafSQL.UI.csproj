@@ -214,6 +214,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LeafSQL.ico" />
+    <None Include="Resources\TreeImage_Index.bmp" />
+    <None Include="Resources\TreeImage_Documents.bmp" />
+    <None Include="Resources\TreeImage_Document.bmp" />
+    <None Include="Resources\TreeImage_Server.bmp" />
+    <None Include="Resources\TreeImage_Schemas.bmp" />
+    <None Include="Resources\TreeImage_Schema.bmp" />
+    <None Include="Resources\TreeImage_Logins.bmp" />
+    <None Include="Resources\TreeImage_Login.bmp" />
+    <None Include="Resources\TreeImage_Indexes.bmp" />
+    <None Include="Resources\TreeImage_IndexAttribute.bmp" />
     <None Include="Resources\ToolWebRun.bmp" />
     <None Include="Resources\ToolUndo.bmp" />
     <None Include="Resources\ToolUnCommentLines.bmp" />

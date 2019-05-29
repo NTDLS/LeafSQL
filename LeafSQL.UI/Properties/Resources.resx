@@ -256,4 +256,34 @@
   <data name="ToolWebRun" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ToolWebRun.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="TreeImage_Document" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Document.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Documents" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Documents.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Index" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Index.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_IndexAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_IndexAttribute.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Indexes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Indexes.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Login" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Login.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Logins" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Logins.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Schema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Schema.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Schemas" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Schemas.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TreeImage_Server" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TreeImage_Server.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using LeafSQL.Library.Client;
+using LeafSQL.Library.Payloads.Models;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.ServiceModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LeafSQL.Library;
-using LeafSQL.Library.Client;
-using LeafSQL.Library.Payloads;
-using LeafSQL.Library.Payloads.Models;
-using LeafSQL.UI;
-using LeafSQL.UI.Forms;
 
 namespace LeafSQL.UI.Forms
 {
@@ -22,13 +13,10 @@ namespace LeafSQL.UI.Forms
     {
         private TabManager tabManager;
         private TreeManager treeManager;
+        private LSTreeNode contextNode = null;
 
         private bool isInitializing = true;
         private LeafSQLClient client;
-        private LSTreeNode contextNode = null;
-        private LSTreeNode ServerNode = null;
-        private LSTreeNode SchemaNode = null;
-        private LSTreeNode LoginsNode = null;
 
         public FormMain()
         {
@@ -54,26 +42,14 @@ namespace LeafSQL.UI.Forms
                 }
             }
 
-            PopulateServerExplorer();
+            treeManager.PopulateServerExplorer(client);
 
             tabManager.AddNewTab();
 
             isInitializing = false;
         }
 
-        bool ContainsNodeOfType(LSTreeNode node, Types.TreeNodeType type)
-        {
-            foreach (LSTreeNode n in node.Nodes)
-            {
-                if (n.Type == type)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        #region Events.
+        #region Tree Context Menu Events.
 
         private void treeViewDatabase_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
@@ -92,9 +68,9 @@ namespace LeafSQL.UI.Forms
                     {
                         if (node.Type == Types.TreeNodeType.Schema || node.Type == Types.TreeNodeType.Schemas)
                         {
-                            if (ContainsNodeOfType(node, Types.TreeNodeType.Schema) == false)
+                            if (treeManager.ContainsNodeOfType(node, Types.TreeNodeType.Schema) == false)
                             {
-                                PopulateSchemas(node);
+                                treeManager.PopulateSchemas(client, node);
                             }
                         }
                     }
@@ -148,7 +124,7 @@ namespace LeafSQL.UI.Forms
 
         private void ContextMenu_CreateIndex(object sender, EventArgs e)
         {
-            string schemaName = GetFullSchemaNameFromNode(contextNode);
+            string schemaName = treeManager.GetFullSchemaNameFromNode(contextNode);
 
             using (FormCreateIndex form = new FormCreateIndex())
             {
@@ -170,7 +146,7 @@ namespace LeafSQL.UI.Forms
                                         Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                                     }
 
-                                    PopulateSchemaIndexes(contextNode);
+                                    treeManager.PopulateSchemaIndexes(client, contextNode);
 
                                 }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -187,7 +163,7 @@ namespace LeafSQL.UI.Forms
                 return;
             }
 
-            string SchemaName = GetFullSchemaNameFromNode(contextNode);
+            string SchemaName = treeManager.GetFullSchemaNameFromNode(contextNode);
 
             client.Schema.Indexes.RebuildAsync(SchemaName, contextNode.Value.ToString()).ContinueWith((t) =>
                         {
@@ -211,7 +187,7 @@ namespace LeafSQL.UI.Forms
                 return;
             }
 
-            string schemaName = GetFullSchemaNameFromNode(contextNode);
+            string schemaName = treeManager.GetFullSchemaNameFromNode(contextNode);
 
             client.Schema.Indexes.DeleteByNameAsync(schemaName, contextNode.Value.ToString()).ContinueWith((t) =>
             {
@@ -358,7 +334,7 @@ namespace LeafSQL.UI.Forms
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    string SchemaName = GetFullSchemaNameFromNode(contextNode) + ":" + form.SchemaName;
+                    string SchemaName = treeManager.GetFullSchemaNameFromNode(contextNode) + ":" + form.SchemaName;
 
                     client.Schema.CreateAsync(SchemaName).ContinueWith((t) =>
                     {
@@ -368,7 +344,7 @@ namespace LeafSQL.UI.Forms
                         if (t.Status == TaskStatus.RanToCompletion)
                         {
                             contextNode.Nodes.Clear();
-                            PopulateSchemas(contextNode, true);
+                            treeManager.PopulateSchemas(client, contextNode, true);
                         }
                         else
                         {
@@ -384,159 +360,12 @@ namespace LeafSQL.UI.Forms
 
         #endregion
 
-        #region Tree Population.
-
-        void PopulateSchemas(LSTreeNode node)
-        {
-            PopulateSchemas(node, false);
-        }
-
-        void PopulateSchemas(LSTreeNode node, bool populateOneLevelDeeper)
-        {
-            string SchemaName = GetFullSchemaNameFromNode(node);
-
-            var schemas = client.Schema.List(SchemaName);
-
-            if (node.Nodes.OfType<TreeNode>().FirstOrDefault(o => o.Text == "Indexes") == null)
-            {
-                LSTreeNode parentIndexesNode = new LSTreeNode(Types.TreeNodeType.Indexes, "Indexes", "Indexes");
-                node.Nodes.Add(parentIndexesNode);
-                PopulateSchemaIndexes(parentIndexesNode);
-            }
-
-            foreach (var schema in schemas)
-            {
-                LSTreeNode SchemaNode = new LSTreeNode(Types.TreeNodeType.Schema, schema.Name, schema.Name);
-                LSTreeNode indexesNode = new LSTreeNode(Types.TreeNodeType.Indexes, "Indexes", "Indexes");
-
-                SchemaNode.Nodes.Add(indexesNode);
-                node.Nodes.Add(SchemaNode);
-
-                PopulateSchemaIndexes(indexesNode);
-            }
-
-            if (populateOneLevelDeeper)
-            {
-                foreach (LSTreeNode subNode in node.Nodes)
-                {
-                    if (subNode.Type == Types.TreeNodeType.Schema)
-                    {
-                        PopulateSchemas(subNode, false);
-                    }
-                }
-            }
-        }
-
-        void PopulateSchemaIndexes(LSTreeNode node)
-        {
-            node.Nodes.Clear();
-
-            string SchemaName = GetFullSchemaNameFromNode(node);
-
-            var indexes = client.Schema.Indexes.List(SchemaName);
-
-            foreach (Index index in indexes.OrderBy(o => o.Name))
-            {
-                var indexNode = new LSTreeNode(Types.TreeNodeType.Index, index.Name);
-
-                foreach (IndexAttribute attribute in index.Attributes)
-                {
-                    indexNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.IndexAttribute, attribute.Name));
-                }
-
-                node.Nodes.Add(indexNode);
-            }
-        }
-
-        void PopulateLogins()
-        {
-            LoginsNode.Nodes.Clear();
-
-            var logins = client.Security.GetLogins();
-
-            foreach (var login in logins.OrderBy(o => o.Name))
-            {
-                LoginsNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Login, login.Name, login.Id));
-            }
-        }
-
-        string GetFullSchemaNameFromNode(LSTreeNode node)
-        {
-            string schemaName = string.Empty;
-
-            if (node.Type == Types.TreeNodeType.Schema)
-            {
-                schemaName = node.Value.ToString();
-            }
-
-            LSTreeNode current = (LSTreeNode)node.Parent;
-
-            while (current.Type != Types.TreeNodeType.Schemas)
-            {
-                if (current.Type == Types.TreeNodeType.Schema)
-                {
-                    if (current.Text == "<root>")
-                    {
-                        schemaName = ":" + schemaName;
-                    }
-                    else
-                    {
-                        schemaName = current.Value.ToString() + ":" + schemaName;
-                    }
-                }
-                current = (LSTreeNode)current.Parent;
-            }
-
-            schemaName = schemaName.Replace("::", ":");
-
-            if (schemaName.Length > 1 && schemaName.EndsWith(":"))
-            {
-                schemaName = schemaName.Substring(0, schemaName.Length - 1);
-            }
-
-            return schemaName;
-        }
-
-        private void PopulateServerExplorer()
-        {
-            treeViewDatabase.Nodes.Clear();
-
-            treeViewDatabase.ImageList = imageListTreeView;
-
-            var serverSettings = client.Server.Settings.Get();
-            var serverVersion = client.Server.Settings.GetVersion();
-
-            ServerNode = new LSTreeNode(Types.TreeNodeType.Server, $"{serverSettings.Name} ({serverVersion.Version})", serverSettings.Name);
-
-            SchemaNode = new LSTreeNode(Types.TreeNodeType.Schemas, "Schemas", "Schemas");
-            SchemaNode.Nodes.Add(new LSTreeNode(Types.TreeNodeType.Schema, "<root>", ":"));
-            SchemaNode.Expand();
-            ServerNode.Nodes.Add(SchemaNode);
-            SchemaNode.Nodes[0].Expand();
-            PopulateSchemas((LSTreeNode)SchemaNode.Nodes[0], true);
-
-            LoginsNode = new LSTreeNode(Types.TreeNodeType.Logins, "Logins");
-            LoginsNode.ImageKey = "Logins";
-            LoginsNode.Expand();
-            ServerNode.Nodes.Add(LoginsNode);
-            PopulateLogins();
-
-            treeViewDatabase.Nodes.Add(ServerNode);
-            ServerNode.Expand();
-        }
-
-        #endregion
-
-        #region Toolstrip.
-
-        private void CmdNewFile_Click(object sender, EventArgs e)
-        {
-            tabManager.AddNewTab();
-        }
-
-        #endregion
-
         #region Menu.
+
+        private void ExecuteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExecuteCurrentDocument();
+        }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -547,7 +376,21 @@ namespace LeafSQL.UI.Forms
 
         #region Toolbar.
 
-        private void CmdRun_Click(object sender, EventArgs e)
+        private void CmdNewFile_Click(object sender, EventArgs e)
+        {
+            tabManager.AddNewTab();
+        }
+
+        private void CmdExecute_Click(object sender, EventArgs e)
+        {
+            ExecuteCurrentDocument();
+        }
+
+        #endregion
+
+        #region Execution.
+
+        private void ExecuteCurrentDocument()
         {
             var queryDocument = tabManager.CurrentQueryDocument();
             string queryText = queryDocument.TextOrSelection?.Trim();
@@ -581,8 +424,6 @@ namespace LeafSQL.UI.Forms
             }
         }
 
-        #endregion
-
         private void PopulateException(AggregateException ex)
         {
             StringBuilder text = new StringBuilder();
@@ -614,7 +455,7 @@ namespace LeafSQL.UI.Forms
 
             foreach (var row in queryResult.Rows)
             {
-                dataGridSearchDocuments.Rows.Add(row.Values.ToArray()); 
+                dataGridSearchDocuments.Rows.Add(row.Values.ToArray());
             }
         }
 
@@ -634,5 +475,7 @@ namespace LeafSQL.UI.Forms
             }
             textBoxOutput.Text = string.Empty;
         }
+
+        #endregion
     }
 }

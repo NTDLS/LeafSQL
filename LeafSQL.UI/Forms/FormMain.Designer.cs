@@ -28,15 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.splitContainerPrimaryVerticle = new System.Windows.Forms.SplitContainer();
             this.treeViewDatabase = new System.Windows.Forms.TreeView();
+            this.splitContainerCodeAndResult = new System.Windows.Forms.SplitContainer();
             this.tabControlPages = new System.Windows.Forms.TabControl();
-            this.imageListTreeView = new System.Windows.Forms.ImageList(this.components);
+            this.tabControlResults = new System.Windows.Forms.TabControl();
+            this.tabPageResults = new System.Windows.Forms.TabPage();
+            this.dataGridSearchDocuments = new System.Windows.Forms.DataGridView();
+            this.tabPagePlan = new System.Windows.Forms.TabPage();
+            this.dataGridViewPlan = new System.Windows.Forms.DataGridView();
+            this.ColumnPlanOrdinal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnOperation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnCoveredAttributes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnScannedNodes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnResultingNodes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnIntersectedNodes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnDuration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPageOutput = new System.Windows.Forms.TabPage();
+            this.textBoxOutput = new System.Windows.Forms.TextBox();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.queryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -62,35 +79,16 @@
             this.cmdCommentLines = new System.Windows.Forms.ToolStripButton();
             this.cmdUncommentLines = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.cmdRun = new System.Windows.Forms.ToolStripButton();
+            this.cmdExecute = new System.Windows.Forms.ToolStripButton();
             this.cmdStop = new System.Windows.Forms.ToolStripButton();
             this.ToolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.cmdToggleProjectPanel = new System.Windows.Forms.ToolStripButton();
             this.cmdToggleOutput = new System.Windows.Forms.ToolStripButton();
             this.cmdToggleToolsPanel = new System.Windows.Forms.ToolStripButton();
-            this.splitter1 = new System.Windows.Forms.Splitter();
-            this.splitContainerCodeAndResult = new System.Windows.Forms.SplitContainer();
-            this.tabControlResults = new System.Windows.Forms.TabControl();
-            this.tabPageResults = new System.Windows.Forms.TabPage();
-            this.dataGridSearchDocuments = new System.Windows.Forms.DataGridView();
-            this.tabPagePlan = new System.Windows.Forms.TabPage();
-            this.dataGridViewPlan = new System.Windows.Forms.DataGridView();
-            this.ColumnPlanOrdinal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnOperation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnCoveredAttributes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnScannedNodes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnResultingNodes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnIntersectedNodes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnDuration = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPageOutput = new System.Windows.Forms.TabPage();
-            this.textBoxOutput = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerPrimaryVerticle)).BeginInit();
             this.splitContainerPrimaryVerticle.Panel1.SuspendLayout();
             this.splitContainerPrimaryVerticle.Panel2.SuspendLayout();
             this.splitContainerPrimaryVerticle.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerCodeAndResult)).BeginInit();
             this.splitContainerCodeAndResult.Panel1.SuspendLayout();
             this.splitContainerCodeAndResult.Panel2.SuspendLayout();
@@ -101,6 +99,8 @@
             this.tabPagePlan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPlan)).BeginInit();
             this.tabPageOutput.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainerPrimaryVerticle
@@ -132,6 +132,25 @@
             this.treeViewDatabase.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeViewDatabase_BeforeExpand);
             this.treeViewDatabase.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewDatabase_NodeMouseClick);
             // 
+            // splitContainerCodeAndResult
+            // 
+            this.splitContainerCodeAndResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerCodeAndResult.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainerCodeAndResult.Location = new System.Drawing.Point(3, 0);
+            this.splitContainerCodeAndResult.Name = "splitContainerCodeAndResult";
+            this.splitContainerCodeAndResult.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerCodeAndResult.Panel1
+            // 
+            this.splitContainerCodeAndResult.Panel1.Controls.Add(this.tabControlPages);
+            // 
+            // splitContainerCodeAndResult.Panel2
+            // 
+            this.splitContainerCodeAndResult.Panel2.Controls.Add(this.tabControlResults);
+            this.splitContainerCodeAndResult.Size = new System.Drawing.Size(749, 659);
+            this.splitContainerCodeAndResult.SplitterDistance = 519;
+            this.splitContainerCodeAndResult.TabIndex = 2;
+            // 
             // tabControlPages
             // 
             this.tabControlPages.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -141,25 +160,151 @@
             this.tabControlPages.Size = new System.Drawing.Size(749, 519);
             this.tabControlPages.TabIndex = 0;
             // 
-            // imageListTreeView
+            // tabControlResults
             // 
-            this.imageListTreeView.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTreeView.ImageStream")));
-            this.imageListTreeView.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListTreeView.Images.SetKeyName(0, "Server");
-            this.imageListTreeView.Images.SetKeyName(1, "Document");
-            this.imageListTreeView.Images.SetKeyName(2, "Documents");
-            this.imageListTreeView.Images.SetKeyName(3, "Logins");
-            this.imageListTreeView.Images.SetKeyName(4, "Schema");
-            this.imageListTreeView.Images.SetKeyName(5, "Schemas");
-            this.imageListTreeView.Images.SetKeyName(6, "Login");
-            this.imageListTreeView.Images.SetKeyName(7, "Index");
-            this.imageListTreeView.Images.SetKeyName(8, "Indexes");
-            this.imageListTreeView.Images.SetKeyName(9, "IndexAttribute");
+            this.tabControlResults.Controls.Add(this.tabPageResults);
+            this.tabControlResults.Controls.Add(this.tabPagePlan);
+            this.tabControlResults.Controls.Add(this.tabPageOutput);
+            this.tabControlResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlResults.Location = new System.Drawing.Point(0, 0);
+            this.tabControlResults.Name = "tabControlResults";
+            this.tabControlResults.SelectedIndex = 0;
+            this.tabControlResults.Size = new System.Drawing.Size(749, 136);
+            this.tabControlResults.TabIndex = 4;
+            // 
+            // tabPageResults
+            // 
+            this.tabPageResults.Controls.Add(this.dataGridSearchDocuments);
+            this.tabPageResults.Location = new System.Drawing.Point(4, 22);
+            this.tabPageResults.Name = "tabPageResults";
+            this.tabPageResults.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageResults.Size = new System.Drawing.Size(741, 110);
+            this.tabPageResults.TabIndex = 0;
+            this.tabPageResults.Text = "Results";
+            this.tabPageResults.UseVisualStyleBackColor = true;
+            // 
+            // dataGridSearchDocuments
+            // 
+            this.dataGridSearchDocuments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridSearchDocuments.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridSearchDocuments.Location = new System.Drawing.Point(3, 3);
+            this.dataGridSearchDocuments.Name = "dataGridSearchDocuments";
+            this.dataGridSearchDocuments.Size = new System.Drawing.Size(735, 104);
+            this.dataGridSearchDocuments.TabIndex = 2;
+            // 
+            // tabPagePlan
+            // 
+            this.tabPagePlan.Controls.Add(this.dataGridViewPlan);
+            this.tabPagePlan.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePlan.Name = "tabPagePlan";
+            this.tabPagePlan.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePlan.Size = new System.Drawing.Size(741, 110);
+            this.tabPagePlan.TabIndex = 1;
+            this.tabPagePlan.Text = "Plan";
+            this.tabPagePlan.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewPlan
+            // 
+            this.dataGridViewPlan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPlan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColumnPlanOrdinal,
+            this.ColumnOperation,
+            this.ColumnIndex,
+            this.ColumnCoveredAttributes,
+            this.ColumnScannedNodes,
+            this.ColumnResultingNodes,
+            this.ColumnIntersectedNodes,
+            this.ColumnDuration});
+            this.dataGridViewPlan.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewPlan.Location = new System.Drawing.Point(3, 3);
+            this.dataGridViewPlan.Name = "dataGridViewPlan";
+            this.dataGridViewPlan.Size = new System.Drawing.Size(735, 104);
+            this.dataGridViewPlan.TabIndex = 3;
+            // 
+            // ColumnPlanOrdinal
+            // 
+            this.ColumnPlanOrdinal.Frozen = true;
+            this.ColumnPlanOrdinal.HeaderText = "Ordinal";
+            this.ColumnPlanOrdinal.Name = "ColumnPlanOrdinal";
+            this.ColumnPlanOrdinal.ReadOnly = true;
+            // 
+            // ColumnOperation
+            // 
+            this.ColumnOperation.Frozen = true;
+            this.ColumnOperation.HeaderText = "Operation";
+            this.ColumnOperation.Name = "ColumnOperation";
+            this.ColumnOperation.ReadOnly = true;
+            // 
+            // ColumnIndex
+            // 
+            this.ColumnIndex.HeaderText = "Index";
+            this.ColumnIndex.Name = "ColumnIndex";
+            this.ColumnIndex.ReadOnly = true;
+            // 
+            // ColumnCoveredAttributes
+            // 
+            this.ColumnCoveredAttributes.HeaderText = "Covered Attributes";
+            this.ColumnCoveredAttributes.Name = "ColumnCoveredAttributes";
+            this.ColumnCoveredAttributes.ReadOnly = true;
+            this.ColumnCoveredAttributes.Width = 200;
+            // 
+            // ColumnScannedNodes
+            // 
+            this.ColumnScannedNodes.HeaderText = "Scanned Nodes";
+            this.ColumnScannedNodes.Name = "ColumnScannedNodes";
+            this.ColumnScannedNodes.ReadOnly = true;
+            // 
+            // ColumnResultingNodes
+            // 
+            this.ColumnResultingNodes.HeaderText = "Resulting Nodes";
+            this.ColumnResultingNodes.Name = "ColumnResultingNodes";
+            this.ColumnResultingNodes.ReadOnly = true;
+            // 
+            // ColumnIntersectedNodes
+            // 
+            this.ColumnIntersectedNodes.HeaderText = "Intersected Nodes";
+            this.ColumnIntersectedNodes.Name = "ColumnIntersectedNodes";
+            this.ColumnIntersectedNodes.ReadOnly = true;
+            // 
+            // ColumnDuration
+            // 
+            this.ColumnDuration.HeaderText = "Duration (ms)";
+            this.ColumnDuration.Name = "ColumnDuration";
+            this.ColumnDuration.ReadOnly = true;
+            // 
+            // tabPageOutput
+            // 
+            this.tabPageOutput.Controls.Add(this.textBoxOutput);
+            this.tabPageOutput.Location = new System.Drawing.Point(4, 22);
+            this.tabPageOutput.Name = "tabPageOutput";
+            this.tabPageOutput.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageOutput.Size = new System.Drawing.Size(741, 110);
+            this.tabPageOutput.TabIndex = 2;
+            this.tabPageOutput.Text = "Output";
+            this.tabPageOutput.UseVisualStyleBackColor = true;
+            // 
+            // textBoxOutput
+            // 
+            this.textBoxOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxOutput.Location = new System.Drawing.Point(3, 3);
+            this.textBoxOutput.Multiline = true;
+            this.textBoxOutput.Name = "textBoxOutput";
+            this.textBoxOutput.Size = new System.Drawing.Size(735, 104);
+            this.textBoxOutput.TabIndex = 0;
+            // 
+            // splitter1
+            // 
+            this.splitter1.Location = new System.Drawing.Point(0, 0);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 659);
+            this.splitter1.TabIndex = 1;
+            this.splitter1.TabStop = false;
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.queryToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -181,6 +326,22 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
+            // 
+            // queryToolStripMenuItem
+            // 
+            this.queryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.executeToolStripMenuItem});
+            this.queryToolStripMenuItem.Name = "queryToolStripMenuItem";
+            this.queryToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.queryToolStripMenuItem.Text = "Query";
+            // 
+            // executeToolStripMenuItem
+            // 
+            this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
+            this.executeToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.executeToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.executeToolStripMenuItem.Text = "Execute";
+            this.executeToolStripMenuItem.Click += new System.EventHandler(this.ExecuteToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -229,7 +390,7 @@
             this.cmdCommentLines,
             this.cmdUncommentLines,
             this.ToolStripSeparator3,
-            this.cmdRun,
+            this.cmdExecute,
             this.cmdStop,
             this.ToolStripSeparator18,
             this.cmdToggleProjectPanel,
@@ -414,16 +575,16 @@
             this.ToolStripSeparator3.Name = "ToolStripSeparator3";
             this.ToolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
-            // cmdRun
+            // cmdExecute
             // 
-            this.cmdRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.cmdRun.Image = global::LeafSQL.UI.Properties.Resources.ToolRun;
-            this.cmdRun.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.cmdRun.Name = "cmdRun";
-            this.cmdRun.Size = new System.Drawing.Size(23, 22);
-            this.cmdRun.Text = "Run";
-            this.cmdRun.ToolTipText = "Run";
-            this.cmdRun.Click += new System.EventHandler(this.CmdRun_Click);
+            this.cmdExecute.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.cmdExecute.Image = global::LeafSQL.UI.Properties.Resources.ToolRun;
+            this.cmdExecute.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.cmdExecute.Name = "cmdExecute";
+            this.cmdExecute.Size = new System.Drawing.Size(23, 22);
+            this.cmdExecute.Text = "Execute";
+            this.cmdExecute.ToolTipText = "Run";
+            this.cmdExecute.Click += new System.EventHandler(this.CmdExecute_Click);
             // 
             // cmdStop
             // 
@@ -466,165 +627,6 @@
             this.cmdToggleToolsPanel.Size = new System.Drawing.Size(23, 22);
             this.cmdToggleToolsPanel.Text = "Toggle Tools Panel";
             // 
-            // splitter1
-            // 
-            this.splitter1.Location = new System.Drawing.Point(0, 0);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 659);
-            this.splitter1.TabIndex = 1;
-            this.splitter1.TabStop = false;
-            // 
-            // splitContainerCodeAndResult
-            // 
-            this.splitContainerCodeAndResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerCodeAndResult.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainerCodeAndResult.Location = new System.Drawing.Point(3, 0);
-            this.splitContainerCodeAndResult.Name = "splitContainerCodeAndResult";
-            this.splitContainerCodeAndResult.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainerCodeAndResult.Panel1
-            // 
-            this.splitContainerCodeAndResult.Panel1.Controls.Add(this.tabControlPages);
-            // 
-            // splitContainerCodeAndResult.Panel2
-            // 
-            this.splitContainerCodeAndResult.Panel2.Controls.Add(this.tabControlResults);
-            this.splitContainerCodeAndResult.Size = new System.Drawing.Size(749, 659);
-            this.splitContainerCodeAndResult.SplitterDistance = 519;
-            this.splitContainerCodeAndResult.TabIndex = 2;
-            // 
-            // tabControlResults
-            // 
-            this.tabControlResults.Controls.Add(this.tabPageResults);
-            this.tabControlResults.Controls.Add(this.tabPagePlan);
-            this.tabControlResults.Controls.Add(this.tabPageOutput);
-            this.tabControlResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlResults.Location = new System.Drawing.Point(0, 0);
-            this.tabControlResults.Name = "tabControlResults";
-            this.tabControlResults.SelectedIndex = 0;
-            this.tabControlResults.Size = new System.Drawing.Size(749, 136);
-            this.tabControlResults.TabIndex = 4;
-            // 
-            // tabPageResults
-            // 
-            this.tabPageResults.Controls.Add(this.dataGridSearchDocuments);
-            this.tabPageResults.Location = new System.Drawing.Point(4, 22);
-            this.tabPageResults.Name = "tabPageResults";
-            this.tabPageResults.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageResults.Size = new System.Drawing.Size(741, 110);
-            this.tabPageResults.TabIndex = 0;
-            this.tabPageResults.Text = "Results";
-            this.tabPageResults.UseVisualStyleBackColor = true;
-            // 
-            // dataGridSearchDocuments
-            // 
-            this.dataGridSearchDocuments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridSearchDocuments.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridSearchDocuments.Location = new System.Drawing.Point(3, 3);
-            this.dataGridSearchDocuments.Name = "dataGridSearchDocuments";
-            this.dataGridSearchDocuments.Size = new System.Drawing.Size(735, 104);
-            this.dataGridSearchDocuments.TabIndex = 2;
-            // 
-            // tabPagePlan
-            // 
-            this.tabPagePlan.Controls.Add(this.dataGridViewPlan);
-            this.tabPagePlan.Location = new System.Drawing.Point(4, 22);
-            this.tabPagePlan.Name = "tabPagePlan";
-            this.tabPagePlan.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePlan.Size = new System.Drawing.Size(741, 110);
-            this.tabPagePlan.TabIndex = 1;
-            this.tabPagePlan.Text = "Plan";
-            this.tabPagePlan.UseVisualStyleBackColor = true;
-            // 
-            // dataGridViewPlan
-            // 
-            this.dataGridViewPlan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewPlan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ColumnPlanOrdinal,
-            this.ColumnOperation,
-            this.ColumnIndex,
-            this.ColumnCoveredAttributes,
-            this.ColumnScannedNodes,
-            this.ColumnResultingNodes,
-            this.ColumnIntersectedNodes,
-            this.ColumnDuration});
-            this.dataGridViewPlan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewPlan.Location = new System.Drawing.Point(3, 3);
-            this.dataGridViewPlan.Name = "dataGridViewPlan";
-            this.dataGridViewPlan.Size = new System.Drawing.Size(735, 104);
-            this.dataGridViewPlan.TabIndex = 3;
-            // 
-            // ColumnPlanOrdinal
-            // 
-            this.ColumnPlanOrdinal.Frozen = true;
-            this.ColumnPlanOrdinal.HeaderText = "Ordinal";
-            this.ColumnPlanOrdinal.Name = "ColumnPlanOrdinal";
-            this.ColumnPlanOrdinal.ReadOnly = true;
-            // 
-            // ColumnOperation
-            // 
-            this.ColumnOperation.Frozen = true;
-            this.ColumnOperation.HeaderText = "Operation";
-            this.ColumnOperation.Name = "ColumnOperation";
-            this.ColumnOperation.ReadOnly = true;
-            // 
-            // ColumnIndex
-            // 
-            this.ColumnIndex.HeaderText = "Index";
-            this.ColumnIndex.Name = "ColumnIndex";
-            this.ColumnIndex.ReadOnly = true;
-            // 
-            // ColumnCoveredAttributes
-            // 
-            this.ColumnCoveredAttributes.HeaderText = "Covered Attributes";
-            this.ColumnCoveredAttributes.Name = "ColumnCoveredAttributes";
-            this.ColumnCoveredAttributes.ReadOnly = true;
-            this.ColumnCoveredAttributes.Width = 200;
-            // 
-            // ColumnScannedNodes
-            // 
-            this.ColumnScannedNodes.HeaderText = "Scanned Nodes";
-            this.ColumnScannedNodes.Name = "ColumnScannedNodes";
-            this.ColumnScannedNodes.ReadOnly = true;
-            // 
-            // ColumnResultingNodes
-            // 
-            this.ColumnResultingNodes.HeaderText = "Resulting Nodes";
-            this.ColumnResultingNodes.Name = "ColumnResultingNodes";
-            this.ColumnResultingNodes.ReadOnly = true;
-            // 
-            // ColumnIntersectedNodes
-            // 
-            this.ColumnIntersectedNodes.HeaderText = "Intersected Nodes";
-            this.ColumnIntersectedNodes.Name = "ColumnIntersectedNodes";
-            this.ColumnIntersectedNodes.ReadOnly = true;
-            // 
-            // ColumnDuration
-            // 
-            this.ColumnDuration.HeaderText = "Duration (ms)";
-            this.ColumnDuration.Name = "ColumnDuration";
-            this.ColumnDuration.ReadOnly = true;
-            // 
-            // tabPageOutput
-            // 
-            this.tabPageOutput.Controls.Add(this.textBoxOutput);
-            this.tabPageOutput.Location = new System.Drawing.Point(4, 22);
-            this.tabPageOutput.Name = "tabPageOutput";
-            this.tabPageOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOutput.Size = new System.Drawing.Size(741, 110);
-            this.tabPageOutput.TabIndex = 2;
-            this.tabPageOutput.Text = "Output";
-            this.tabPageOutput.UseVisualStyleBackColor = true;
-            // 
-            // textBoxOutput
-            // 
-            this.textBoxOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxOutput.Location = new System.Drawing.Point(3, 3);
-            this.textBoxOutput.Multiline = true;
-            this.textBoxOutput.Name = "textBoxOutput";
-            this.textBoxOutput.Size = new System.Drawing.Size(735, 104);
-            this.textBoxOutput.TabIndex = 0;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -644,10 +646,6 @@
             this.splitContainerPrimaryVerticle.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerPrimaryVerticle)).EndInit();
             this.splitContainerPrimaryVerticle.ResumeLayout(false);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.toolStrip.ResumeLayout(false);
-            this.toolStrip.PerformLayout();
             this.splitContainerCodeAndResult.Panel1.ResumeLayout(false);
             this.splitContainerCodeAndResult.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerCodeAndResult)).EndInit();
@@ -659,6 +657,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPlan)).EndInit();
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -669,7 +671,6 @@
         private System.Windows.Forms.SplitContainer splitContainerPrimaryVerticle;
         private System.Windows.Forms.TreeView treeViewDatabase;
         private System.Windows.Forms.TabControl tabControlPages;
-        private System.Windows.Forms.ImageList imageListTreeView;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -698,7 +699,7 @@
         internal System.Windows.Forms.ToolStripButton cmdCommentLines;
         internal System.Windows.Forms.ToolStripButton cmdUncommentLines;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator3;
-        internal System.Windows.Forms.ToolStripButton cmdRun;
+        internal System.Windows.Forms.ToolStripButton cmdExecute;
         internal System.Windows.Forms.ToolStripButton cmdStop;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator18;
         internal System.Windows.Forms.ToolStripButton cmdToggleProjectPanel;
@@ -721,6 +722,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnDuration;
         private System.Windows.Forms.TabPage tabPageOutput;
         private System.Windows.Forms.TextBox textBoxOutput;
+        private System.Windows.Forms.ToolStripMenuItem queryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem executeToolStripMenuItem;
     }
 }
 

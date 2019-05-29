@@ -11,37 +11,14 @@ namespace LeafSQL.UI.Controls
             InitializeComponent();
         }
 
-        public CodeEditorControl Editor
-        {
-            get
-            {
-                return codeEditor;
-            }
-        }
+        public CodeEditorControl Editor => codeEditor;
+        public override string Text => codeEditor.Document.Text;
+        public string SelectedText => codeEditor.Selection?.Text;
 
         /// <summary>
         /// Returns the selected text, or if no text is selected returns the entire text.
         /// </summary>
-        public string TextOrSelection
-        {
-            get
-            {
-                if (codeEditor.Selection != null && codeEditor.Selection.Text.Length > 0)
-                {
-                    return codeEditor.Selection.Text;
-                }
-
-                return codeEditor.Document.Text;
-            }
-        }
-
-        public string Text
-        {
-            get
-            {
-                return codeEditor.Document.Text;
-            }
-        }
+        public string TextOrSelection => String.IsNullOrEmpty(SelectedText) ? codeEditor.Selection.Text : Text;
 
         private void QueryDocuments_Load(object sender, EventArgs e)
         {
