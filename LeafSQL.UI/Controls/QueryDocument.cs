@@ -18,7 +18,7 @@ namespace LeafSQL.UI.Controls
         /// <summary>
         /// Returns the selected text, or if no text is selected returns the entire text.
         /// </summary>
-        public string TextOrSelection => String.IsNullOrEmpty(SelectedText) ? codeEditor.Selection.Text : Text;
+        public string TextOrSelection => String.IsNullOrEmpty(SelectedText) ? Text : codeEditor.Selection.Text;
 
         private void QueryDocuments_Load(object sender, EventArgs e)
         {
