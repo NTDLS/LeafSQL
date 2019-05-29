@@ -71,7 +71,6 @@
             this.codeEditor.TabIndex = 2;
             this.codeEditor.Text = "codeEditorControl1";
             this.codeEditor.WhitespaceColor = System.Drawing.SystemColors.ControlDark;
-            this.codeEditor.Click += new System.EventHandler(this.CodeEditor_Click);
             // 
             // QueryDocument
             // 

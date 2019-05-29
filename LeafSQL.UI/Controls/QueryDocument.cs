@@ -1,212 +1,47 @@
-﻿using LeafSQL.Library.Client;
-using LeafSQL.Library.Payloads.Models;
+﻿using NTDLS.Windows.Forms;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LeafSQL.UI.Controls
 {
     public partial class QueryDocument : UserControl
     {
-        private int currentPage = 0;
-
         public QueryDocument()
         {
             InitializeComponent();
         }
 
-        void Preview()
+        public CodeEditorControl Editor
         {
-            /*
-            DocumentsPagedResult documents = dal.GetAllDocumentsByPage(session, namespaceName, currentPage, 100);
-
-            dataGridSearchDocuments.Rows.Clear();
-
-            foreach (Document document in documents.Collection)
+            get
             {
-                dataGridSearchDocuments.Rows.Add(
-                    new object[] { document.Id,
-                        document.OriginalType,
-                        document.Bytes.Length,
-                        document.Text }
-                    );
+                return codeEditor;
             }
-
-            dataGridViewPlan.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            dataGridSearchDocuments.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            */
         }
 
-        public async Task<QueryResult> ExecuteAsync(LeafSQLClient client)
+        /// <summary>
+        /// Returns the selected text, or if no text is selected returns the entire text.
+        /// </summary>
+        public string TextOrSelection
         {
-            string queryText = codeEditor.Document.Text;
-            if (codeEditor.Selection != null && codeEditor.Selection.Text.Length > 0)
+            get
             {
-                queryText = codeEditor.Selection.Text;
-            }
-            return await client.Query.ExecuteQueryAsync(queryText);
-        }
-
-        void DoSearch()
-        {
-
-            //CancellationTokenSource cancellationToken = new CancellationTokenSource();
-
-            /*
-            dal.ExecuteQueryAsync(session, queryText).ContinueWith((t) =>
-            {
-                FormProgress.WaitForVisible();
-                FormProgress.Complete();
-
-                if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
+                if (codeEditor.Selection != null && codeEditor.Selection.Text.Length > 0)
                 {
-                    //Success
-                    QueryResult documents = t.Result;
-
-                    if (documents != null)
-                    {
-                        textBoxOutput.Text += documents.RowCount.ToString("N0") + " rows affected." + "\r\n";
-                        textBoxOutput.Text += documents.Message == null ? string.Empty : documents.Message + "\r\n";
-                        textBoxOutput.Text += documents.Exception == null ? string.Empty : documents.Exception + "\r\n";
-
-                        toolStripStatusLabelDuration.Text = (documents.ExecutionTime.TotalMilliseconds / 1000.0).ToString("N2") + "s";
-
-                        if (documents.Explanation != null)
-                        {
-                            int ordinal = 0;
-
-                            foreach (PlanExplanationNode explainStep in documents.Explanation.Steps)
-                            {
-                                dataGridViewPlan.Rows.Add(
-                                    new object[] {
-                                            ordinal++,
-                                            explainStep.Operation,
-                                            explainStep.IndexName,
-                                            String.Join(", ", explainStep.CoveredAttributes),
-                                            explainStep.ScannedNodes,
-                                            explainStep.ResultingNodes,
-                                            explainStep.IntersectedNodes,
-                                            explainStep.Duration.TotalMilliseconds
-                                    });
-                            }
-                        }
-
-                        if (documents.Documents != null && documents.Documents.Count > 0)
-                        {
-                            toolStripStatusLabelRowCount.Text = documents.Documents.Count.ToString("N0") + " rows";
-
-                            int ordinal = 0;
-
-                            PopulateDefaultResultColumns();
-
-                            foreach (Document document in documents.Documents)
-                            {
-                                dataGridSearchDocuments.Rows.Add(
-                                    new object[] {
-                                            ordinal++,
-                                            document.Id,
-                                            document.OriginalType,
-                                            document.Bytes.Length,
-                                            document.Text
-                                    });
-                            }
-                        }
-                        else if (documents.Columns != null && documents.Columns.Count > 0)
-                        {
-                            toolStripStatusLabelRowCount.Text = documents.Rows.Count.ToString("N0") + " rows";
-
-                            foreach (string columnName in documents.Columns)
-                            {
-                                dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
-                                {
-                                    Name = columnName,
-                                    HeaderText = columnName,
-                                    ReadOnly = true,
-                                    Frozen = false
-                                });
-                            }
-
-                            foreach (List<string> row in documents.Rows)
-                            {
-                                dataGridSearchDocuments.Rows.Add(row.ToArray());
-                            }
-                        }
-
-                        if (dataGridSearchDocuments.Rows.Count > 0)
-                        {
-                            tabControlResults.SelectedTab = tabPageResults;
-                        }
-                        else if (textBoxOutput.Text.Trim().Length > 0)
-                        {
-                            tabControlResults.SelectedTab = tabPageOutput;
-                        }
-
-                        dataGridViewPlan.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-                        dataGridSearchDocuments.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-                    }
+                    return codeEditor.Selection.Text;
                 }
-                else
-                {
-                    textBoxOutput.Text += "An error occured while processing your request.\r\n";
-                    if (t.Result != null)
-                    {
-                        textBoxOutput.Text += t.Result.Message == null ? string.Empty : t.Result.Message + "\r\n";
-                        textBoxOutput.Text += t.Result.Exception == null ? string.Empty : t.Result.Exception + "\r\n";
-                    }
 
-                    tabControlResults.SelectedTab = tabPageOutput;
-                }
-            }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
-
-            //FormProgress.Instance.CanCancel = true;
-
-            if (FormProgress.Start("Executing query...") == DialogResult.Cancel)
-            {
-                //cancellationToken.Cancel();
+                return codeEditor.Document.Text;
             }
-            */
         }
 
-        /*
-        private void PopulateDefaultResultColumns()
+        public string Text
         {
-            dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
+            get
             {
-                Name = "Ordinal",
-                HeaderText = "Ordinal",
-                ReadOnly = true,
-                Frozen = true
-            });
-            dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "Id",
-                HeaderText = "Id",
-                ReadOnly = true,
-                Frozen = true
-            });
-            dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "Data Type",
-                HeaderText = "Data Type",
-                ReadOnly = true,
-                Frozen = false
-            });
-            dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "Length",
-                HeaderText = "Length",
-                ReadOnly = true,
-                Frozen = false
-            });
-            dataGridSearchDocuments.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "Text",
-                HeaderText = "Text",
-                ReadOnly = true,
-                Frozen = false
-            });
+                return codeEditor.Document.Text;
+            }
         }
-        */
 
         private void QueryDocuments_Load(object sender, EventArgs e)
         {
@@ -227,11 +62,6 @@ namespace LeafSQL.UI.Controls
             + "\tAND SafetyStockLevel = 500\r\n"
             + "\tAND ProductLine = 'M '\r\n"
             + "\tAND Class = 'L '\r\n";
-        }
-
-        private void CodeEditor_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -73,11 +73,6 @@
             this.tabControlResults = new System.Windows.Forms.TabControl();
             this.tabPageResults = new System.Windows.Forms.TabPage();
             this.dataGridSearchDocuments = new System.Windows.Forms.DataGridView();
-            this.ColumnOrdinal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnOriginalType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPagePlan = new System.Windows.Forms.TabPage();
             this.dataGridViewPlan = new System.Windows.Forms.DataGridView();
             this.ColumnPlanOrdinal = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -524,48 +519,11 @@
             // dataGridSearchDocuments
             // 
             this.dataGridSearchDocuments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridSearchDocuments.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ColumnOrdinal,
-            this.ColumnId,
-            this.ColumnOriginalType,
-            this.ColumnLength,
-            this.ColumnText});
             this.dataGridSearchDocuments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridSearchDocuments.Location = new System.Drawing.Point(3, 3);
             this.dataGridSearchDocuments.Name = "dataGridSearchDocuments";
             this.dataGridSearchDocuments.Size = new System.Drawing.Size(735, 104);
             this.dataGridSearchDocuments.TabIndex = 2;
-            // 
-            // ColumnOrdinal
-            // 
-            this.ColumnOrdinal.Frozen = true;
-            this.ColumnOrdinal.HeaderText = "Ordinal";
-            this.ColumnOrdinal.Name = "ColumnOrdinal";
-            this.ColumnOrdinal.ReadOnly = true;
-            // 
-            // ColumnId
-            // 
-            this.ColumnId.Frozen = true;
-            this.ColumnId.HeaderText = "RID";
-            this.ColumnId.Name = "ColumnId";
-            this.ColumnId.ReadOnly = true;
-            // 
-            // ColumnOriginalType
-            // 
-            this.ColumnOriginalType.HeaderText = "Original Type";
-            this.ColumnOriginalType.Name = "ColumnOriginalType";
-            this.ColumnOriginalType.ReadOnly = true;
-            // 
-            // ColumnLength
-            // 
-            this.ColumnLength.HeaderText = "Length";
-            this.ColumnLength.Name = "ColumnLength";
-            this.ColumnLength.ReadOnly = true;
-            // 
-            // ColumnText
-            // 
-            this.ColumnText.HeaderText = "Text";
-            this.ColumnText.Name = "ColumnText";
             // 
             // tabPagePlan
             // 
@@ -573,7 +531,7 @@
             this.tabPagePlan.Location = new System.Drawing.Point(4, 22);
             this.tabPagePlan.Name = "tabPagePlan";
             this.tabPagePlan.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePlan.Size = new System.Drawing.Size(730, 123);
+            this.tabPagePlan.Size = new System.Drawing.Size(741, 110);
             this.tabPagePlan.TabIndex = 1;
             this.tabPagePlan.Text = "Plan";
             this.tabPagePlan.UseVisualStyleBackColor = true;
@@ -593,7 +551,7 @@
             this.dataGridViewPlan.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewPlan.Location = new System.Drawing.Point(3, 3);
             this.dataGridViewPlan.Name = "dataGridViewPlan";
-            this.dataGridViewPlan.Size = new System.Drawing.Size(724, 117);
+            this.dataGridViewPlan.Size = new System.Drawing.Size(735, 104);
             this.dataGridViewPlan.TabIndex = 3;
             // 
             // ColumnPlanOrdinal
@@ -653,7 +611,7 @@
             this.tabPageOutput.Location = new System.Drawing.Point(4, 22);
             this.tabPageOutput.Name = "tabPageOutput";
             this.tabPageOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOutput.Size = new System.Drawing.Size(730, 123);
+            this.tabPageOutput.Size = new System.Drawing.Size(741, 110);
             this.tabPageOutput.TabIndex = 2;
             this.tabPageOutput.Text = "Output";
             this.tabPageOutput.UseVisualStyleBackColor = true;
@@ -664,7 +622,7 @@
             this.textBoxOutput.Location = new System.Drawing.Point(3, 3);
             this.textBoxOutput.Multiline = true;
             this.textBoxOutput.Name = "textBoxOutput";
-            this.textBoxOutput.Size = new System.Drawing.Size(724, 117);
+            this.textBoxOutput.Size = new System.Drawing.Size(735, 104);
             this.textBoxOutput.TabIndex = 0;
             // 
             // FormMain
@@ -751,11 +709,6 @@
         private System.Windows.Forms.TabControl tabControlResults;
         private System.Windows.Forms.TabPage tabPageResults;
         private System.Windows.Forms.DataGridView dataGridSearchDocuments;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOrdinal;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOriginalType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnLength;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnText;
         private System.Windows.Forms.TabPage tabPagePlan;
         private System.Windows.Forms.DataGridView dataGridViewPlan;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlanOrdinal;

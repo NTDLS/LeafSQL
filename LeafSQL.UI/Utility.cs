@@ -11,7 +11,7 @@ namespace LeafSQL.UI
         private static int nextFileName = 1;
         public static string GetNextFileName()
         {
-            return ("Query " + (nextFileName++) + ".lsql");
+            return ("New Query " + (nextFileName++) + ".lsql");
         }
     }
 }

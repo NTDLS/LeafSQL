@@ -21,6 +21,7 @@ namespace LeafSQL.UI.Forms
     public partial class FormMain : Form
     {
         private TabManager tabManager;
+        private TreeManager treeManager;
 
         private bool isInitializing = true;
         private LeafSQLClient client;
@@ -32,7 +33,32 @@ namespace LeafSQL.UI.Forms
         public FormMain()
         {
             InitializeComponent();
+
             tabManager = new TabManager(tabControlPages);
+            treeManager = new TreeManager(treeViewDatabase);
+        }
+
+        private void FormMain_Shown(object sender, EventArgs e)
+        {
+            using (var formLogin = new FormLogin())
+            {
+                if (formLogin.ShowDialog() == DialogResult.OK)
+                {
+                    client = new LeafSQLClient(formLogin.Address, formLogin.Username, formLogin.Password);
+                }
+                else
+                {
+                    this.DialogResult = DialogResult.Cancel;
+                    this.Close();
+                    return;
+                }
+            }
+
+            PopulateServerExplorer();
+
+            tabManager.AddNewTab();
+
+            isInitializing = false;
         }
 
         bool ContainsNodeOfType(LSTreeNode node, Types.TreeNodeType type)
@@ -356,27 +382,6 @@ namespace LeafSQL.UI.Forms
             }
         }
 
-        private void FormMain_Shown(object sender, EventArgs e)
-        {
-            using (var formLogin = new FormLogin())
-            {
-                if (formLogin.ShowDialog() == DialogResult.OK)
-                {
-                    client = new LeafSQLClient(formLogin.Address, formLogin.Username, formLogin.Password);
-                }
-                else
-                {
-                    this.DialogResult = DialogResult.Cancel;
-                    this.Close();
-                    return;
-                }
-            }
-
-            PopulateServerExplorer();
-
-            isInitializing = false;
-        }
-
         #endregion
 
         #region Tree Population.
@@ -442,7 +447,6 @@ namespace LeafSQL.UI.Forms
                 node.Nodes.Add(indexNode);
             }
         }
-
 
         void PopulateLogins()
         {
@@ -546,21 +550,27 @@ namespace LeafSQL.UI.Forms
         private void CmdRun_Click(object sender, EventArgs e)
         {
             var queryDocument = tabManager.CurrentQueryDocument();
+            string queryText = queryDocument.TextOrSelection?.Trim();
 
-            queryDocument.ExecuteAsync(client).ContinueWith((t) =>
+            if (String.IsNullOrWhiteSpace(queryText))
+            {
+                return;
+            }
+
+            client.Query.ExecuteQueryAsync(queryText).ContinueWith((t) =>
             {
                 FormProgress.WaitForVisible();
                 FormProgress.Complete();
 
                 if (t.Status == TaskStatus.RanToCompletion)
                 {
-                    PopulateResultsGrid(t.Result);
+                    PopulateFormFromResults(t.Result);
                 }
                 else
                 {
-                    Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
+                    PopulateException(t.Exception);
+                    //Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                 }
-
             }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
             //FormProgress.Instance.CanCancel = true;
@@ -573,9 +583,23 @@ namespace LeafSQL.UI.Forms
 
         #endregion
 
-        private void PopulateResultsGrid(QueryResult queryResult)
+        private void PopulateException(AggregateException ex)
+        {
+            StringBuilder text = new StringBuilder();
+            foreach (var exception in ex.InnerExceptions)
+            {
+                text.AppendLine(exception.Message);
+            }
+
+            textBoxOutput.Text = text.ToString();
+            tabControlResults.SelectedTab = tabPageOutput;
+        }
+
+        private void PopulateFormFromResults(QueryResult queryResult)
         {
             ClearResults();
+
+            tabControlResults.SelectedTab = tabPageResults;
 
             foreach (var column in queryResult.Columns)
             {
@@ -610,6 +634,5 @@ namespace LeafSQL.UI.Forms
             }
             textBoxOutput.Text = string.Empty;
         }
-
     }
 }

@@ -75,6 +75,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="RegistryHelper.cs" />
     <Compile Include="TabManager.cs" />
+    <Compile Include="TreeManager.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Controls\QueryDocument.cs">
       <SubType>UserControl</SubType>

@@ -66,7 +66,8 @@ namespace LeafSQL.UI
 
         public void AddNewTab()
         {
-            AddTab(Utility.GetNextFileName(), "", new Controls.QueryDocument());
+            string fileName = Utility.GetNextFileName();
+            AddTab(fileName, fileName, new Controls.QueryDocument());
         }
     }
 }
