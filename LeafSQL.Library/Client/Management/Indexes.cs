@@ -51,24 +51,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task RebuildAsync(string schema, string indexName)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectName = indexName
             };
 
-            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Indexes/RebuildByName", action);
+            await SubmitAsync<ActionGenericBase, ActionResponseBase>("api/Indexes/RebuildByName", action);
         }
 
         public void Rebuild(string schema, string indexName)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectName = indexName
             };
 
-            Submit<ActionGenericObject, ActionResponseBase>("api/Indexes/RebuildByName", action);
+            Submit<ActionGenericBase, ActionResponseBase>("api/Indexes/RebuildByName", action);
         }
 
         /// <summary>
@@ -78,24 +78,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task<bool> ExistsAsync(string schema, string indexName)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectName = indexName
             };
 
-            return (await SubmitAsync<ActionGenericObject, ActionResponseBoolean>("api/Indexes/ExistsByName", action)).Value;
+            return (await SubmitAsync<ActionGenericBase, ActionResponseBoolean>("api/Indexes/ExistsByName", action)).Value;
         }
 
         public bool Exists(string schema, string indexName)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectName = indexName
             };
 
-            return Submit<ActionGenericObject, ActionResponseBoolean>("api/Indexes/ExistsByName", action).Value;
+            return Submit<ActionGenericBase, ActionResponseBoolean>("api/Indexes/ExistsByName", action).Value;
         }
 
         /// <summary>
@@ -105,22 +105,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task<List<Payloads.Models.Index>> ListAsync(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            return (await SubmitAsync<ActionGenericObject, ActionResponseIndexes>("api/Indexes/List", action)).List;
+            return (await SubmitAsync<ActionGenericBase, ActionResponseIndexes>("api/Indexes/List", action)).List;
         }
 
         public List<Payloads.Models.Index> List(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            return Submit<ActionGenericObject, ActionResponseIndexes>("api/Indexes/List", action).List;
+            return Submit<ActionGenericBase, ActionResponseIndexes>("api/Indexes/List", action).List;
         }
 
         /// <summary>
@@ -130,24 +130,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task DeleteByNameAsync(string schema, string indexName)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectName = indexName
             };
 
-            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Indexes/DeleteByName", action);
+            await SubmitAsync<ActionGenericBase, ActionResponseBase>("api/Indexes/DeleteByName", action);
         }
 
         public void DeleteByName(string schema, string indexName)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectName = indexName
             };
 
-            Submit<ActionGenericObject, ActionResponseBase>("api/Indexes/DeleteByName", action);
+            Submit<ActionGenericBase, ActionResponseBase>("api/Indexes/DeleteByName", action);
         }
     }
 }

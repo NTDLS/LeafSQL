@@ -24,22 +24,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task CreateAsync(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Schema/Create", action);
+            await SubmitAsync<ActionGenericBase, ActionResponseBase>("api/Schema/Create", action);
         }
 
         public void Create(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            Submit<ActionGenericObject, ActionResponseBase>("api/Schema/Create", action);
+            Submit<ActionGenericBase, ActionResponseBase>("api/Schema/Create", action);
         }
 
         /// <summary>
@@ -48,22 +48,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task<bool> ExistsAsync(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            return (await SubmitAsync<ActionGenericObject, ActionResponseBoolean>("api/Schema/Exists", action)).Value;
+            return (await SubmitAsync<ActionGenericBase, ActionResponseBoolean>("api/Schema/Exists", action)).Value;
         }
 
         public bool Exists(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            return Submit<ActionGenericObject, ActionResponseBoolean>("api/Schema/Exists", action).Value;
+            return Submit<ActionGenericBase, ActionResponseBoolean>("api/Schema/Exists", action).Value;
         }
 
 
@@ -73,22 +73,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task DropAsync(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Schema/Drop", action);
+            await SubmitAsync<ActionGenericBase, ActionResponseBase>("api/Schema/Drop", action);
         }
 
         public void Drop(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            Submit<ActionGenericObject, ActionResponseBase>("api/Schema/Drop", action);
+            Submit<ActionGenericBase, ActionResponseBase>("api/Schema/Drop", action);
         }
 
         /// <summary>
@@ -97,22 +97,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task<List<Payloads.Models.Schema>> ListAsync(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            return (await SubmitAsync<ActionGenericObject, ActionResponseSchemas>("api/Schema/List", action)).List;
+            return (await SubmitAsync<ActionGenericBase, ActionResponseSchemas>("api/Schema/List", action)).List;
         }
 
         public List<Payloads.Models.Schema> List(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema
             };
 
-            return Submit<ActionGenericObject, ActionResponseSchemas>("api/Schema/List", action).List;
+            return Submit<ActionGenericBase, ActionResponseSchemas>("api/Schema/List", action).List;
         }
     }
 }

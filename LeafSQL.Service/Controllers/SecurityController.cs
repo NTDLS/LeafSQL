@@ -132,7 +132,7 @@ namespace LeafSQL.Service.Controllers
         }
 
         [HttpPost]
-        public ActionResponseId DeleteLoginByName([FromBody]ActionGenericObject action)
+        public ActionResponseId DeleteLoginByName([FromBody]ActionGenericBase action)
         {
             var result = new ActionResponseId();
 

@@ -16,7 +16,7 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Namespace/List
         [HttpPost]
-        public ActionResponseDocuments List([FromBody] ActionGenericObject action)
+        public ActionResponseDocuments List([FromBody] ActionGenericBase action)
         {
             Session session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -66,7 +66,7 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Document/{Namespace}/DeleteById/{Id}
         [HttpPost]
-        public ActionResponseBase DeleteById([FromBody] ActionGenericObject action)
+        public ActionResponseBase DeleteById([FromBody] ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
 

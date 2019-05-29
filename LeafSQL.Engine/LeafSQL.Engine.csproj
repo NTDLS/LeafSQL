@@ -79,6 +79,7 @@
     <Compile Include="Indexes\IndexManager.cs" />
     <Compile Include="Indexes\PersistIndexPageCatalog.cs" />
     <Compile Include="Indexes\PotentialIndex.cs" />
+    <Compile Include="Interfaces\ICoreManagement.cs" />
     <Compile Include="Interfaces\IPayloadCompatible.cs" />
     <Compile Include="IO\IOManager.cs" />
     <Compile Include="Locking\LockIntention.cs" />

@@ -2,9 +2,9 @@
 
 namespace LeafSQL.Library.Payloads.Actions
 {
-    public class ActionGenericObject : ActionRequestBase
+    public class ActionGenericBase : ActionRequestBase
     {
-        public ActionGenericObject(Guid sessionId)
+        public ActionGenericBase(Guid sessionId)
             : base (sessionId)
         {
             this.SessionId = sessionId;

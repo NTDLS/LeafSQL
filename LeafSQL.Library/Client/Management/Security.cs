@@ -110,23 +110,23 @@ namespace LeafSQL.Library.Client.Management
 
         public async Task DeleteLoginByNameAsync(string username)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 ObjectName = username
             };
 
-            await SubmitAsync<ActionGenericObject, ActionResponseId>
+            await SubmitAsync<ActionGenericBase, ActionResponseId>
                 ("api/Security/DeleteLoginByName", action);
         }
 
         public void DeleteLoginByName(string username)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 ObjectName = username
             };
 
-            Submit<ActionGenericObject, ActionResponseId>
+            Submit<ActionGenericBase, ActionResponseId>
                 ("api/Security/DeleteLoginByName", action);
         }
     }

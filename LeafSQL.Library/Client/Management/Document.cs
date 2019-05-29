@@ -51,24 +51,24 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="document"></param>
         public async Task DeleteByIdAsync(string schema, Guid id)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectId = id
             };
 
-            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Document/DeleteById", action);
+            await SubmitAsync<ActionGenericBase, ActionResponseBase>("api/Document/DeleteById", action);
         }
 
         public void DeleteById(string schema, Guid id)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
                 ObjectId = id
             };
 
-            Submit<ActionGenericObject, ActionResponseBase>("api/Document/DeleteById", action);
+            Submit<ActionGenericBase, ActionResponseBase>("api/Document/DeleteById", action);
         }
 
         /// <summary>
@@ -77,22 +77,22 @@ namespace LeafSQL.Library.Client.Management
         /// <param name="schema"></param>
         public async Task<List<Payloads.Models.DocumentMeta>> GetCatalogAsync(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
             };
 
-            return (await SubmitAsync<ActionGenericObject, ActionResponseDocuments>("api/Document/List", action)).List;
+            return (await SubmitAsync<ActionGenericBase, ActionResponseDocuments>("api/Document/List", action)).List;
         }
 
         public List<Payloads.Models.DocumentMeta> GetCatalog(string schema)
         {
-            var action = new ActionGenericObject(client.Token.SessionId)
+            var action = new ActionGenericBase(client.Token.SessionId)
             {
                 SchemaName = schema,
             };
 
-            return Submit<ActionGenericObject, ActionResponseDocuments>("api/Document/List", action).List;
+            return Submit<ActionGenericBase, ActionResponseDocuments>("api/Document/List", action).List;
         }
     }
 }

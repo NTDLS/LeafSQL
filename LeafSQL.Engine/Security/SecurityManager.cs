@@ -1,4 +1,5 @@
-﻿using LeafSQL.Engine.Sessions;
+﻿using LeafSQL.Engine.Interfaces;
+using LeafSQL.Engine.Sessions;
 using LeafSQL.Library.Payloads.Models;
 using System;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 
 namespace LeafSQL.Engine.Security
 {
-    public class SecurityManager
+    public class SecurityManager: ICoreManagement
     {
         private Core core;
 

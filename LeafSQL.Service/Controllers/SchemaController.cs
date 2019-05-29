@@ -15,7 +15,7 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Namespace/List
         [HttpPost]
-        public ActionResponseSchemas List([FromBody]ActionGenericObject action)
+        public ActionResponseSchemas List([FromBody]ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -48,7 +48,7 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Namespace/{Namespace}/Create
         [HttpPost]
-        public ActionResponseBase Create([FromBody]ActionGenericObject action)
+        public ActionResponseBase Create([FromBody]ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -75,7 +75,7 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Namespace/{Namespace}/Exists
         [HttpPost]
-        public ActionResponseBoolean Exists([FromBody]ActionGenericObject action)
+        public ActionResponseBoolean Exists([FromBody]ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -102,7 +102,7 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Namespace/{Namespace}/Drop
         [HttpPost]
-        public ActionResponseBase Drop([FromBody]ActionGenericObject action)
+        public ActionResponseBase Drop([FromBody]ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";

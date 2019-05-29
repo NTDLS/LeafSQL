@@ -4,7 +4,7 @@ using System;
 
 namespace LeafSQL.Library.Payloads.Actions
 {
-    public class ActionRequestStoreDocument : ActionGenericObject
+    public class ActionRequestStoreDocument : ActionGenericBase
     {
         public ActionRequestStoreDocument(Guid sessionId) : base(sessionId) { }
 

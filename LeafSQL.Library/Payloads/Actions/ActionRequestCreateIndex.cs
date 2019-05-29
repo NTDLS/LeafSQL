@@ -3,7 +3,7 @@ using System;
 
 namespace LeafSQL.Library.Payloads
 {
-    public class ActionRequestCreateIndex : ActionGenericObject
+    public class ActionRequestCreateIndex : ActionGenericBase
     {
         public ActionRequestCreateIndex(Guid sessionId) : base(sessionId) { }
 

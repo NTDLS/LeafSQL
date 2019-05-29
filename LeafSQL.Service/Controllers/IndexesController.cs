@@ -47,7 +47,7 @@ namespace LeafSQL.Service.Controllers
         /// </summary>
         /// <param name="schema"></param>
         [HttpPost]
-        public ActionResponseBase DeleteByName([FromBody] ActionGenericObject action)
+        public ActionResponseBase DeleteByName([FromBody] ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -73,7 +73,7 @@ namespace LeafSQL.Service.Controllers
         /// </summary>
         /// <param name="schema"></param>
         [HttpPost]
-        public ActionResponseBase RebuildByName([FromBody] ActionGenericObject action)
+        public ActionResponseBase RebuildByName([FromBody] ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -100,7 +100,7 @@ namespace LeafSQL.Service.Controllers
         /// </summary>
         /// <param name="schema"></param>
         [HttpPost]
-        public ActionResponseBoolean ExistsByName([FromBody] ActionGenericObject action)
+        public ActionResponseBoolean ExistsByName([FromBody] ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
@@ -126,7 +126,7 @@ namespace LeafSQL.Service.Controllers
         /// </summary>
         /// <param name="schema"></param>
         [HttpPost]
-        public ActionResponseIndexes List([FromBody] ActionGenericObject action)
+        public ActionResponseIndexes List([FromBody] ActionGenericBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
