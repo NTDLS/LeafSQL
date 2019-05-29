@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LeafSQL.Engine.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,12 @@ using System.Linq;
 namespace LeafSQL.Engine.Indexes
 {
     [Serializable]
-    public class PersistIndexCatalog
+    public class PersistIndexCatalog : ICatalog<PersistIndex>
     {
         public List<PersistIndex> Collection = new List<PersistIndex>();
+
+        [JsonIgnore]
+        public Object LockObject { get; set; } = new object();
 
         [JsonIgnore]
         public string DiskPath { get; set; }
@@ -40,19 +44,19 @@ namespace LeafSQL.Engine.Indexes
             return null;
         }
 
-        public PersistIndexCatalog Clone()
+        public List<PersistIndex> Clone()
         {
-            var catalog = new PersistIndexCatalog();
-
-            lock (this)
+            lock (LockObject)
             {
+                var catalog = new PersistIndexCatalog();
+
                 foreach (var obj in Collection)
                 {
                     catalog.Collection.Add(obj.Clone());
                 }
-            }
 
-            return catalog;
+                return catalog.Collection;
+            }
         }
     }
 }

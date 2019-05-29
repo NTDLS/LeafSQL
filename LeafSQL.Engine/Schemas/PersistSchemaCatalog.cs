@@ -1,12 +1,17 @@
-﻿using System;
+﻿using LeafSQL.Engine.Interfaces;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace LeafSQL.Engine.Schemas
 {
-    public class PersistSchemaCatalog
+    public class PersistSchemaCatalog : ICatalog<PersistSchema>
     {
         public List<PersistSchema> Collection = new List<PersistSchema>();
+
+        [JsonIgnore]
+        public Object LockObject { get; set; } = new object();
 
         public void Add(PersistSchema namespaceMeta)
         {
@@ -42,11 +47,11 @@ namespace LeafSQL.Engine.Schemas
             return (from o in Collection where o.Id == id select o).FirstOrDefault();
         }
 
-        public PersistSchemaCatalog Clone()
+        public List<PersistSchema> Clone()
         {
             var catalog = new PersistSchemaCatalog();
 
-            lock (this)
+            lock (LockObject)
             {
                 foreach (var obj in Collection)
                 {
@@ -54,8 +59,7 @@ namespace LeafSQL.Engine.Schemas
                 }
             }
 
-            return catalog;
+            return catalog.Collection;
         }
-
     }
 }

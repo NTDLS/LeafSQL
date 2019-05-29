@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Interfaces;
 using LeafSQL.Library.Payloads.Models;
 using Newtonsoft.Json;
 using System;
@@ -8,23 +9,30 @@ using System.Linq;
 namespace LeafSQL.Engine.Security
 {
     [Serializable]
-    public class PersistLoginCatalog
+    public class PersistLoginCatalog: ICatalog<PersistLogin>
     {
         [JsonProperty]
         private List<PersistLogin> Collection = new List<PersistLogin>();
 
         [JsonIgnore]
-        public object LockObject { get; set; } = new object();
+        public Object LockObject { get; set; } = new object();
 
         [JsonIgnore]
         public string DiskPath { get; set; }
 
-        public void Remove(PersistLogin item)
+        public List<PersistLogin> Clone()
         {
+            var catalog = new PersistLoginCatalog();
+
             lock (LockObject)
             {
-                Collection.Remove(item);
+                foreach (var obj in Collection)
+                {
+                    catalog.Collection.Add(obj.Clone());
+                }
             }
+
+            return catalog.Collection;
         }
 
         /// <summary>
@@ -39,6 +47,22 @@ namespace LeafSQL.Engine.Security
                 item.Id = Guid.NewGuid();
                 this.Collection.Add(item);
                 return item.Id;
+            }
+        }
+
+        public void Remove(PersistLogin item)
+        {
+            lock (LockObject)
+            {
+                Collection.Remove(item);
+            }
+        }
+        
+        public PersistLogin GetById(Guid id)
+        {
+            lock (LockObject)
+            {
+                return (from o in Collection where o.Id == id select o).FirstOrDefault();
             }
         }
 
@@ -72,14 +96,6 @@ namespace LeafSQL.Engine.Security
             }
         }
 
-        public PersistLogin GetById(Guid id)
-        {
-            lock (LockObject)
-            {
-                return (from o in Collection where o.Id == id select o).FirstOrDefault();
-            }
-        }
-
         public PersistLogin GetByName(string name)
         {
             lock (LockObject)
@@ -104,21 +120,6 @@ namespace LeafSQL.Engine.Security
                                     && o.PasswordHash.ToLower() == passwordHash.ToLower()
                                     ).FirstOrDefault();
             }
-        }
-
-        public List<PersistLogin> Clone()
-        {
-            var catalog = new PersistLoginCatalog();
-
-            lock (LockObject)
-            {
-                foreach (var obj in Collection)
-                {
-                    catalog.Collection.Add(obj.Clone());
-                }
-            }
-
-            return catalog.Collection;
         }
     }
 }
