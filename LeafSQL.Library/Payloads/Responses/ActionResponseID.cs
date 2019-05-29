@@ -2,7 +2,7 @@
 
 namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponseId: IActionResponse
+    public class ActionResponseId: ActionResponseBase
     {
         public Guid Id { get; set; }
     }

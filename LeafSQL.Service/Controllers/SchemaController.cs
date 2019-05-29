@@ -1,5 +1,5 @@
 ﻿using LeafSQL.Library;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Threading;
@@ -48,13 +48,13 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Namespace/{Namespace}/Create
         [HttpPost]
-        public IActionResponse Create([FromBody]ActionGenericObject action)
+        public ActionResponseBase Create([FromBody]ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new IActionResponse();
+            ActionResponseBase result = new ActionResponseBase();
 
             try
             {
@@ -102,13 +102,13 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Namespace/{Namespace}/Drop
         [HttpPost]
-        public IActionResponse Drop([FromBody]ActionGenericObject action)
+        public ActionResponseBase Drop([FromBody]ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new IActionResponse();
+            ActionResponseBase result = new ActionResponseBase();
 
             try
             {

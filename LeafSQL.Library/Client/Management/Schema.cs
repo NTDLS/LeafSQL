@@ -1,5 +1,5 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,7 +29,7 @@ namespace LeafSQL.Library.Client.Management
                 SchemaName = schema
             };
 
-            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Schema/Create", action);
+            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Schema/Create", action);
         }
 
         public void Create(string schema)
@@ -39,7 +39,7 @@ namespace LeafSQL.Library.Client.Management
                 SchemaName = schema
             };
 
-            Submit<ActionGenericObject, IActionResponse>("api/Schema/Create", action);
+            Submit<ActionGenericObject, ActionResponseBase>("api/Schema/Create", action);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace LeafSQL.Library.Client.Management
                 SchemaName = schema
             };
 
-            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Schema/Drop", action);
+            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Schema/Drop", action);
         }
 
         public void Drop(string schema)
@@ -88,7 +88,7 @@ namespace LeafSQL.Library.Client.Management
                 SchemaName = schema
             };
 
-            Submit<ActionGenericObject, IActionResponse>("api/Schema/Drop", action);
+            Submit<ActionGenericObject, ActionResponseBase>("api/Schema/Drop", action);
         }
 
         /// <summary>

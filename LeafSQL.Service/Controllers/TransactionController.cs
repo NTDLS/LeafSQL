@@ -1,5 +1,5 @@
 ﻿using LeafSQL.Library;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Threading;
@@ -10,13 +10,13 @@ namespace LeafSQL.Service.Controllers
     public class TransactionController : ApiController
     {
         [HttpPost]
-        public IActionResponse Begin([FromBody]ActionGeneric action)
+        public ActionResponseBase Begin([FromBody]ActionRequestBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new IActionResponse();
+            ActionResponseBase result = new ActionResponseBase();
 
             try
             {
@@ -32,13 +32,13 @@ namespace LeafSQL.Service.Controllers
         }
 
         [HttpPost]
-        public IActionResponse Commit([FromBody]ActionGeneric action)
+        public ActionResponseBase Commit([FromBody]ActionRequestBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new IActionResponse();
+            ActionResponseBase result = new ActionResponseBase();
 
             try
             {
@@ -54,13 +54,13 @@ namespace LeafSQL.Service.Controllers
         }
 
         [HttpPost]
-        public IActionResponse Rollback([FromBody]ActionGeneric action)
+        public ActionResponseBase Rollback([FromBody]ActionRequestBase action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new IActionResponse();
+            ActionResponseBase result = new ActionResponseBase();
 
             try
             {

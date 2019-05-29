@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace LeafSQL.Library.Payloads.Actions.Base
+namespace LeafSQL.Library.Payloads.Actions
 {
-    public class ActionGeneric: IActionRequest
+    public class ActionRequestBase: IActionRequest
     {
-        public ActionGeneric(Guid sessionId)
+        public ActionRequestBase(Guid sessionId)
         {
             this.SessionId = sessionId;
         }

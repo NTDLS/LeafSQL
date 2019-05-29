@@ -1,6 +1,5 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
 using LeafSQL.Library.Payloads.Actions;
-using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
 using System;
@@ -42,8 +41,8 @@ namespace LeafSQL.Library.Client.Management
         /// </summary>
         public void Logout()
         {
-            Submit<ActionGeneric, IActionResponse>
-                ("api/Security/Logout", new ActionGeneric(client.Token.SessionId));
+            Submit<ActionRequestBase, ActionResponseBase>
+                ("api/Security/Logout", new ActionRequestBase(client.Token.SessionId));
 
             client.Token = new Payloads.Models.LoginToken();
         }
@@ -55,14 +54,14 @@ namespace LeafSQL.Library.Client.Management
         public async Task<List<Payloads.Models.Login>> GetLoginsAsync()
         {
 
-            return (await SubmitAsync<ActionGeneric, ActionResponceLogins>
-                ("api/Security/ListLogins", new ActionGeneric(client.Token.SessionId))).List;
+            return (await SubmitAsync<ActionRequestBase, ActionResponceLogins>
+                ("api/Security/ListLogins", new ActionRequestBase(client.Token.SessionId))).List;
         }
 
         public List<Payloads.Models.Login> GetLogins()
         {
-            return Submit<ActionGeneric, ActionResponceLogins>
-                ("api/Security/ListLogins", new ActionGeneric(client.Token.SessionId)).List;
+            return Submit<ActionRequestBase, ActionResponceLogins>
+                ("api/Security/ListLogins", new ActionRequestBase(client.Token.SessionId)).List;
         }
 
         public async Task<Guid> CreateLoginAsync(string username, string passwordHash)

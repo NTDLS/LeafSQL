@@ -23,7 +23,7 @@ namespace LeafSQL.Library.Client.Management
                 Statement = statement
             };
 
-            await SubmitAsync<ActionRequestExecuteNonQuery, IActionResponse>("api/Query/ExecuteNonQuery", action);
+            await SubmitAsync<ActionRequestExecuteNonQuery, ActionResponseBase>("api/Query/ExecuteNonQuery", action);
         }
 
         public void ExecuteNonQuery(string statement)
@@ -33,7 +33,7 @@ namespace LeafSQL.Library.Client.Management
                 Statement = statement
             };
 
-            Submit<ActionRequestExecuteNonQuery, IActionResponse>("api/Query/ExecuteNonQuery", action);
+            Submit<ActionRequestExecuteNonQuery, ActionResponseBase>("api/Query/ExecuteNonQuery", action);
         }
 
         public async Task<QueryResult> ExecuteQueryAsync(string statement)

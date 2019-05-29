@@ -1,4 +1,4 @@
-﻿using LeafSQL.Library.Payloads.Actions.Base;
+﻿using LeafSQL.Library.Payloads.Actions;
 using System;
 
 namespace LeafSQL.Library.Payloads

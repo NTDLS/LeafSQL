@@ -2,7 +2,7 @@
 
 namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponseServerSettings : IActionResponse
+    public class ActionResponseServerSettings : ActionResponseBase
     {
         public ServerSettings Settings { get; set; }
     }

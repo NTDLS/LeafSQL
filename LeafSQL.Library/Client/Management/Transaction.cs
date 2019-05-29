@@ -1,5 +1,5 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
 
 namespace LeafSQL.Library.Client.Management
@@ -16,20 +16,20 @@ namespace LeafSQL.Library.Client.Management
 
         public void Begin()
         {
-            Submit<ActionGeneric, IActionResponse>
-                ("api/Transaction/Begin", new ActionGeneric(client.Token.SessionId));
+            Submit<ActionRequestBase, ActionResponseBase>
+                ("api/Transaction/Begin", new ActionRequestBase(client.Token.SessionId));
         }
 
         public void Commit()
         {
-            Submit<ActionGeneric, IActionResponse>
-                ("api/Transaction/Commit", new ActionGeneric(client.Token.SessionId));
+            Submit<ActionRequestBase, ActionResponseBase>
+                ("api/Transaction/Commit", new ActionRequestBase(client.Token.SessionId));
         }
 
         public void Rollback()
         {
-            Submit<ActionGeneric, IActionResponse>
-                ("api/Transaction/Rollback", new ActionGeneric(client.Token.SessionId));
+            Submit<ActionRequestBase, ActionResponseBase>
+                ("api/Transaction/Rollback", new ActionRequestBase(client.Token.SessionId));
         }
     }
 }

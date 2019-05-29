@@ -1,6 +1,6 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
 using LeafSQL.Library.Payloads;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
 using System.Threading.Tasks;

@@ -10,13 +10,13 @@ namespace LeafSQL.Service.Controllers
     public class QueryController : ApiController
     {
         [HttpPost]
-        public IActionResponse ExecuteNonQuery([FromBody]ActionRequestExecuteNonQuery action)
+        public ActionResponseBase ExecuteNonQuery([FromBody]ActionRequestExecuteNonQuery action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            var result = new IActionResponse();
+            var result = new ActionResponseBase();
 
             try
             {

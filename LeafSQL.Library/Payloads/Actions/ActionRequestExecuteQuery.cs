@@ -1,9 +1,9 @@
-﻿using LeafSQL.Library.Payloads.Actions.Base;
+﻿using LeafSQL.Library.Payloads.Actions;
 using System;
 
 namespace LeafSQL.Library.Payloads
 {
-    public class ActionRequestExecuteQuery : ActionGeneric
+    public class ActionRequestExecuteQuery : ActionRequestBase
     {
         public ActionRequestExecuteQuery(Guid sessionId) : base(sessionId) { }
 

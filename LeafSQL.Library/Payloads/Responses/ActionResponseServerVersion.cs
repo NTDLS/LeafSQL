@@ -2,7 +2,7 @@
 
 namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponseServerVersion : IActionResponse
+    public class ActionResponseServerVersion : ActionResponseBase
     {
         public ServerVersion Version { get; set; }
     }

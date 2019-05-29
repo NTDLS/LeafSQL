@@ -1,6 +1,5 @@
 ﻿using LeafSQL.Library;
 using LeafSQL.Library.Payloads.Actions;
-using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
 using System;
@@ -40,9 +39,9 @@ namespace LeafSQL.Service.Controllers
 
         //api/Security/{sessionId}/Logout
         [HttpPost]
-        public IActionResponse Logout([FromBody]ActionGeneric action)
+        public ActionResponseBase Logout([FromBody]ActionRequestBase action)
         {
-            IActionResponse result = new IActionResponse();
+            ActionResponseBase result = new ActionResponseBase();
 
             try
             {
@@ -62,7 +61,7 @@ namespace LeafSQL.Service.Controllers
 
         //api/Security/{sessionId}/ListLogins
         [HttpPost]
-        public ActionResponceLogins ListLogins([FromBody]ActionGeneric action)
+        public ActionResponceLogins ListLogins([FromBody]ActionRequestBase action)
         {
             var result = new ActionResponceLogins();
 

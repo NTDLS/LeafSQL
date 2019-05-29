@@ -1,6 +1,6 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
 using LeafSQL.Library.Payloads;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ namespace LeafSQL.Library.Client.Management
                 Object = index
             };
 
-            await SubmitAsync<ActionRequestCreateIndex, IActionResponse>("api/Indexes/Create", action);
+            await SubmitAsync<ActionRequestCreateIndex, ActionResponseBase>("api/Indexes/Create", action);
         }
 
         public void Create(string schema, Payloads.Models.Index index)
@@ -41,7 +41,7 @@ namespace LeafSQL.Library.Client.Management
                 Object = index
             };
 
-            Submit<ActionRequestCreateIndex, IActionResponse>("api/Indexes/Create", action);
+            Submit<ActionRequestCreateIndex, ActionResponseBase>("api/Indexes/Create", action);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace LeafSQL.Library.Client.Management
                 ObjectName = indexName
             };
 
-            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Indexes/RebuildByName", action);
+            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Indexes/RebuildByName", action);
         }
 
         public void Rebuild(string schema, string indexName)
@@ -68,7 +68,7 @@ namespace LeafSQL.Library.Client.Management
                 ObjectName = indexName
             };
 
-            Submit<ActionGenericObject, IActionResponse>("api/Indexes/RebuildByName", action);
+            Submit<ActionGenericObject, ActionResponseBase>("api/Indexes/RebuildByName", action);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace LeafSQL.Library.Client.Management
                 ObjectName = indexName
             };
 
-            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Indexes/DeleteByName", action);
+            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Indexes/DeleteByName", action);
         }
 
         public void DeleteByName(string schema, string indexName)
@@ -147,7 +147,7 @@ namespace LeafSQL.Library.Client.Management
                 ObjectName = indexName
             };
 
-            Submit<ActionGenericObject, IActionResponse>("api/Indexes/DeleteByName", action);
+            Submit<ActionGenericObject, ActionResponseBase>("api/Indexes/DeleteByName", action);
         }
     }
 }

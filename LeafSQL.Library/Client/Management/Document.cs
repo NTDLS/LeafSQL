@@ -1,7 +1,5 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
-using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Actions;
-using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Collections.Generic;
@@ -32,7 +30,7 @@ namespace LeafSQL.Library.Client.Management
                 Object = document
             };
 
-            await SubmitAsync<ActionRequestStoreDocument, IActionResponse>("api/Document/Store", action);
+            await SubmitAsync<ActionRequestStoreDocument, ActionResponseBase>("api/Document/Store", action);
         }
 
         public void Store(string schema, Payloads.Models.Document document)
@@ -43,7 +41,7 @@ namespace LeafSQL.Library.Client.Management
                 Object = document
             };
 
-            Submit<ActionRequestStoreDocument, IActionResponse>("api/Document/Store", action);
+            Submit<ActionRequestStoreDocument, ActionResponseBase>("api/Document/Store", action);
         }
 
         /// <summary>
@@ -59,7 +57,7 @@ namespace LeafSQL.Library.Client.Management
                 ObjectId = id
             };
 
-            await SubmitAsync<ActionGenericObject, IActionResponse>("api/Document/DeleteById", action);
+            await SubmitAsync<ActionGenericObject, ActionResponseBase>("api/Document/DeleteById", action);
         }
 
         public void DeleteById(string schema, Guid id)
@@ -70,7 +68,7 @@ namespace LeafSQL.Library.Client.Management
                 ObjectId = id
             };
 
-            Submit<ActionGenericObject, IActionResponse>("api/Document/DeleteById", action);
+            Submit<ActionGenericObject, ActionResponseBase>("api/Document/DeleteById", action);
         }
 
         /// <summary>

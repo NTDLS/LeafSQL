@@ -1,5 +1,5 @@
 ﻿using LeafSQL.Library;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Diagnostics;
@@ -13,7 +13,7 @@ namespace LeafSQL.Service.Controllers
     {
         // GET api/Server/Settings
         [HttpPost]
-        public ActionResponseServerSettings Settings([FromBody]ActionGeneric action)
+        public ActionResponseServerSettings Settings([FromBody]ActionRequestBase action)
         {
             var result = new ActionResponseServerSettings();
 
@@ -37,7 +37,7 @@ namespace LeafSQL.Service.Controllers
 
         // GET api/Server/Version
         [HttpPost]
-        public ActionResponseServerVersion Version([FromBody]ActionGeneric action)
+        public ActionResponseServerVersion Version([FromBody]ActionRequestBase action)
         {
             var result = new ActionResponseServerVersion();
 

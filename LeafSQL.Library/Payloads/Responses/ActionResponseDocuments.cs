@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponseDocuments : IActionResponse
+    public class ActionResponseDocuments : ActionResponseBase
     {
         public List<DocumentMeta> List { get; set; }
 

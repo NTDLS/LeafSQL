@@ -1,7 +1,7 @@
 ﻿using LeafSQL.Engine.Exceptions;
 using LeafSQL.Library;
 using LeafSQL.Library.Payloads;
-using LeafSQL.Library.Payloads.Actions.Base;
+using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Threading;
@@ -47,13 +47,13 @@ namespace LeafSQL.Service.Controllers
         /// </summary>
         /// <param name="schema"></param>
         [HttpPost]
-        public IActionResponse DeleteByName([FromBody] ActionGenericObject action)
+        public ActionResponseBase DeleteByName([FromBody] ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new ActionResponseBoolean();
+            ActionResponseBase result = new ActionResponseBoolean();
 
             try
             {
@@ -73,13 +73,13 @@ namespace LeafSQL.Service.Controllers
         /// </summary>
         /// <param name="schema"></param>
         [HttpPost]
-        public IActionResponse RebuildByName([FromBody] ActionGenericObject action)
+        public ActionResponseBase RebuildByName([FromBody] ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new ActionResponseBoolean();
+            ActionResponseBase result = new ActionResponseBoolean();
 
             try
             {

@@ -2,7 +2,7 @@
 
 namespace LeafSQL.Library.Payloads.Responses
 {
-    public class ActionResponseStrings : IActionResponse
+    public class ActionResponseStrings : ActionResponseBase
     {
         public List<string> Values { get; set; }
 

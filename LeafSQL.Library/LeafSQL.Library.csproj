@@ -59,8 +59,8 @@
     <Compile Include="Payloads\Actions\ActionRequestCreateIndex.cs" />
     <Compile Include="Payloads\Actions\IActionRequest.cs" />
     <Compile Include="Payloads\Actions\ActionRequestStoreDocument.cs" />
-    <Compile Include="Payloads\Actions\Base\ActionGenericObject.cs" />
-    <Compile Include="Payloads\Actions\Base\ActionGeneric.cs" />
+    <Compile Include="Payloads\Actions\ActionGenericObject.cs" />
+    <Compile Include="Payloads\Actions\ActionRequestBase.cs" />
     <Compile Include="Payloads\Models\QueryColumn.cs" />
     <Compile Include="Payloads\Models\QueryRow.cs" />
     <Compile Include="Payloads\Models\QueryResult.cs" />
@@ -74,7 +74,7 @@
     <Compile Include="Payloads\Responses\ActionResponseServerSettings.cs" />
     <Compile Include="Payloads\Models\LoginToken.cs" />
     <Compile Include="Payloads\Responses\ActionResponceLogin.cs" />
-    <Compile Include="Payloads\Responses\IActionResponse.cs" />
+    <Compile Include="Payloads\Responses\ActionResponseBase.cs" />
     <Compile Include="Payloads\Responses\ActionResponseBoolean.cs" />
     <Compile Include="Payloads\Responses\ActionResponseSchemas.cs" />
     <Compile Include="Payloads\Responses\ActionResponseStrings.cs" />

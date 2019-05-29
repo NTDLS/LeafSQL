@@ -1,7 +1,6 @@
 ﻿using LeafSQL.Engine.Sessions;
 using LeafSQL.Library;
 using LeafSQL.Library.Payloads.Actions;
-using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Responses;
 using System;
 using System.Threading;
@@ -67,14 +66,14 @@ namespace LeafSQL.Service.Controllers
         /// <param name="schema"></param>
         //api/Document/{Namespace}/DeleteById/{Id}
         [HttpPost]
-        public IActionResponse DeleteById([FromBody] ActionGenericObject action)
+        public ActionResponseBase DeleteById([FromBody] ActionGenericObject action)
         {
             var session = Program.Core.Sessions.GetSession(action.SessionId);
 
             Thread.CurrentThread.Name = $"API:{session.InstanceKey}:{Utility.GetCurrentMethod()}";
             Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-            IActionResponse result = new IActionResponse();
+            ActionResponseBase result = new ActionResponseBase();
 
             try
             {

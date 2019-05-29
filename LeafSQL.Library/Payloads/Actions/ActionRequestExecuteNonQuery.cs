@@ -1,9 +1,9 @@
-﻿using LeafSQL.Library.Payloads.Actions.Base;
+﻿using LeafSQL.Library.Payloads.Actions;
 using System;
 
 namespace LeafSQL.Library.Payloads
 {
-    public class ActionRequestExecuteNonQuery : ActionGeneric
+    public class ActionRequestExecuteNonQuery : ActionRequestBase
     {
         public ActionRequestExecuteNonQuery(Guid sessionId) : base(sessionId) { }
 

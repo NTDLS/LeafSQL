@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace LeafSQL.Library.Payloads.Actions.Base
+namespace LeafSQL.Library.Payloads.Actions
 {
-    public class ActionGenericObject : ActionGeneric
+    public class ActionGenericObject : ActionRequestBase
     {
         public ActionGenericObject(Guid sessionId)
             : base (sessionId)
