@@ -1,4 +1,5 @@
-﻿using LeafSQL.Engine.Sessions;
+﻿using LeafSQL.Engine.Interfaces;
+using LeafSQL.Engine.Sessions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,10 +8,10 @@ using System.Linq;
 
 namespace LeafSQL.Engine.Transactions
 {
-    public class TransactionManager
+    public class TransactionManager : ICoreManagement
     {
         public List<Transaction> Collection = new List<Transaction>();
-        private Core core;
+        public Core core { get; set; }
 
         public TransactionManager(Core core)
         {

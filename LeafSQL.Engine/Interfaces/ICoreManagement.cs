@@ -8,5 +8,6 @@ namespace LeafSQL.Engine.Interfaces
 {
     public interface ICoreManagement
     {
+        Core core { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LeafSQL.Engine.Documents;
 using LeafSQL.Engine.Exceptions;
 using LeafSQL.Engine.Indexes;
+using LeafSQL.Engine.Interfaces;
 using LeafSQL.Engine.Sessions;
 using LeafSQL.Engine.Transactions;
 using System;
@@ -12,9 +13,9 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Schemas
 {
-    public class SchemaManager
+    public class SchemaManager : ICoreManagement
     {
-        private Core core;
+        public Core core { get; set; }
         private string rootCatalogFile;
         private PersistSchema rootSchemaMeta = null;
 

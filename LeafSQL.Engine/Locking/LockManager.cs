@@ -1,11 +1,12 @@
-﻿using System;
+﻿using LeafSQL.Engine.Interfaces;
+using System;
 
 namespace LeafSQL.Engine.Locking
 {
-    public class LockManager
+    public class LockManager : ICoreManagement
     {
         public ObjectLocks Locks { get; set; }
-        private Core core;
+        public Core core { get; set; }
 
         public LockManager(Core core)
         {

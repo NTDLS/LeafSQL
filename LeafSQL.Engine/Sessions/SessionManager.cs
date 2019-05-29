@@ -1,12 +1,13 @@
-﻿using System;
+﻿using LeafSQL.Engine.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace LeafSQL.Engine.Sessions
 {
-    public class SessionManager
+    public class SessionManager : ICoreManagement
     {
-        private Core core;
+        public Core core { get; set; }
 
         private UInt64 nextProcessId = 1;
 

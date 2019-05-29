@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeafSQL.Engine.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,11 +7,11 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Health
 {
-    public class HealthManager
+    public class HealthManager : ICoreManagement
     {
         public List<HealthCounter> Counters;
 
-        private Core core;
+        public Core core { get; set; }
         private DateTime lastCheckpoint = DateTime.MinValue;
 
         public HealthManager(Core core)

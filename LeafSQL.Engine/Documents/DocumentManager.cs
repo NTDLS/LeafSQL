@@ -1,24 +1,23 @@
-﻿using LeafSQL.Library;
+﻿using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Indexes;
+using LeafSQL.Engine.Interfaces;
+using LeafSQL.Engine.Query;
+using LeafSQL.Engine.Schemas;
+using LeafSQL.Engine.Sessions;
+using LeafSQL.Engine.Transactions;
+using LeafSQL.Library.Payloads.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static LeafSQL.Engine.Constants;
-using LeafSQL.Library.Payloads;
-using LeafSQL.Engine.Schemas;
-using LeafSQL.Engine.Exceptions;
-using LeafSQL.Engine.Query;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using LeafSQL.Engine.Transactions;
-using LeafSQL.Engine.Sessions;
-using LeafSQL.Library.Payloads.Models;
-using LeafSQL.Engine.Indexes;
+using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Documents
 {
-    public class DocumentManager
+    public class DocumentManager : ICoreManagement
     {
-        private Core core;
+        public Core core { get; set; }
 
         public DocumentManager(Core core)
         {

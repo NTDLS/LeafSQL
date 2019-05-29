@@ -1,19 +1,16 @@
-﻿using LeafSQL.Library;
+﻿using LeafSQL.Engine.Interfaces;
+using LeafSQL.Engine.Transactions;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Caching;
-using LeafSQL.Engine.Transactions;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.IO
 {
-    public class IOManager
+    public class IOManager : ICoreManagement
     {
-        private Core core;
+        public Core core { get; set; }
         public IOManager(Core core)
         {
             this.core = core;

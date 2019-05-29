@@ -1,5 +1,6 @@
 ﻿using LeafSQL.Engine.Documents;
 using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Interfaces;
 using LeafSQL.Engine.Query;
 using LeafSQL.Engine.Schemas;
 using LeafSQL.Engine.Sessions;
@@ -15,9 +16,9 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Indexes
 {
-    public class IndexManager
+    public class IndexManager : ICoreManagement
     {
-        private Core core;
+        public Core core { get; set; }
         public IndexManager(Core core)
         {
             this.core = core;

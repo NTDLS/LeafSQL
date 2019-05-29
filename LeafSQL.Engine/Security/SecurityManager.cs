@@ -9,7 +9,7 @@ namespace LeafSQL.Engine.Security
 {
     public class SecurityManager: ICoreManagement
     {
-        private Core core;
+        public Core core { get; set; }
 
         public PersistLoginCatalog Catalog { get; set; }
 
@@ -102,6 +102,5 @@ namespace LeafSQL.Engine.Security
         {
             core.Sessions.LogoutSession(sessionId);
         }
-
     }
 }

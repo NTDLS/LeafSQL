@@ -1,16 +1,15 @@
-﻿using System;
+﻿using LeafSQL.Engine.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LeafSQL.Engine.Caching
 {
-    public class CacheManager
+    public class CacheManager : ICoreManagement
     {
         private Dictionary<string, CacheItem> collection = new Dictionary<string, CacheItem>();
-        private Core core;
+        public Core core { get; set; }
 
         public CacheManager(Core core)
         {

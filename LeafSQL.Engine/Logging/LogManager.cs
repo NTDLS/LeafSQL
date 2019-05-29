@@ -1,14 +1,15 @@
 ﻿using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Interfaces;
 using System;
 using System.IO;
 using System.Text;
 
 namespace LeafSQL.Engine.Logging
 {
-    public class LogManager
+    public class LogManager : ICoreManagement
     {
-        private Core core;
-        private System.IO.StreamWriter fileHandle = null;
+        public Core core { get; set; }
+        private StreamWriter fileHandle = null;
         private DateTime recycledTime = DateTime.MinValue;
 
         public LogManager(Core core)

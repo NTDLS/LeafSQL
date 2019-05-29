@@ -1,12 +1,13 @@
 ﻿using LeafSQL.Engine.Exceptions;
+using LeafSQL.Engine.Interfaces;
 using LeafSQL.Engine.Sessions;
 using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.Engine.Query
 {
-    public class QueryManager
+    public class QueryManager : ICoreManagement
     {
-        private Core core;
+        public Core core { get; set; }
 
         public QueryManager(Core core)
         {
