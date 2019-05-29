@@ -12,23 +12,13 @@ namespace LeafSQL.UI.Forms
                 return textBoxUsername.Text;
             }
         }
-        public string Password
+        public string PasswordHash
         {
             get
             {
-                return textBoxPassword.Text;
+                return LeafSQL.Library.Utility.HashPassword(textBoxPassword.Text);
             }
         }
-
-        /*
-        public Library.ServerRole ServerRole
-        {
-            get
-            {
-                return (Library.ServerRole) Enum.Parse(typeof(Library.ServerRole), comboBoxServerRole.Text);
-            }
-        }
-        */
 
         public FormCreateLogin()
         {
@@ -38,16 +28,6 @@ namespace LeafSQL.UI.Forms
             this.CancelButton = buttonCancel;
         }
 
-        private void FormCreateLogin_Load(object sender, EventArgs e)
-        {
-            /*
-            foreach (Library.ServerRole role in Enum.GetValues(typeof(Library.ServerRole)))
-            {
-                comboBoxServerRole.Items.Add(role.ToString());
-            }
-            */
-            comboBoxServerRole.SelectedItem = "None";
-        }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {

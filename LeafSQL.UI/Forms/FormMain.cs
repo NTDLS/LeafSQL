@@ -238,94 +238,76 @@ namespace LeafSQL.UI.Forms
 
         private void ContextMenu_SetLoginPassword(object sender, EventArgs e)
         {
-            /*
             using (FormSetLoginPassword form = new FormSetLoginPassword())
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-
-                    client.SetLoginPasswordByIdAsync((Guid)contextNode.Value, form.Password).ContinueWith((t) =>
+                    client.Security.SetLoginPasswordAsync(contextNode.Text, form.PasswordHash).ContinueWith((t) =>
                     {
                         FormProgress.WaitForVisible();
                         FormProgress.Complete();
 
-                        if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
+                        if (t.Status != TaskStatus.RanToCompletion)
                         {
-                            //Success
-                        }
-                        else
-                        {
-                            Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
+                            Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                         }
                     }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
                     FormProgress.Start("Setting password for [" + contextNode.Text + "]...");
                 }
             }
-            */
         }
 
         private void ContextMenu_CreateLogin(object sender, EventArgs e)
         {
-            /*
             using (FormCreateLogin form = new FormCreateLogin())
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    client.CreateLoginAsync(new Login
-                        {
-                            UserName = form.Username,
-                            Password = form.Password,
-                            ServerRole = form.ServerRole
-                        }).ContinueWith((t) =>
-                    {
-                        FormProgress.WaitForVisible();
-                        FormProgress.Complete();
+                    client.Security.CreateLoginAsync(form.Username, form.PasswordHash).ContinueWith((t) =>
+                                {
+                                    FormProgress.WaitForVisible();
+                                    FormProgress.Complete();
 
-                        if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
-                        {
-                            //Success
-                            PopulateLogins();
-                        }
-                        else
-                        {
-                            Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
-                        }
-                    }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                                    if (t.Status != TaskStatus.RanToCompletion)
+                                    {
+                                        Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
+                                    }
+
+                                    treeManager.PopulateLogins(client);
+
+                                }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
                     FormProgress.Start("Creating login [" + form.Username + "]...");
                 }
             }
-            */
         }
 
         private void ContextMenu_DeleteLogin(object sender, EventArgs e)
         {
-            /*
             if (MessageBox.Show("Are you sure you want to delete the login [" + contextNode.Text + "]?",
                 "Delete Login?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
-            client.DeleteLoginByIdAsync((Guid)contextNode.Value).ContinueWith((t) =>
-                {
-                    FormProgress.WaitForVisible();
-                    FormProgress.Complete();
+            client.Security.DeleteLoginByNameAsync(contextNode.Text).ContinueWith((t) =>
+            {
+                FormProgress.WaitForVisible();
+                FormProgress.Complete();
 
-                    if (t.Status == TaskStatus.RanToCompletion && t.Result != null && t.Result.Success == true)
-                    {
-                        //Success
-                        contextNode.Remove();
-                    }
-                    else
-                    {
-                        Program.AsyncResultMessage(t.Result, "An error occured while processing your request.");
-                    }
-                }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+                if (t.Status != TaskStatus.RanToCompletion)
+                {
+                    Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
+                }
+
+                treeManager.PopulateLogins(client);
+
+            }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
             FormProgress.Start("Deleting login [" + contextNode.Text + "]...");
-            */
+
+
         }
 
         private void ContextMenu_CreateSchema(object sender, EventArgs e)
@@ -412,7 +394,6 @@ namespace LeafSQL.UI.Forms
                 else
                 {
                     PopulateException(t.Exception);
-                    //Program.AsyncExceptionMessage(t, "An error occured while processing your request.");
                 }
             }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 

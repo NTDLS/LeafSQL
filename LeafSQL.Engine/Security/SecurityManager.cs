@@ -1,4 +1,5 @@
 ﻿using LeafSQL.Engine.Sessions;
+using LeafSQL.Library.Payloads.Models;
 using System;
 using System.IO;
 using System.Linq;
@@ -37,25 +38,50 @@ namespace LeafSQL.Engine.Security
             Catalog = core.IO.GetJsonNonTracked<PersistLoginCatalog>(loginCatalogFile);
         }
 
+        public void WriteToDisk()
+        {
+            core.IO.PutJsonNonTracked(loginCatalogFile, Catalog);
+        }
+
+        public Guid CreateLogin(Login login)
+        {
+            lock (core.Security.Catalog.LockObject)
+            {
+                var loginId = core.Security.Catalog.Add(PersistLogin.FromPayload(login));
+                WriteToDisk();
+                return loginId;
+            }
+        }
+
+        public void SetLoginPasswordByName(Login login)
+        {
+            lock (core.Security.Catalog.LockObject)
+            {
+                core.Security.Catalog.SetLoginPasswordByName(login);
+                WriteToDisk();
+            }
+        }
+
+        public void DeleteLoginByName(string name)
+        {
+            lock (core.Security.Catalog.LockObject)
+            {
+                core.Security.Catalog.DeleteLoginByName(name);
+                WriteToDisk();
+            }
+        }
+
         /// <summary>
         /// Logs a user in and establishes a new session id.
         /// </summary>
         /// <param name="username"></param>
         /// <param name="passwordHash"></param>
         /// <returns></returns>
-        public Session Login(string username, string passwordHash)
+        public Session Login(Login login)
         {
             Guid sessionId = Guid.NewGuid();
 
-            PersistLogin foundLogin = null;
-
-            lock (Catalog.Collection)
-            {
-                foundLogin = Catalog.Collection.Where(o =>
-                            o.Name.ToLower() == username.ToLower()
-                            && o.PasswordHash.ToLower() == passwordHash.ToLower()
-                            ).FirstOrDefault();
-            }
+            var foundLogin = Catalog.GetByNameandPasswordHash(login.Name, login.PasswordHash);
 
             if (foundLogin == null)
             {
@@ -75,5 +101,6 @@ namespace LeafSQL.Engine.Security
         {
             core.Sessions.LogoutSession(sessionId);
         }
+
     }
 }

@@ -1,9 +1,9 @@
 ﻿using LeafSQL.Library.Client.Management.Base;
-using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Actions;
 using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,8 +29,7 @@ namespace LeafSQL.Library.Client.Management
         {
             var action = new ActionRequestLogin(client.Token.SessionId)
             {
-                Username = username,
-                PasswordHash = Utility.HashPassword(password)
+                Login = new Login(username, Utility.HashPassword(password))
             };
 
             client.Token = Submit<ActionRequestLogin, ActionResponceLogin>("api/Security/Login", action).ToToken();
@@ -64,6 +63,72 @@ namespace LeafSQL.Library.Client.Management
         {
             return Submit<ActionGeneric, ActionResponceLogins>
                 ("api/Security/ListLogins", new ActionGeneric(client.Token.SessionId)).List;
+        }
+
+        public async Task<Guid> CreateLoginAsync(string username, string passwordHash)
+        {
+            var action = new ActionRequestLogin(client.Token.SessionId)
+            {
+                Login = new Login(username, passwordHash)
+            };
+
+            return (await SubmitAsync<ActionRequestLogin, ActionResponseId>
+                ("api/Security/CreateLogin", action)).Id;
+        }
+
+        public Guid CreateLogin(string username, string passwordHash)
+        {
+            var action = new ActionRequestLogin(client.Token.SessionId)
+            {
+                Login = new Login(username, passwordHash)
+            };
+
+            return Submit<ActionRequestLogin, ActionResponseId>
+                ("api/Security/CreateLogin", action).Id;
+        }
+
+        public async Task<Guid> SetLoginPasswordAsync(string username, string passwordHash)
+        {
+            var action = new ActionRequestLogin(client.Token.SessionId)
+            {
+                Login = new Login(username, passwordHash)
+            };
+
+            return (await SubmitAsync<ActionRequestLogin, ActionResponseId>
+                ("api/Security/SetLoginPasswordByName", action)).Id;
+        }
+
+        public Guid SetLoginPassword(string username, string passwordHash)
+        {
+            var action = new ActionRequestLogin(client.Token.SessionId)
+            {
+                Login = new Login(username, passwordHash)
+            };
+
+            return Submit<ActionRequestLogin, ActionResponseId>
+                ("api/Security/SetLoginPasswordByName", action).Id;
+        }
+
+        public async Task DeleteLoginByNameAsync(string username)
+        {
+            var action = new ActionGenericObject(client.Token.SessionId)
+            {
+                ObjectName = username
+            };
+
+            await SubmitAsync<ActionGenericObject, ActionResponseId>
+                ("api/Security/DeleteLoginByName", action);
+        }
+
+        public void DeleteLoginByName(string username)
+        {
+            var action = new ActionGenericObject(client.Token.SessionId)
+            {
+                ObjectName = username
+            };
+
+            Submit<ActionGenericObject, ActionResponseId>
+                ("api/Security/DeleteLoginByName", action);
         }
     }
 }

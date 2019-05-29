@@ -1,6 +1,6 @@
 ﻿using LeafSQL.Library;
-using LeafSQL.Library.Payloads;
 using LeafSQL.Library.Payloads.Actions;
+using LeafSQL.Library.Payloads.Actions.Base;
 using LeafSQL.Library.Payloads.Models;
 using LeafSQL.Library.Payloads.Responses;
 using System;
@@ -23,7 +23,7 @@ namespace LeafSQL.Service.Controllers
                 Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
                 Program.Core.Log.Trace(Thread.CurrentThread.Name);
 
-                var session = Program.Core.Security.Login(action.Username, action.PasswordHash);
+                var session = Program.Core.Security.Login(action.Login);
 
                 result.SessionId = session.SessionId;
                 result.LoginId = session.LoginId;
@@ -40,7 +40,7 @@ namespace LeafSQL.Service.Controllers
 
         //api/Security/{sessionId}/Logout
         [HttpPost]
-        public IActionResponse Logout([FromBody]ActionRequestExecuteNonQuery action)
+        public IActionResponse Logout([FromBody]ActionGeneric action)
         {
             IActionResponse result = new IActionResponse();
 
@@ -62,7 +62,7 @@ namespace LeafSQL.Service.Controllers
 
         //api/Security/{sessionId}/ListLogins
         [HttpPost]
-        public ActionResponceLogins ListLogins([FromBody]ActionRequestExecuteNonQuery action)
+        public ActionResponceLogins ListLogins([FromBody]ActionGeneric action)
         {
             var result = new ActionResponceLogins();
 
@@ -73,13 +73,76 @@ namespace LeafSQL.Service.Controllers
 
                 result.List = new List<Login>();
 
-                lock (Program.Core.Security.Catalog.Collection)
+                foreach (var login in Program.Core.Security.Catalog.Clone())
                 {
-                    foreach (var login in Program.Core.Security.Catalog.Collection)
-                    {
-                        result.List.Add(login.ToPayload());
-                    }
+                    result.List.Add(login.ToPayload());
                 }
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public ActionResponseId CreateLogin([FromBody]ActionRequestLogin action)
+        {
+            var result = new ActionResponseId();
+
+            try
+            {
+                Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
+                Program.Core.Log.Trace(Thread.CurrentThread.Name);
+
+                Program.Core.Security.CreateLogin(action.Login);
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public ActionResponseId SetLoginPasswordByName([FromBody]ActionRequestLogin action)
+        {
+            var result = new ActionResponseId();
+
+            try
+            {
+                Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
+                Program.Core.Log.Trace(Thread.CurrentThread.Name);
+
+                Program.Core.Security.SetLoginPasswordByName(action.Login);
+
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public ActionResponseId DeleteLoginByName([FromBody]ActionGenericObject action)
+        {
+            var result = new ActionResponseId();
+
+            try
+            {
+                Thread.CurrentThread.Name = string.Format("API:{0}", Utility.GetCurrentMethod());
+                Program.Core.Log.Trace(Thread.CurrentThread.Name);
+
+                Program.Core.Security.DeleteLoginByName(action.ObjectName);
 
                 result.Success = true;
             }

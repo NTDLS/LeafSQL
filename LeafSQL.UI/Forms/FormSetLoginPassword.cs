@@ -5,11 +5,11 @@ namespace LeafSQL.UI.Forms
 {
     public partial class FormSetLoginPassword : Form
     {
-        public string Password
+        public string PasswordHash
         {
             get
             {
-                return textBoxPassword.Text;
+                return LeafSQL.Library.Utility.HashPassword(textBoxPassword.Text);
             }
         }
 
@@ -23,12 +23,6 @@ namespace LeafSQL.UI.Forms
 
         private void buttonSet_Click(object sender, EventArgs e)
         {
-            if (textBoxPassword.Text.Length < 4)
-            {
-                MessageBox.Show("The password must be at least 4 characters.");
-                return;
-            }
-
             if (textBoxPassword.Text != textBoxConfirmPassword.Text)
             {
                 MessageBox.Show("Passwords do not match.");

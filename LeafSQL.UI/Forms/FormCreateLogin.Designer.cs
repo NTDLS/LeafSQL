@@ -35,15 +35,13 @@
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxServerRole = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxConfirmPassword = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(147, 173);
+            this.buttonCancel.Location = new System.Drawing.Point(143, 133);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -53,7 +51,7 @@
             // 
             // buttonCreate
             // 
-            this.buttonCreate.Location = new System.Drawing.Point(66, 173);
+            this.buttonCreate.Location = new System.Drawing.Point(62, 133);
             this.buttonCreate.Name = "buttonCreate";
             this.buttonCreate.Size = new System.Drawing.Size(75, 23);
             this.buttonCreate.TabIndex = 4;
@@ -63,14 +61,14 @@
             // 
             // textBoxUsername
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(17, 25);
+            this.textBoxUsername.Location = new System.Drawing.Point(13, 25);
             this.textBoxUsername.Name = "textBoxUsername";
             this.textBoxUsername.Size = new System.Drawing.Size(208, 20);
             this.textBoxUsername.TabIndex = 0;
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(17, 66);
+            this.textBoxPassword.Location = new System.Drawing.Point(13, 66);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(208, 20);
             this.textBoxPassword.TabIndex = 1;
@@ -79,7 +77,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 50);
+            this.label2.Location = new System.Drawing.Point(10, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 8;
@@ -88,34 +86,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(8, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 13);
             this.label1.TabIndex = 7;
             this.label1.Text = "Username";
             // 
-            // comboBoxServerRole
-            // 
-            this.comboBoxServerRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxServerRole.FormattingEnabled = true;
-            this.comboBoxServerRole.Location = new System.Drawing.Point(17, 146);
-            this.comboBoxServerRole.Name = "comboBoxServerRole";
-            this.comboBoxServerRole.Size = new System.Drawing.Size(208, 21);
-            this.comboBoxServerRole.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 130);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Server Role";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 91);
+            this.label4.Location = new System.Drawing.Point(10, 91);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 13);
             this.label4.TabIndex = 12;
@@ -123,7 +103,7 @@
             // 
             // textBoxConfirmPassword
             // 
-            this.textBoxConfirmPassword.Location = new System.Drawing.Point(17, 107);
+            this.textBoxConfirmPassword.Location = new System.Drawing.Point(13, 107);
             this.textBoxConfirmPassword.Name = "textBoxConfirmPassword";
             this.textBoxConfirmPassword.Size = new System.Drawing.Size(208, 20);
             this.textBoxConfirmPassword.TabIndex = 2;
@@ -133,11 +113,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(234, 207);
+            this.ClientSize = new System.Drawing.Size(234, 170);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxConfirmPassword);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.comboBoxServerRole);
             this.Controls.Add(this.textBoxUsername);
             this.Controls.Add(this.textBoxPassword);
             this.Controls.Add(this.label2);
@@ -151,7 +129,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create Login";
-            this.Load += new System.EventHandler(this.FormCreateLogin_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,8 +142,6 @@
         private System.Windows.Forms.TextBox textBoxPassword;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBoxServerRole;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxConfirmPassword;
     }

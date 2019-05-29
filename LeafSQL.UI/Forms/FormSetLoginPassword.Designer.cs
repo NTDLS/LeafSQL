@@ -39,7 +39,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(145, 92);
+            this.buttonCancel.Location = new System.Drawing.Point(145, 94);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
@@ -49,7 +49,7 @@
             // 
             // buttonSet
             // 
-            this.buttonSet.Location = new System.Drawing.Point(64, 92);
+            this.buttonSet.Location = new System.Drawing.Point(64, 94);
             this.buttonSet.Name = "buttonSet";
             this.buttonSet.Size = new System.Drawing.Size(75, 23);
             this.buttonSet.TabIndex = 2;
@@ -77,7 +77,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 50);
+            this.label2.Location = new System.Drawing.Point(12, 52);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 13);
             this.label2.TabIndex = 8;
@@ -85,7 +85,7 @@
             // 
             // textBoxConfirmPassword
             // 
-            this.textBoxConfirmPassword.Location = new System.Drawing.Point(15, 66);
+            this.textBoxConfirmPassword.Location = new System.Drawing.Point(15, 68);
             this.textBoxConfirmPassword.Name = "textBoxConfirmPassword";
             this.textBoxConfirmPassword.Size = new System.Drawing.Size(205, 20);
             this.textBoxConfirmPassword.TabIndex = 1;
@@ -95,7 +95,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(231, 131);
+            this.ClientSize = new System.Drawing.Size(231, 139);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxConfirmPassword);
             this.Controls.Add(this.label1);
