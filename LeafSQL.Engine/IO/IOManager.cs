@@ -8,12 +8,10 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.IO
 {
-    public class IOManager : ICoreManagement
+    public class IOManager : CoreManagementBase
     {
-        public Core core { get; set; }
-        public IOManager(Core core)
+        public IOManager(Core core) : base(core)
         {
-            this.core = core;
         }
 
         #region Getters.

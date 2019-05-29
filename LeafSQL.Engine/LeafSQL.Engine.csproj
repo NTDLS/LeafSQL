@@ -80,7 +80,7 @@
     <Compile Include="Indexes\PersistIndexPageCatalog.cs" />
     <Compile Include="Indexes\PotentialIndex.cs" />
     <Compile Include="Interfaces\ICatalog.cs" />
-    <Compile Include="Interfaces\ICoreManagement.cs" />
+    <Compile Include="Interfaces\CoreManagementBase.cs" />
     <Compile Include="Interfaces\IPayloadCompatible.cs" />
     <Compile Include="IO\IOManager.cs" />
     <Compile Include="Locking\LockIntention.cs" />

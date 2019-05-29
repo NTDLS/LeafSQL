@@ -8,14 +8,12 @@ using System.Linq;
 
 namespace LeafSQL.Engine.Transactions
 {
-    public class TransactionManager : ICoreManagement
+    public class TransactionManager : CoreManagementBase
     {
         public List<Transaction> Collection = new List<Transaction>();
-        public Core core { get; set; }
 
-        public TransactionManager(Core core)
+        public TransactionManager(Core core) : base(core)
         {
-            this.core = core;
         }
 
         public Transaction GetByProcessId(UInt64 processId)

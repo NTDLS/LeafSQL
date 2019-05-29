@@ -7,17 +7,14 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Health
 {
-    public class HealthManager : ICoreManagement
+    public class HealthManager : CoreManagementBase
     {
         public List<HealthCounter> Counters;
 
-        public Core core { get; set; }
         private DateTime lastCheckpoint = DateTime.MinValue;
 
-        public HealthManager(Core core)
+        public HealthManager(Core core) : base(core)
         {
-            this.core = core;
-
             string healthCounterDiskPath = Path.Combine(core.Settings.LogDirectory, Constants.HealthStatsFile);
             if (File.Exists(healthCounterDiskPath))
             {

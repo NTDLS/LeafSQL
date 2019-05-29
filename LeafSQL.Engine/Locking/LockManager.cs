@@ -3,14 +3,12 @@ using System;
 
 namespace LeafSQL.Engine.Locking
 {
-    public class LockManager : ICoreManagement
+    public class LockManager : CoreManagementBase
     {
         public ObjectLocks Locks { get; set; }
-        public Core core { get; set; }
 
-        public LockManager(Core core)
+        public LockManager(Core core) : base(core)
         {
-            this.core = core;
             Locks = new ObjectLocks(core);
         }
 

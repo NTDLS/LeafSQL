@@ -13,9 +13,8 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Schemas
 {
-    public class SchemaManager : ICoreManagement
+    public class SchemaManager : CoreManagementBase
     {
-        public Core core { get; set; }
         private string rootCatalogFile;
         private PersistSchema rootSchemaMeta = null;
 
@@ -38,10 +37,8 @@ namespace LeafSQL.Engine.Schemas
             }
         }
 
-        public SchemaManager(Core core)
+        public SchemaManager(Core core) : base(core)
         {
-            this.core = core;
-
             rootCatalogFile = Path.Combine(core.Settings.DataRootPath, Constants.SchemaCatalogFile);
 
             //If the catalog doesnt exist, create a new empty one.

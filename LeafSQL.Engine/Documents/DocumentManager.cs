@@ -15,13 +15,10 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Documents
 {
-    public class DocumentManager : ICoreManagement
+    public class DocumentManager : CoreManagementBase
     {
-        public Core core { get; set; }
-
-        public DocumentManager(Core core)
+        public DocumentManager(Core core) : base(core)
         {
-            this.core = core;
         }
 
         public QueryResult ExecuteSelect(Session session, PreparedQuery preparedQuery)

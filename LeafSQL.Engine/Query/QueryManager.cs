@@ -5,13 +5,10 @@ using LeafSQL.Library.Payloads.Models;
 
 namespace LeafSQL.Engine.Query
 {
-    public class QueryManager : ICoreManagement
+    public class QueryManager : CoreManagementBase
     {
-        public Core core { get; set; }
-
-        public QueryManager(Core core)
+        public QueryManager(Core core) : base(core)
         {
-            this.core = core;
         }
 
         public QueryResult Execute(Session session, string statement)

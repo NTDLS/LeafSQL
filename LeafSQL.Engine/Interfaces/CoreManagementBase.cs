@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace LeafSQL.Engine.Interfaces
 {
-    public interface ICoreManagement
+    public class CoreManagementBase
     {
-        Core core { get; set; }
+        public Core core { get; set; }
+
+        public CoreManagementBase(Core core)
+        {
+            this.core = core;
+        }
     }
 }

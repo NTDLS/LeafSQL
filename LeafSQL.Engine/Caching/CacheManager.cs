@@ -6,14 +6,12 @@ using System.Linq;
 
 namespace LeafSQL.Engine.Caching
 {
-    public class CacheManager : ICoreManagement
+    public class CacheManager : CoreManagementBase
     {
         private Dictionary<string, CacheItem> collection = new Dictionary<string, CacheItem>();
-        public Core core { get; set; }
 
-        public CacheManager(Core core)
+        public CacheManager(Core core) : base(core)
         {
-            this.core = core;
         }
 
         public void Remove(string key)

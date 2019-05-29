@@ -16,12 +16,10 @@ using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Indexes
 {
-    public class IndexManager : ICoreManagement
+    public class IndexManager : CoreManagementBase
     {
-        public Core core { get; set; }
-        public IndexManager(Core core)
+        public IndexManager(Core core) : base(core)
         {
-            this.core = core;
         }
 
         public IndexSelections SelectIndexes(Transaction transaction, PersistSchema schemaMeta, Conditions conditions)

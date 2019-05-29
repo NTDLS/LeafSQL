@@ -7,18 +7,14 @@ using System.Linq;
 
 namespace LeafSQL.Engine.Security
 {
-    public class SecurityManager: ICoreManagement
+    public class SecurityManager: CoreManagementBase
     {
-        public Core core { get; set; }
-
         public PersistLoginCatalog Catalog { get; set; }
 
         private string loginCatalogFile;
 
-        public SecurityManager(Core core)
+        public SecurityManager(Core core) : base(core)
         {
-            this.core = core;
-
             loginCatalogFile = Path.Combine(core.Settings.DataRootPath, Constants.LoginCatalogFile);
 
             //If the catalog doesnt exist, create a new empty one.

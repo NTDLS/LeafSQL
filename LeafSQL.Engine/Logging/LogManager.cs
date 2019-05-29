@@ -6,15 +6,13 @@ using System.Text;
 
 namespace LeafSQL.Engine.Logging
 {
-    public class LogManager : ICoreManagement
+    public class LogManager : CoreManagementBase
     {
-        public Core core { get; set; }
         private StreamWriter fileHandle = null;
         private DateTime recycledTime = DateTime.MinValue;
 
-        public LogManager(Core core)
+        public LogManager(Core core) : base(core)
         {
-            this.core = core;
             RecycleLog();
         }
 

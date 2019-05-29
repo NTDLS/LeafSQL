@@ -5,17 +5,14 @@ using System.Linq;
 
 namespace LeafSQL.Engine.Sessions
 {
-    public class SessionManager : ICoreManagement
+    public class SessionManager : CoreManagementBase
     {
-        public Core core { get; set; }
 
         private UInt64 nextProcessId = 1;
-
         public List<Session> Collection { get; set; }
 
-        public SessionManager(Core core)
+        public SessionManager(Core core) : base(core)
         {
-            this.core = core;
             Collection = new List<Session>();
         }
 
