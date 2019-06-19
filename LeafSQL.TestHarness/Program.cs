@@ -41,23 +41,23 @@ namespace LeafSQL.TestHarness
         static void Main(string[] args)
         {
             //Exporter.ExportAll();
-            //TestCreateAllAdventureWorks2012Indexes();
+            TestCreateAllAdventureWorks2012Indexes();
             //TestServerStress();
 
             //TestCreateIndexAddDocuments();
             //TestAddDocumentsCreateIndex();
             //TestIndexDocumentDeletion();
 
-            using (LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", ""))
-            {
-                var serverVersion = client.Server.Settings.GetVersion();
-                Console.WriteLine($"{serverVersion.Name} v{serverVersion.Version}");
-                client.Logout();
-            }
+            //using (LeafSQLClient client = new LeafSQLClient("http://localhost:6858/", "admin", ""))
+            //{
+            //    var serverVersion = client.Server.Settings.GetVersion();
+            //    Console.WriteLine($"{serverVersion.Name} v{serverVersion.Version}");
+            //    client.Logout();
+            //}
 
-            //ExecuteAndPrint("SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
-            //ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
-            ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product where color = 'Black' and SafetyStockLevel = 500 and ProductLine = 'M ' and Class = 'L '");
+            ////ExecuteAndPrint("SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
+            ////ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
+            //ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product where color = 'Black' and SafetyStockLevel = 500 and ProductLine = 'M ' and Class = 'L '");
 
             Console.WriteLine("Complete");
             Console.ReadLine();

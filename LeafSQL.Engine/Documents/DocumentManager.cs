@@ -148,12 +148,12 @@ namespace LeafSQL.Engine.Documents
 
                     foreach (var selectedIndex in indexSelections)
                     {
-                        var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, selectedIndex.Index.DiskPath, LockOperation.Read);
-                        var targetedIndexConditions = (from o in conditions.Root.Where(o => selectedIndex.HandledKeyNames.Contains(o.Key)) select o).ToList();
+                        //var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, selectedIndex.Index.DiskPath, LockOperation.Read);
+                        //var targetedIndexConditions = (from o in conditions.Root.Where(o => selectedIndex.HandledKeyNames.Contains(o.Key)) select o).ToList();
 
                         //Going to have to loop though all of the nested conditions.
 
-                        intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);
+                        //intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);
                     }
 
                     //Now that we have elimiated all but the document IDs that we care about, all we
@@ -180,7 +180,7 @@ namespace LeafSQL.Engine.Documents
 
                             //If we have any conditions that were not indexes, open the remainder
                             //  of the documents and do additonal document-level filtering.
-                            if (indexSelections.UnhandledKeys?.Count > 0)
+                            //if (indexSelections.UnhandledKeys?.Count > 0)
                             {
                                 foreach (Condition condition in conditions.Root)
                                 {

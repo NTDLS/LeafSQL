@@ -22,7 +22,38 @@ namespace LeafSQL.Engine.Indexes
         {
         }
 
-        public IndexSelections SelectIndexes(Transaction transaction, PersistSchema schemaMeta, Conditions conditions)
+        /// <summary>
+        /// Returns a list of conditon groups and an associated list of supporting indexes to satisify each group (nested conditions).
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <param name="schemaMeta"></param>
+        /// <param name="conditions"></param>
+        /// <returns></returns>
+        public List<IndexSelections> SelectIndexes(Transaction transaction, PersistSchema schemaMeta, Conditions conditions)
+        {
+            List<IndexSelections> indexSelections = new List<IndexSelections>();
+
+            IndexSelections indexSelection = new IndexSelections(conditions);
+
+            SelectIndexes(transaction, schemaMeta, conditions.Root, ref indexSelection);
+            indexSelections.Add(indexSelection);
+
+            if (conditions.Children != null && conditions.Children.Count > 0)
+            {
+                foreach (var childConditions in conditions.Children)
+                {
+                    var childIndexSelections = SelectIndexes(transaction, schemaMeta, childConditions);
+                    if (childIndexSelections != null && childIndexSelections.Count > 0)
+                    {
+                        indexSelections.AddRange(childIndexSelections);
+                    }
+                }
+            }
+
+            return indexSelections;
+        }
+
+        private void SelectIndexes(Transaction transaction, PersistSchema schemaMeta, List<Condition> conditions, ref IndexSelections indexSelection)
         {
             try
             {
@@ -34,7 +65,7 @@ namespace LeafSQL.Engine.Indexes
                 throw;
             }
 
-            IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions.Flattened);
+            IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions);
 
             //Loop though each index in the schema and create a list of all indexes which could potentially be used to match the conditions.
             var indexCatalog = GetIndexCatalog(transaction, schemaMeta, LockOperation.Read);
@@ -61,8 +92,6 @@ namespace LeafSQL.Engine.Indexes
                 }
             }
 
-            IndexSelections indexSelections = new IndexSelections();
-
             //Group the indxes by their first attribute.
             var distinctFirstAttributes = potentialIndexs.Select(o => o.Index.Attributes[0].Name).Distinct();
             foreach (var distinctFirstAttribute in distinctFirstAttributes)
@@ -82,12 +111,10 @@ namespace LeafSQL.Engine.Indexes
                     handledKey.Handled = true;
                 }
 
-                indexSelections.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames));
+                indexSelection.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames));
             }
 
-            indexSelections.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
-
-            return indexSelections;
+            indexSelection.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
         }
 
         public List<Library.Payloads.Models.Index> List(Session session, string schema)

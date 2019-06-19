@@ -6,12 +6,12 @@
  DefaultDirName                   = {pf}\NetworkDLS\LeafSQL
  DefaultGroupName                 = NetworkDLS\LeafSQL
  UninstallDisplayIcon             = {app}\IDE\LeafSQL.UI.exe
- PrivilegesRequired               = PowerUser
+ PrivilegesRequired               = admin
  Uninstallable                    = Yes
  MinVersion                       = 0.0,5.0
  Compression                      = bZIP/9
  ChangesAssociations              = Yes
- OutputBaseFilename               = SSE
+ OutputBaseFilename               = LeafSQL_Client
  ArchitecturesInstallIn64BitMode  = x64
 
 ;-- Windows 2000 & XP (Support Dialog)

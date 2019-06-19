@@ -384,7 +384,7 @@ namespace LeafSQL.Engine.Query
                     else
                     {
                         nestedConditions.ConditionType = conditionType;
-                        conditions.Nest.Add(nestedConditions);
+                        conditions.Children.Add(nestedConditions);
                     }
                     continue;
                 }

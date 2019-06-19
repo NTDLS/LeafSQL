@@ -39,9 +39,9 @@ namespace LeafSQL.Engine.Query
         {
             outConditions.AddRange(conditions.Root);
 
-            if (conditions.Nest != null)
+            if (conditions.Children != null)
             {
-                foreach (var nestedConditions in conditions.Nest)
+                foreach (var nestedConditions in conditions.Children)
                 {
                     GetFlattenedConditions(nestedConditions, ref outConditions);
                 }
@@ -50,7 +50,7 @@ namespace LeafSQL.Engine.Query
 
         private List<Conditions> _Nest = null;
 
-        public List<Conditions> Nest
+        public List<Conditions> Children
         {
             get
             {
@@ -97,7 +97,7 @@ namespace LeafSQL.Engine.Query
 
         public void Add(Conditions conditions)
         {
-            this.Nest = conditions.Nest;
+            this.Children = conditions.Children;
             foreach (Condition condition in conditions.Root)
             {
                 this.Add(condition);
@@ -145,9 +145,9 @@ namespace LeafSQL.Engine.Query
                 }
             }
 
-            if (conditions.Nest != null)
+            if (conditions.Children != null)
             {
-                foreach (var nestedCondition in conditions.Nest)
+                foreach (var nestedCondition in conditions.Children)
                 {
                     if (nestedCondition.ConditionType == ConditionType.And)
                     {
