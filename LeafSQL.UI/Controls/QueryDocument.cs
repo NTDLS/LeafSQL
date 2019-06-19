@@ -1,4 +1,5 @@
-﻿using NTDLS.Windows.Forms;
+﻿using LeafSQL.UI.Properties;
+using NTDLS.Windows.Forms;
 using System;
 using System.Windows.Forms;
 
@@ -25,20 +26,9 @@ namespace LeafSQL.UI.Controls
             string syntaxtFileName = RegistryHelper.GetRegistryString("", "Path") + "\\IDE\\Highlighters\\LSQL.syn";
             codeEditor.Document.SyntaxFile = syntaxtFileName;
 
-            codeEditor.Document.Text =
-            "SELECT TOP 100\r\n"
-            + "\tProductID,\r\n"
-            + "\tName,\r\n"
-            + "\tProductNumber,\r\n"
-            + "\tColor,\r\n"
-            + "\tSafetyStockLevel\r\n"
-            + "FROM\r\n"
-            + "\t:AdventureWorks2012:Production:Product\r\n"
-            + "WHERE\r\n"
-            + "\tcolor = 'Black'\r\n"
-            + "\tAND SafetyStockLevel = 500\r\n"
-            + "\tAND ProductLine = 'M '\r\n"
-            + "\tAND Class = 'L '\r\n";
+#if DEBUG
+            codeEditor.Document.Text = Resources.DebugSQL;
+#endif
         }
     }
 }

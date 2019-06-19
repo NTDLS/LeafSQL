@@ -34,7 +34,7 @@ namespace LeafSQL.Engine.Indexes
                 throw;
             }
 
-            IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions);
+            IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions.Flattened);
 
             //Loop though each index in the schema and create a list of all indexes which could potentially be used to match the conditions.
             var indexCatalog = GetIndexCatalog(transaction, schemaMeta, LockOperation.Read);

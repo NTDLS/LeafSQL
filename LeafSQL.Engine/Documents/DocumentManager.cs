@@ -81,7 +81,7 @@ namespace LeafSQL.Engine.Documents
 
                 string documentCatalogDiskPath = Path.Combine(schemaMeta.DiskPath, Constants.DocumentCatalogFile);
 
-                if (indexSelections.Count == 0)
+                if (indexSelections.Count == 0) //Full schema scan. Ouch!
                 {
                     var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(transaction, documentCatalogDiskPath, LockOperation.Read);
 
@@ -91,23 +91,8 @@ namespace LeafSQL.Engine.Documents
                         PersistDocument persistDocument = core.IO.GetJson<PersistDocument>(transaction, documentDiskPath, LockOperation.Read);
 
                         JObject jsonContent = JObject.Parse(persistDocument.Content);
-                        bool fullAttributeMatch = true;
 
-                        foreach (Condition condition in conditions.Collection)
-                        {
-                            JToken jToken = null;
-
-                            if (jsonContent.TryGetValue(condition.Key, StringComparison.CurrentCultureIgnoreCase, out jToken))
-                            {
-                                if (condition.IsMatch(jToken.ToString().ToLower()) == false)
-                                {
-                                    fullAttributeMatch = false;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (fullAttributeMatch)
+                        if (conditions.IsMatch(jsonContent))
                         {
                             QueryRow rowValues = new QueryRow();
 
@@ -156,7 +141,7 @@ namespace LeafSQL.Engine.Documents
                         }
                     }
                 }
-                else
+                else //Indexed search!
                 {
                     List<string> intersectingDocumentIds = new List<string>();
                     HashSet<Guid> intersectedDocumentIds = new HashSet<Guid>();
@@ -164,7 +149,10 @@ namespace LeafSQL.Engine.Documents
                     foreach (var selectedIndex in indexSelections)
                     {
                         var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, selectedIndex.Index.DiskPath, LockOperation.Read);
-                        var targetedIndexConditions = (from o in conditions.Collection.Where(o => selectedIndex.HandledKeyNames.Contains(o.Key)) select o).ToList();
+                        var targetedIndexConditions = (from o in conditions.Root.Where(o => selectedIndex.HandledKeyNames.Contains(o.Key)) select o).ToList();
+
+                        //Going to have to loop though all of the nested conditions.
+
                         intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);
                     }
 
@@ -194,7 +182,7 @@ namespace LeafSQL.Engine.Documents
                             //  of the documents and do additonal document-level filtering.
                             if (indexSelections.UnhandledKeys?.Count > 0)
                             {
-                                foreach (Condition condition in conditions.Collection)
+                                foreach (Condition condition in conditions.Root)
                                 {
                                     JToken jToken = null;
 

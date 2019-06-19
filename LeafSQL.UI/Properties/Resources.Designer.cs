@@ -61,6 +61,33 @@ namespace LeafSQL.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT TOP 100
+        ///	ProductID,
+        ///	Name,
+        ///	ProductNumber,
+        ///	Color,
+        ///	SafetyStockLevel,
+        ///	ProductLine,
+        ///	Class
+        ///	
+        ///FROM
+        ///	:AdventureWorks2012:Production:Product
+        ///WHERE
+        ///	color = &apos;Black&apos;
+        ///	AND SafetyStockLevel = 500
+        ///	AND (
+        ///		AND ProductLine = &apos;M &apos;
+        ///		AND Class = &apos;L &apos;
+        ///	)
+        ///.
+        /// </summary>
+        internal static string DebugSQL {
+            get {
+                return ResourceManager.GetString("DebugSQL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Key {

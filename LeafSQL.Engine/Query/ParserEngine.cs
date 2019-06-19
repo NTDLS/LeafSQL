@@ -201,7 +201,7 @@ namespace LeafSQL.Engine.Query
             {
                 if (result.Conditions != null)
                 {
-                    foreach (var kvp in result.Conditions.Collection)
+                    foreach (var kvp in result.Conditions.Flattened)
                     {
                         kvp.Key = kvp.Key.Replace(literalString.Key, literalString.Value);
                         kvp.Value = kvp.Value.Replace(literalString.Key, literalString.Value);
@@ -220,7 +220,7 @@ namespace LeafSQL.Engine.Query
 
             if (result.Conditions != null)
             {
-                foreach (var kvp in result.Conditions.Collection)
+                foreach (var kvp in result.Conditions.Flattened)
                 {
                     if (kvp.Key.StartsWith("\'") && kvp.Key.EndsWith("\'"))
                     {
@@ -356,7 +356,7 @@ namespace LeafSQL.Engine.Query
             {
                 if ((token = Utilities.GetNextToken(conditionsText, ref position)) == string.Empty)
                 {
-                    if (conditions.Collection.Count > 0)
+                    if (conditions.Count > 0)
                     {
                         break; //Completed successfully.
                     }

@@ -214,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LeafSQL.ico" />
+    <None Include="Resources\DebugSQL.txt" />
     <None Include="Resources\TreeImage_Index.bmp" />
     <None Include="Resources\TreeImage_Documents.bmp" />
     <None Include="Resources\TreeImage_Document.bmp" />

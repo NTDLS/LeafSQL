@@ -5,11 +5,9 @@ namespace LeafSQL.Engine.Indexes
 {
     public class IndexKeyMatches : List<IndexKeyMatch>
     {
-        public IndexKeyMatches(Conditions conditions)
+        public IndexKeyMatches(List<Condition> conditions)
         {
-            conditions.MakeLowerCase();
-
-            foreach (Condition condition in conditions.Collection)
+            foreach (Condition condition in conditions)
             {
                 this.Add(new IndexKeyMatch(condition));
             }

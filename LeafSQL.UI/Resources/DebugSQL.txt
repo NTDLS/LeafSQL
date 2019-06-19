@@ -1,0 +1,18 @@
+SELECT TOP 100
+	ProductID,
+	Name,
+	ProductNumber,
+	Color,
+	SafetyStockLevel,
+	ProductLine,
+	Class
+	
+FROM
+	:AdventureWorks2012:Production:Product
+WHERE
+	color = 'Black'
+	AND SafetyStockLevel = 500
+	AND (
+		AND ProductLine = 'M '
+		AND Class = 'L '
+	)
