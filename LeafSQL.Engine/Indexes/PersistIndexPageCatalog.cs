@@ -11,7 +11,7 @@ namespace LeafSQL.Engine.Indexes
     public class PersistIndexPageCatalog
     {
         [ProtoMember(1)]
-        public PersistIndexLeaves Leaves = new PersistIndexLeaves();
+        public PersistIndexExtent Leaves = new PersistIndexExtent();
     }
 
 }

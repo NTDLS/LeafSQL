@@ -365,7 +365,7 @@ namespace LeafSQL.Engine.Indexes
         public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, List<Condition> conditions, HashSet<Guid> intersectedDocumentIds)
         {
             HashSet<Guid> foundDocumentIds = new HashSet<Guid>();
-            MatchDocuments(indexPageCatalog.Leaves, conditions, foundDocumentIds, intersectedDocumentIds);
+            MatchDocuments(indexPageCatalog.Leaves, conditions, 0, foundDocumentIds, intersectedDocumentIds);
             return foundDocumentIds;
         }
 
@@ -380,36 +380,52 @@ namespace LeafSQL.Engine.Indexes
             return MatchDocuments(indexPageCatalog, conditions, null);
         }
 
+
         /// <summary>
         /// Finds document IDs given a set of conditions.
         /// </summary>
         /// <param name="persistIndexLeaves"></param>
         /// <param name="conditions"></param>
         /// <param name="foundDocumentIds"></param>
-        private void MatchDocuments(PersistIndexLeaves persistIndexLeaves, List<Condition> conditions, HashSet<Guid> foundDocumentIds, HashSet<Guid> intersectedDocumentIds)
+        private void MatchDocuments(PersistIndexExtent persistIndexLeaves, List<Condition> conditions, int conditionOrdinal, HashSet<Guid> foundDocumentIds, HashSet<Guid> intersectedDocumentIds)
         {
-            foreach (var leaf in persistIndexLeaves.Entries)
+            foreach (var leaf in persistIndexLeaves.Leaves)
             {
-                foreach (Condition condition in conditions)
+                Condition condition = conditions[conditionOrdinal];
+
+                if (condition.IsMatch(leaf.Key) == true)
                 {
-                    if (condition.IsMatch(leaf.Key) == true)
+                    if (conditions.Count == conditionOrdinal + 1)
                     {
-                        if (leaf.IsBottom) //This is the bottom of the index, where the doucment IDs are stored.
+                        //We have exausted all of our conditons, go ahead and skip to the document IDs.
+                        foreach (var documentId in leaf.Coalesce())
                         {
-                            foreach (var documentId in leaf.DocumentIDs)
+                            //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
+                            //  this is how we incrementally filter documents with each successive index scan.
+                            if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
                             {
-                                //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that colection.
-                                //  this is how we incrementally filter documents with each successive index scan.
-                                if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
-                                {
-                                    foundDocumentIds.Add(documentId);
-                                }
+                                foundDocumentIds.Add(documentId);
                             }
                         }
-                        else
+                    }
+                    else if (leaf.IsBottom) //This is the bottom of the index, where the doucment IDs are stored.
+                    {
+                        //We have matched all of the index attributes.
+
+                        foreach (var documentId in leaf.DocumentIDs)
                         {
-                            MatchDocuments(leaf.Leaves, conditions, foundDocumentIds, intersectedDocumentIds);
+                            //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
+                            //  this is how we incrementally filter documents with each successive index scan.
+                            if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                            {
+                                foundDocumentIds.Add(documentId);
+                            }
                         }
+                    }
+                    else
+                    {
+                        //Match the next condition to the next lowest leaf level.
+                        MatchDocuments(leaf.Extent, conditions, conditionOrdinal+1, foundDocumentIds, intersectedDocumentIds);
                     }
                 }
             }
@@ -452,8 +468,8 @@ namespace LeafSQL.Engine.Indexes
                         Catalog = indexPageCatalog
                     };
 
-                    result.Leaves = result.Catalog.Leaves;
-                    if (result.Leaves == null || result.Leaves.Count == 0)
+                    result.Extent = result.Catalog.Leaves;
+                    if (result.Extent == null || result.Extent.Count == 0)
                     {
                         //The index is empty.
                         return result;
@@ -465,14 +481,14 @@ namespace LeafSQL.Engine.Indexes
                     {
                         bool locatedExtent = false;
 
-                        foreach (var leaf in result.Leaves.Entries)
+                        foreach (var leaf in result.Extent.Leaves)
                         {
                             if (leaf.Key == token)
                             {
                                 locatedExtent = true;
                                 foundExtentCount++;
                                 result.Leaf = leaf;
-                                result.Leaves = leaf.Leaves; //Move one level lower in the extent tree.
+                                result.Extent = leaf.Extent; //Move one level lower in the extent tree.
 
                                 result.IsPartialMatch = true;
                                 result.ExtentLevel = foundExtentCount;
@@ -617,8 +633,8 @@ namespace LeafSQL.Engine.Indexes
                     {
                         for (int i = findResult.ExtentLevel; i < searchTokens.Count; i++)
                         {
-                            findResult.Leaf = findResult.Leaves.AddNewleaf(searchTokens[i]);
-                            findResult.Leaves = findResult.Leaf.Leaves;
+                            findResult.Leaf = findResult.Extent.AddNewleaf(searchTokens[i]);
+                            findResult.Extent = findResult.Leaf.Extent;
                         }
 
                         if (findResult.Leaf == null || findResult.Leaf.DocumentIDs == null)
@@ -806,7 +822,7 @@ namespace LeafSQL.Engine.Indexes
             }
         }
 
-        private bool RemoveDocumentFromLeaves(ref PersistIndexLeaves leaves, Guid documentId)
+        private bool RemoveDocumentFromLeaves(ref PersistIndexExtent leaves, Guid documentId)
         {
             foreach (var leaf in leaves)
             {
@@ -818,9 +834,9 @@ namespace LeafSQL.Engine.Indexes
                     }
                 }
 
-                if (leaf.Leaves != null && leaf.Leaves.Count > 0)
+                if (leaf.Extent != null && leaf.Extent.Count > 0)
                 {
-                    if (RemoveDocumentFromLeaves(ref leaf.Leaves, documentId))
+                    if (RemoveDocumentFromLeaves(ref leaf.Extent, documentId))
                     {
                         return true;
                     }

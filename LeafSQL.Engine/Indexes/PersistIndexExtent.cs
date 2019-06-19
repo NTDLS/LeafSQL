@@ -1,25 +1,21 @@
 ﻿using Newtonsoft.Json;
 using ProtoBuf;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LeafSQL.Engine.Indexes
 {
     [ProtoContract]
-    public class PersistIndexLeaves
+    public class PersistIndexExtent
     {
         [ProtoMember(1)]
-        public List<PersistIndexLeaf> Entries = new List<PersistIndexLeaf>();
+        public List<PersistIndexLeaf> Leaves = new List<PersistIndexLeaf>();
 
         [JsonIgnore]
         public int Count
         {
             get
             {
-                return Entries.Count;
+                return Leaves.Count;
             }
         }
 
@@ -27,24 +23,24 @@ namespace LeafSQL.Engine.Indexes
         {
             key = key.ToLower(); //TODO: Make this optional for selective case sensitivity?
             var leaf = new PersistIndexLeaf(key);
-            Entries.Add(leaf);
+            Leaves.Add(leaf);
             return leaf;
         }
 
         public IEnumerator<PersistIndexLeaf> GetEnumerator()
         {
             int position = 0;
-            while (position < Entries.Count - 1)
+            while (position < Leaves.Count)
             {
-                yield return this[++position];
+                yield return this[position++];
             }
         }
 
-        public PersistIndexLeaf this[int index]    
+        public PersistIndexLeaf this[int index]
         {
             get
             {
-                return Entries[index];
+                return Leaves[index];
             }
         }
     }

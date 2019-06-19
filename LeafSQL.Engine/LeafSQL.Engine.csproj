@@ -73,10 +73,10 @@
     <Compile Include="Indexes\IndexKeyMatches.cs" />
     <Compile Include="Indexes\IndexSelection.cs" />
     <Compile Include="Indexes\IndexSelections.cs" />
-    <Compile Include="Indexes\PersistIndexLeaf.cs" />
     <Compile Include="Indexes\PersistIndexAttribute.cs" />
-    <Compile Include="Indexes\PersistIndexLeaves.cs" />
     <Compile Include="Indexes\IndexManager.cs" />
+    <Compile Include="Indexes\PersistIndexLeaf.cs" />
+    <Compile Include="Indexes\PersistIndexExtent.cs" />
     <Compile Include="Indexes\PersistIndexPageCatalog.cs" />
     <Compile Include="Indexes\PotentialIndex.cs" />
     <Compile Include="Interfaces\ICatalog.cs" />

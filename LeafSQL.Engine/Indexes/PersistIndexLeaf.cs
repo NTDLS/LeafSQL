@@ -15,8 +15,33 @@ namespace LeafSQL.Engine.Indexes
         [ProtoMember(2)]
         public HashSet<Guid> DocumentIDs = null;
         [ProtoMember(3)]
-        public PersistIndexLeaves Leaves = new PersistIndexLeaves();
+        public PersistIndexExtent Extent = new PersistIndexExtent();
 
+        /// <summary>
+        /// Returns all document ids from the bottom level of this leaf/extent.
+        /// </summary>
+        /// <returns></returns>
+        public List<Guid> Coalesce()
+        {
+            List<Guid> documentIds = new List<Guid>();
+
+            if (DocumentIDs != null)
+            {
+                documentIds.AddRange(DocumentIDs); //If this is the bottom, just return all the doucment IDs.
+            }
+
+            //...Otherwise we need to traverse to the end of each entent and grab the document IDs.
+
+            foreach (var leaf in Extent)
+            {
+                var childDocumentIDs = leaf.Coalesce();
+                if(documentIds != null)
+                {
+                    documentIds.AddRange(childDocumentIDs);
+                }
+            }
+            return documentIds;
+        }
 
         /// <summary>
         /// Returns true if this is the level of the index that contains the document IDs.
