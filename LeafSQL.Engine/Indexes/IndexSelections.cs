@@ -1,5 +1,6 @@
 ﻿using LeafSQL.Engine.Query;
 using System.Collections.Generic;
+using static LeafSQL.Engine.Constants;
 
 namespace LeafSQL.Engine.Indexes
 {
@@ -15,15 +16,18 @@ namespace LeafSQL.Engine.Indexes
         /// </summary>
         public List<Condition> Conditions { get; set; }
 
+        public ConditionType ConditionGroupType { get; set; }
+
         public IndexSelections()
         {
             UnhandledKeys = new List<string>();
         }
 
-        public IndexSelections(List<Condition> conditions)
+        public IndexSelections(Conditions conditions)
         {
             UnhandledKeys = new List<string>();
-            Conditions = conditions;
+            Conditions = conditions.Root;
+            ConditionGroupType = conditions.ConditionGroupType;
         }
     }
 }

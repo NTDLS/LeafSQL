@@ -32,7 +32,7 @@ namespace LeafSQL.Engine.Indexes
         public List<IndexSelections> SelectIndexes(Transaction transaction, PersistSchema schemaMeta, Conditions conditions)
         {
             List<IndexSelections> indexSelections = new List<IndexSelections>();
-            IndexSelections indexSelection = new IndexSelections(conditions.Root);
+            IndexSelections indexSelection = new IndexSelections(conditions);
 
             SelectIndexes(transaction, schemaMeta, conditions.Root, ref indexSelection);
             indexSelections.Add(indexSelection);
@@ -393,22 +393,11 @@ namespace LeafSQL.Engine.Indexes
         /// <param name="indexPageCatalog"></param>
         /// <param name="conditions"></param>
         /// <returns></returns>
-        public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, List<Condition> conditions, HashSet<Guid> intersectedDocumentIds)
-        {
-            HashSet<Guid> foundDocumentIds = new HashSet<Guid>();
-            MatchDocuments(indexPageCatalog.Leaves, conditions, 0, foundDocumentIds, intersectedDocumentIds);
-            return foundDocumentIds;
-        }
-
-        /// <summary>
-        /// Finds document IDs given a set of conditions.
-        /// </summary>
-        /// <param name="indexPageCatalog"></param>
-        /// <param name="conditions"></param>
-        /// <returns></returns>
         public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, List<Condition> conditions)
         {
-            return MatchDocuments(indexPageCatalog, conditions, null);
+            HashSet<Guid> globallyFoundDocumentIds = new HashSet<Guid>();
+            MatchDocuments(indexPageCatalog.Leaves, conditions, 0, globallyFoundDocumentIds);
+            return globallyFoundDocumentIds;
         }
 
         /// <summary>
@@ -417,8 +406,14 @@ namespace LeafSQL.Engine.Indexes
         /// <param name="persistIndexLeaves"></param>
         /// <param name="conditions"></param>
         /// <param name="foundDocumentIds"></param>
-        private void MatchDocuments(PersistIndexExtent persistIndexLeaves, List<Condition> conditions, int conditionOrdinal, HashSet<Guid> foundDocumentIds, HashSet<Guid> intersectedDocumentIds)
+        private void MatchDocuments(PersistIndexExtent persistIndexLeaves, List<Condition> conditions, int conditionOrdinal, HashSet<Guid> globallyFoundDocumentIds)
         {
+            HashSet<Guid> sessionFoundDocumentIds = new HashSet<Guid>();
+
+            //TODO: This is broken, very broken.
+            // We have scenarios where we have ANDs/ORs and nested ANDs/ORs.
+            // We also have to support the same key being used in an OR (e.g. Color = 'BLACK' OR Color = 'Silver')
+
             foreach (var leaf in persistIndexLeaves.Leaves)
             {
                 Condition condition = conditions[conditionOrdinal];
@@ -430,43 +425,47 @@ namespace LeafSQL.Engine.Indexes
                         //We have exausted all of our conditons, go ahead and skip to the document IDs.
                         foreach (var documentId in leaf.Coalesce())
                         {
-                            if (condition.ConditionType == ConditionType.And)
+                            if (condition.ConditionType == ConditionType.None) //None means this is the first condition in a group.
                             {
-                                //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
-                                //  this is how we incrementally filter documents with each successive index scan.
-                                if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                                sessionFoundDocumentIds.Add(documentId);
+                            }
+                            else if (condition.ConditionType == ConditionType.And)
+                            {
+                                if (globallyFoundDocumentIds.Contains(documentId))
                                 {
-                                    foundDocumentIds.Add(documentId);
+                                    sessionFoundDocumentIds.Add(documentId);
                                 }
                             }
                             else if (condition.ConditionType == ConditionType.Or)
                             {
-                                throw new NotImplementedException();
+                                sessionFoundDocumentIds.Add(documentId);
                             }
                             else
                             {
                                 throw new LeafSQLExceptionBase("Unsupported expression type.");
                             }
+
                         }
                     }
                     else if (leaf.IsBottom) //This is the bottom of the index, where the doucment IDs are stored.
                     {
                         //We have matched all of the index attributes.
-
                         foreach (var documentId in leaf.DocumentIDs)
                         {
-                            if (condition.ConditionType == ConditionType.And)
+                            if (condition.ConditionType == ConditionType.None) //None means this is the first condition in a group.
                             {
-                                //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
-                                //  this is how we incrementally filter documents with each successive index scan.
-                                if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                                sessionFoundDocumentIds.Add(documentId);
+                            }
+                            else if (condition.ConditionType == ConditionType.And)
+                            {
+                                if (globallyFoundDocumentIds.Contains(documentId))
                                 {
-                                    foundDocumentIds.Add(documentId);
+                                    sessionFoundDocumentIds.Add(documentId);
                                 }
                             }
                             else if (condition.ConditionType == ConditionType.Or)
                             {
-                                throw new NotImplementedException();
+                                sessionFoundDocumentIds.Add(documentId);
                             }
                             else
                             {
@@ -477,10 +476,13 @@ namespace LeafSQL.Engine.Indexes
                     else
                     {
                         //Match the next condition to the next lowest leaf level.
-                        MatchDocuments(leaf.Extent, conditions, conditionOrdinal + 1, foundDocumentIds, intersectedDocumentIds);
+                        MatchDocuments(leaf.Extent, conditions, conditionOrdinal + 1, globallyFoundDocumentIds);
+                        return;
                     }
                 }
             }
+
+            globallyFoundDocumentIds.Add(
         }
 
         /// <summary>

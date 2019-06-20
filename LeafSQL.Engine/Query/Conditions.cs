@@ -66,7 +66,7 @@ namespace LeafSQL.Engine.Query
             }
         }
 
-        public ConditionType ConditionType { get; set; }
+        public ConditionType ConditionGroupType { get; set; }
 
         public bool LowerCased { get; set; }
 
@@ -147,15 +147,15 @@ namespace LeafSQL.Engine.Query
 
             if (conditions.Children != null)
             {
-                foreach (var nestedCondition in conditions.Children)
+                foreach (var nestedConditions in conditions.Children)
                 {
-                    if (nestedCondition.ConditionType == ConditionType.And)
+                    if (nestedConditions.ConditionGroupType == ConditionType.And)
                     {
-                        fullAttributeMatch = fullAttributeMatch && nestedCondition.IsMatch(jsonContent);
+                        fullAttributeMatch = fullAttributeMatch && nestedConditions.IsMatch(jsonContent);
                     }
-                    else if (nestedCondition.ConditionType == ConditionType.Or)
+                    else if (nestedConditions.ConditionGroupType == ConditionType.Or)
                     {
-                        fullAttributeMatch = fullAttributeMatch || nestedCondition.IsMatch(jsonContent);
+                        fullAttributeMatch = fullAttributeMatch || nestedConditions.IsMatch(jsonContent);
                     }
                     else
                     {

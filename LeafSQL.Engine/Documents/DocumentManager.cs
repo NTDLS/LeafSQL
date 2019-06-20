@@ -143,11 +143,20 @@ namespace LeafSQL.Engine.Documents
                 }
                 else //Indexed search!
                 {
-                    List<string> intersectingDocumentIds = new List<string>();
                     HashSet<Guid> intersectedDocumentIds = new HashSet<Guid>();
 
                     foreach (var indexSelectionGroup in indexSelectionGroups)
                     {
+                        if (indexSelectionGroup.ConditionGroupType == ConditionType.None)
+                        {
+                        }
+                        else if (indexSelectionGroup.ConditionGroupType == ConditionType.And)
+                        {
+                        }
+                        else if (indexSelectionGroup.ConditionGroupType == ConditionType.Or)
+                        {
+                        }
+
                         foreach (var indexSelection in indexSelectionGroup)
                         {
                             var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, indexSelection.Index.DiskPath, LockOperation.Read);
@@ -155,7 +164,7 @@ namespace LeafSQL.Engine.Documents
                             var targetedIndexConditions = (from o in indexSelectionGroup.Conditions.Where(o => indexSelection.HandledConditionID == o.Id) select o).ToList();
 
                             //Going to have to loop though all of the nested conditions.
-                            intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);
+                            var foundDocuments = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions);
                         }
                     }
 

@@ -383,7 +383,7 @@ namespace LeafSQL.Engine.Query
                     }
                     else
                     {
-                        nestedConditions.ConditionType = conditionType;
+                        nestedConditions.ConditionGroupType = conditionType;
                         conditions.Children.Add(nestedConditions);
                     }
                     continue;
