@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LeafSQL.Engine.Indexes
 {
     public class PotentialIndex
     {
         public List<string> HandledKeyNames { get; set; }
+        public List<Guid> HandledConditionIDs { get; set; }
         public PersistIndex Index { get; set; }
         public bool Eliminate { get; set; }
 
@@ -16,10 +18,11 @@ namespace LeafSQL.Engine.Indexes
             }
         }
 
-        public PotentialIndex(PersistIndex index, List<string> handledKeyNames)
+        public PotentialIndex(PersistIndex index, List<string> handledKeyNames, List<Guid> handledConditionIDs)
         {
             this.Index = index;
             this.HandledKeyNames = handledKeyNames;
+            this.HandledConditionIDs = handledConditionIDs;
         }
     }
 }

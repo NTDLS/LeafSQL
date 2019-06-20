@@ -63,12 +63,16 @@ namespace LeafSQL.Engine.Indexes
                 List<PotentialIndex> potentialIndexs = new List<PotentialIndex>();
                 foreach (var indexMeta in indexCatalog.Collection)
                 {
-                    List<string> handledKeyNames = new List<string>();
+                    var handledKeyNames = new List<string>();
+                    var handledConditionIDs = new List<Guid>();
 
                     for (int i = 0; i < indexMeta.Attributes.Count; i++)
                     {
-                        if (indexKeyMatches.Find(o => o.Key == indexMeta.Attributes[i].Name.ToLower()) != null)
+                        var indexKeyMatch = indexKeyMatches.FindAll(o => o.Key == indexMeta.Attributes[i].Name.ToLower());
+
+                        if (indexKeyMatch.Count > 0)
                         {
+                            handledConditionIDs.AddRange(indexKeyMatch.Select(o => o.Id));
                             handledKeyNames.Add(indexMeta.Attributes[i].Name.ToLower());
                         }
                         else
@@ -79,7 +83,7 @@ namespace LeafSQL.Engine.Indexes
 
                     if (handledKeyNames.Count > 0)
                     {
-                        potentialIndexs.Add(new PotentialIndex(indexMeta, handledKeyNames));
+                        potentialIndexs.Add(new PotentialIndex(indexMeta, handledKeyNames, handledConditionIDs));
                     }
                 }
 
@@ -102,7 +106,10 @@ namespace LeafSQL.Engine.Indexes
                         handledKey.Handled = true;
                     }
 
-                    indexSelection.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames));
+                    foreach (var conditionId in firstIndexInGroup.HandledConditionIDs)
+                    {
+                        indexSelection.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames, conditionId));
+                    }
                 }
 
                 indexSelection.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
@@ -423,11 +430,22 @@ namespace LeafSQL.Engine.Indexes
                         //We have exausted all of our conditons, go ahead and skip to the document IDs.
                         foreach (var documentId in leaf.Coalesce())
                         {
-                            //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
-                            //  this is how we incrementally filter documents with each successive index scan.
-                            if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                            if (condition.ConditionType == ConditionType.And)
                             {
-                                foundDocumentIds.Add(documentId);
+                                //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
+                                //  this is how we incrementally filter documents with each successive index scan.
+                                if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                                {
+                                    foundDocumentIds.Add(documentId);
+                                }
+                            }
+                            else if (condition.ConditionType == ConditionType.Or)
+                            {
+                                throw new NotImplementedException();
+                            }
+                            else
+                            {
+                                throw new LeafSQLExceptionBase("Unsupported expression type.");
                             }
                         }
                     }
@@ -437,18 +455,29 @@ namespace LeafSQL.Engine.Indexes
 
                         foreach (var documentId in leaf.DocumentIDs)
                         {
-                            //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
-                            //  this is how we incrementally filter documents with each successive index scan.
-                            if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                            if (condition.ConditionType == ConditionType.And)
                             {
-                                foundDocumentIds.Add(documentId);
+                                //If the intersectedDocumentIds contains docIds, then we want to eliminate any documents that are not contained in that collection.
+                                //  this is how we incrementally filter documents with each successive index scan.
+                                if (intersectedDocumentIds == null || intersectedDocumentIds.Count == 0 || intersectedDocumentIds.Contains(documentId))
+                                {
+                                    foundDocumentIds.Add(documentId);
+                                }
+                            }
+                            else if (condition.ConditionType == ConditionType.Or)
+                            {
+                                throw new NotImplementedException();
+                            }
+                            else
+                            {
+                                throw new LeafSQLExceptionBase("Unsupported expression type.");
                             }
                         }
                     }
                     else
                     {
                         //Match the next condition to the next lowest leaf level.
-                        MatchDocuments(leaf.Extent, conditions, conditionOrdinal+1, foundDocumentIds, intersectedDocumentIds);
+                        MatchDocuments(leaf.Extent, conditions, conditionOrdinal + 1, foundDocumentIds, intersectedDocumentIds);
                     }
                 }
             }

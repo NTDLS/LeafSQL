@@ -152,7 +152,7 @@ namespace LeafSQL.Engine.Documents
                         {
                             var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, indexSelection.Index.DiskPath, LockOperation.Read);
 
-                            var targetedIndexConditions = (from o in indexSelectionGroup.Conditions.Where(o => indexSelection.HandledKeyNames.Contains(o.Key)) select o).ToList();
+                            var targetedIndexConditions = (from o in indexSelectionGroup.Conditions.Where(o => indexSelection.HandledConditionID == o.Id) select o).ToList();
 
                             //Going to have to loop though all of the nested conditions.
                             intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);

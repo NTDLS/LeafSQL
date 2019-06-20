@@ -15,11 +15,12 @@ namespace LeafSQL.Engine.Query
 
         public Condition()
         {
-
+            this.Id = Guid.NewGuid();
         }
 
         public Condition(ConditionType conditionType, string key, ConditionQualifier conditionQualifier, string value)
         {
+            this.Id = Guid.NewGuid();
             this.Key = key;
             this.Value = value;
             this.ConditionQualifier = conditionQualifier;
