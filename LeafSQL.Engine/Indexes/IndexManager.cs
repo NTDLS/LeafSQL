@@ -56,24 +56,26 @@ namespace LeafSQL.Engine.Indexes
         {
             try
             {
-                IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions);
-
-                //Loop though each index in the schema and create a list of all indexes which could potentially be used to match the conditions.
                 var indexCatalog = GetIndexCatalog(transaction, schemaMeta, LockOperation.Read);
                 List<PotentialIndex> potentialIndexs = new List<PotentialIndex>();
+
+                var indexConditions = new IndexConditions(conditions);
+
+                //Loop though each index in the schema and create a list of all indexes which could potentially be used to match the conditions.
                 foreach (var indexMeta in indexCatalog.Collection)
                 {
-                    var handledKeyNames = new List<string>();
-                    var handledConditionIDs = new List<Guid>();
+                    var indexHandledCondition = new List<IndexHandledCondition>();
 
                     for (int i = 0; i < indexMeta.Attributes.Count; i++)
                     {
-                        var indexKeyMatch = indexKeyMatches.FindAll(o => o.Key == indexMeta.Attributes[i].Name.ToLower());
+                        var indexConditonMatches = indexConditions.FindAll(o => o.Key == indexMeta.Attributes[i].Name.ToLower() && o.Handled == false);
 
-                        if (indexKeyMatch.Count > 0)
+                        if (indexConditonMatches.Count > 0)
                         {
-                            handledConditionIDs.AddRange(indexKeyMatch.Select(o => o.Id));
-                            handledKeyNames.Add(indexMeta.Attributes[i].Name.ToLower());
+                            foreach (var indexConditonMatche in indexConditonMatches)
+                            {
+                                indexHandledCondition.Add(new IndexHandledCondition(indexConditonMatche, i));
+                            }
                         }
                         else
                         {
@@ -81,13 +83,13 @@ namespace LeafSQL.Engine.Indexes
                         }
                     }
 
-                    if (handledKeyNames.Count > 0)
+                    if (indexHandledCondition.Count > 0)
                     {
-                        potentialIndexs.Add(new PotentialIndex(indexMeta, handledKeyNames, handledConditionIDs));
+                        potentialIndexs.Add(new PotentialIndex(indexMeta, indexHandledCondition));
                     }
                 }
 
-                //Group the indxes by their first attribute.
+                //Group the indexes by their first attribute.
                 var distinctFirstAttributes = potentialIndexs.Select(o => o.Index.Attributes[0].Name).Distinct();
                 foreach (var distinctFirstAttribute in distinctFirstAttributes)
                 {
@@ -96,23 +98,23 @@ namespace LeafSQL.Engine.Indexes
 
                     //For the group of indexes, find the one index that handles the most keys but also has the fewest atributes.
                     var firstIndexInGroup = (from o in indexGroup select o)
-                        .OrderByDescending(s => s.HandledKeyNames.Count)
+                        .OrderByDescending(s => s.IndexHandledConditions.Count)
                         .ThenBy(t => t.Index.Attributes.Count).FirstOrDefault();
 
-                    //Mark the keys which are handled by this index as "handled".
-                    var handledKeys = (from o in indexKeyMatches where firstIndexInGroup.HandledKeyNames.Contains(o.Key) select o).ToList();
-                    foreach (var handledKey in handledKeys)
+                    foreach (var indexHandledCondition in firstIndexInGroup.IndexHandledConditions)
                     {
-                        handledKey.Handled = true;
+                        //Mark the keys which are handled by this index as "handled".
+                        var handledKeys = (from o in indexConditions where o.Id == indexHandledCondition.Id select o).ToList();
+                        foreach (var handledKey in handledKeys)
+                        {
+                            handledKey.Handled = true;
+                        }
                     }
 
-                    foreach (var conditionId in firstIndexInGroup.HandledConditionIDs)
-                    {
-                        indexSelection.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames, conditionId));
-                    }
+                    indexSelection.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.IndexHandledConditions));
                 }
 
-                indexSelection.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
+                indexSelection.UnhandledKeys.AddRange((from o in indexConditions where o.Handled == false select o.Key).ToList());
             }
             catch (Exception ex)
             {
@@ -482,7 +484,7 @@ namespace LeafSQL.Engine.Indexes
                 }
             }
 
-            globallyFoundDocumentIds.Add(
+            //globallyFoundDocumentIds.Add(
         }
 
         /// <summary>

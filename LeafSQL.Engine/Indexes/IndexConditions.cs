@@ -3,17 +3,17 @@ using LeafSQL.Engine.Query;
 
 namespace LeafSQL.Engine.Indexes
 {
-    public class IndexKeyMatches : List<IndexKeyMatch>
+    public class IndexConditions : List<IndexCondition>
     {
-        public IndexKeyMatches(List<Condition> conditions)
+        public IndexConditions(List<Condition> conditions)
         {
             foreach (Condition condition in conditions)
             {
-                this.Add(new IndexKeyMatch(condition));
+                this.Add(new IndexCondition(condition));
             }
         }
 
-        public IndexKeyMatches()
+        public IndexConditions()
         {
         }
     }

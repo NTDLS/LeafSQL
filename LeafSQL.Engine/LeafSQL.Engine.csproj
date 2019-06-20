@@ -69,8 +69,9 @@
     <Compile Include="Health\HealthCounter.cs" />
     <Compile Include="Health\HealthManager.cs" />
     <Compile Include="Indexes\FindKeyPageResult.cs" />
-    <Compile Include="Indexes\IndexKeyMatch.cs" />
-    <Compile Include="Indexes\IndexKeyMatches.cs" />
+    <Compile Include="Indexes\IndexHandledCondition.cs" />
+    <Compile Include="Indexes\IndexCondition.cs" />
+    <Compile Include="Indexes\IndexConditions.cs" />
     <Compile Include="Indexes\IndexSelection.cs" />
     <Compile Include="Indexes\IndexSelections.cs" />
     <Compile Include="Indexes\PersistIndexAttribute.cs" />

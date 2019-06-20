@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace LeafSQL.Engine.Indexes
 {
     public class IndexSelection
     {
         public PersistIndex Index;
-        public List<string> HandledKeyNames { get; set; }
-        public Guid HandledConditionID { get; set; }
+        public List<IndexHandledCondition> IndexHandledConditions { get; set; }
 
-        public IndexSelection(PersistIndex index, List<string> handledKeyNames, Guid handledConditionID)
+        public IndexSelection(PersistIndex index, List<IndexHandledCondition> indexHandledConditions)
         {
-            this.HandledKeyNames = handledKeyNames;
-            this.HandledConditionID = handledConditionID;
+            this.IndexHandledConditions = indexHandledConditions;
             this.Index = index;
         }
     }
