@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LeafSQL.Engine.Indexes
 {
@@ -18,7 +16,7 @@ namespace LeafSQL.Engine.Indexes
         public PersistIndexExtent Extent = new PersistIndexExtent();
 
         /// <summary>
-        /// Returns all document ids from the bottom level of this leaf/extent.
+        /// Returns all document IDs from the bottom level of the extent.
         /// </summary>
         /// <returns></returns>
         public List<Guid> Coalesce()
@@ -35,7 +33,7 @@ namespace LeafSQL.Engine.Indexes
             foreach (var leaf in Extent)
             {
                 var childDocumentIDs = leaf.Coalesce();
-                if(documentIds != null)
+                if (documentIds != null)
                 {
                     documentIds.AddRange(childDocumentIDs);
                 }

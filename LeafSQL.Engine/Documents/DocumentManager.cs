@@ -77,11 +77,11 @@ namespace LeafSQL.Engine.Documents
                 }
 
                 bool hasFieldList = fieldList != null && fieldList.Count > 0;
-                var indexSelections = core.Indexes.SelectIndexes(transaction, schemaMeta, conditions);
+                var indexSelectionGroups = core.Indexes.SelectIndexes(transaction, schemaMeta, conditions);
 
                 string documentCatalogDiskPath = Path.Combine(schemaMeta.DiskPath, Constants.DocumentCatalogFile);
 
-                if (indexSelections.Count == 0) //Full schema scan. Ouch!
+                if (indexSelectionGroups.Count == 0) //Full schema scan. Ouch!
                 {
                     var documentCatalog = core.IO.GetJson<PersistDocumentCatalog>(transaction, documentCatalogDiskPath, LockOperation.Read);
 
@@ -146,14 +146,17 @@ namespace LeafSQL.Engine.Documents
                     List<string> intersectingDocumentIds = new List<string>();
                     HashSet<Guid> intersectedDocumentIds = new HashSet<Guid>();
 
-                    foreach (var selectedIndex in indexSelections)
+                    foreach (var indexSelectionGroup in indexSelectionGroups)
                     {
-                        //var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, selectedIndex.Index.DiskPath, LockOperation.Read);
-                        //var targetedIndexConditions = (from o in conditions.Root.Where(o => selectedIndex.HandledKeyNames.Contains(o.Key)) select o).ToList();
+                        foreach (var indexSelection in indexSelectionGroup)
+                        {
+                            var indexPageCatalog = core.IO.GetPBuf<PersistIndexPageCatalog>(transaction, indexSelection.Index.DiskPath, LockOperation.Read);
 
-                        //Going to have to loop though all of the nested conditions.
+                            var targetedIndexConditions = (from o in indexSelectionGroup.Conditions.Where(o => indexSelection.HandledKeyNames.Contains(o.Key)) select o).ToList();
 
-                        //intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);
+                            //Going to have to loop though all of the nested conditions.
+                            intersectedDocumentIds = core.Indexes.MatchDocuments(indexPageCatalog, targetedIndexConditions, intersectedDocumentIds);
+                        }
                     }
 
                     //Now that we have elimiated all but the document IDs that we care about, all we
@@ -178,20 +181,28 @@ namespace LeafSQL.Engine.Documents
 
                             bool fullAttributeMatch = true;
 
-                            //If we have any conditions that were not indexes, open the remainder
-                            //  of the documents and do additonal document-level filtering.
-                            //if (indexSelections.UnhandledKeys?.Count > 0)
+                            foreach (var indexSelectionGroup in indexSelectionGroups)
                             {
-                                foreach (Condition condition in conditions.Root)
+                                //If we have any conditions that were not indexed, open the remainder
+                                //  of the documents and do additonal document-level filtering.
+                                if (indexSelectionGroup.UnhandledKeys?.Count > 0)
                                 {
-                                    JToken jToken = null;
+                                    var unhandledConditions = (from o
+                                                               in indexSelectionGroup.Conditions
+                                                               where indexSelectionGroup.UnhandledKeys.Contains(o.Key)
+                                                               select o).ToList();
 
-                                    if (jsonContent.TryGetValue(condition.Key, StringComparison.CurrentCultureIgnoreCase, out jToken))
+                                    foreach (Condition condition in unhandledConditions)
                                     {
-                                        if (condition.IsMatch(jToken.ToString().ToLower()) == false)
+                                        JToken jToken = null;
+
+                                        if (jsonContent.TryGetValue(condition.Key, StringComparison.CurrentCultureIgnoreCase, out jToken))
                                         {
-                                            fullAttributeMatch = false;
-                                            break;
+                                            if (condition.IsMatch(jToken.ToString().ToLower()) == false)
+                                            {
+                                                fullAttributeMatch = false;
+                                                break;
+                                            }
                                         }
                                     }
                                 }

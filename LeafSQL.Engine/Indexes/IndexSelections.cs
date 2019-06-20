@@ -3,17 +3,24 @@ using System.Collections.Generic;
 
 namespace LeafSQL.Engine.Indexes
 {
-    public class IndexSelections: List<IndexSelection>
+    public class IndexSelections : List<IndexSelection>
     {
+        /// <summary>
+        /// The condition keys that this index cannot satisify.
+        /// </summary>
         public List<string> UnhandledKeys { get; set; }
-        public Conditions Conditions { get; set; }
+
+        /// <summary>
+        /// The condition that this index can satisfiy.
+        /// </summary>
+        public List<Condition> Conditions { get; set; }
 
         public IndexSelections()
         {
             UnhandledKeys = new List<string>();
         }
 
-        public IndexSelections(Conditions conditions)
+        public IndexSelections(List<Condition> conditions)
         {
             UnhandledKeys = new List<string>();
             Conditions = conditions;

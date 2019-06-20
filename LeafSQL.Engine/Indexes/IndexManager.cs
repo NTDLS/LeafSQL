@@ -32,8 +32,7 @@ namespace LeafSQL.Engine.Indexes
         public List<IndexSelections> SelectIndexes(Transaction transaction, PersistSchema schemaMeta, Conditions conditions)
         {
             List<IndexSelections> indexSelections = new List<IndexSelections>();
-
-            IndexSelections indexSelection = new IndexSelections(conditions);
+            IndexSelections indexSelection = new IndexSelections(conditions.Root);
 
             SelectIndexes(transaction, schemaMeta, conditions.Root, ref indexSelection);
             indexSelections.Add(indexSelection);
@@ -57,64 +56,62 @@ namespace LeafSQL.Engine.Indexes
         {
             try
             {
+                IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions);
 
+                //Loop though each index in the schema and create a list of all indexes which could potentially be used to match the conditions.
+                var indexCatalog = GetIndexCatalog(transaction, schemaMeta, LockOperation.Read);
+                List<PotentialIndex> potentialIndexs = new List<PotentialIndex>();
+                foreach (var indexMeta in indexCatalog.Collection)
+                {
+                    List<string> handledKeyNames = new List<string>();
+
+                    for (int i = 0; i < indexMeta.Attributes.Count; i++)
+                    {
+                        if (indexKeyMatches.Find(o => o.Key == indexMeta.Attributes[i].Name.ToLower()) != null)
+                        {
+                            handledKeyNames.Add(indexMeta.Attributes[i].Name.ToLower());
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (handledKeyNames.Count > 0)
+                    {
+                        potentialIndexs.Add(new PotentialIndex(indexMeta, handledKeyNames));
+                    }
+                }
+
+                //Group the indxes by their first attribute.
+                var distinctFirstAttributes = potentialIndexs.Select(o => o.Index.Attributes[0].Name).Distinct();
+                foreach (var distinctFirstAttribute in distinctFirstAttributes)
+                {
+                    //Find all idexes with the same first attribute:
+                    var indexGroup = potentialIndexs.Where(o => o.FirstAttributeName == distinctFirstAttribute);
+
+                    //For the group of indexes, find the one index that handles the most keys but also has the fewest atributes.
+                    var firstIndexInGroup = (from o in indexGroup select o)
+                        .OrderByDescending(s => s.HandledKeyNames.Count)
+                        .ThenBy(t => t.Index.Attributes.Count).FirstOrDefault();
+
+                    //Mark the keys which are handled by this index as "handled".
+                    var handledKeys = (from o in indexKeyMatches where firstIndexInGroup.HandledKeyNames.Contains(o.Key) select o).ToList();
+                    foreach (var handledKey in handledKeys)
+                    {
+                        handledKey.Handled = true;
+                    }
+
+                    indexSelection.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames));
+                }
+
+                indexSelection.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
             }
             catch (Exception ex)
             {
                 core.Log.Write(String.Format("Failed to select indexes for process {0}.", transaction.ProcessId), ex);
                 throw;
             }
-
-            IndexKeyMatches indexKeyMatches = new IndexKeyMatches(conditions);
-
-            //Loop though each index in the schema and create a list of all indexes which could potentially be used to match the conditions.
-            var indexCatalog = GetIndexCatalog(transaction, schemaMeta, LockOperation.Read);
-            List<PotentialIndex> potentialIndexs = new List<PotentialIndex>();
-            foreach (var indexMeta in indexCatalog.Collection)
-            {
-                List<string> handledKeyNames = new List<string>();
-
-                for (int i = 0; i < indexMeta.Attributes.Count; i++)
-                {
-                    if (indexKeyMatches.Find(o => o.Key == indexMeta.Attributes[i].Name.ToLower() && o.Handled == false) != null)
-                    {
-                        handledKeyNames.Add(indexMeta.Attributes[i].Name.ToLower());
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                if (handledKeyNames.Count > 0)
-                {
-                    potentialIndexs.Add(new PotentialIndex(indexMeta, handledKeyNames));
-                }
-            }
-
-            //Group the indxes by their first attribute.
-            var distinctFirstAttributes = potentialIndexs.Select(o => o.Index.Attributes[0].Name).Distinct();
-            foreach (var distinctFirstAttribute in distinctFirstAttributes)
-            {
-                //Find all idexes with the same first attribute:
-                var indexGroup = potentialIndexs.Where(o => o.FirstAttributeName == distinctFirstAttribute);
-
-                //For the group of indexes, find the one index that handles the most keys but also has the fewest atributes.
-                var firstIndexInGroup = (from o in indexGroup select o)
-                    .OrderByDescending(s => s.HandledKeyNames.Count)
-                    .ThenBy(t => t.Index.Attributes.Count).FirstOrDefault();
-
-                //Mark the keys which are handled by this index as "handled".
-                var handledKeys = (from o in indexKeyMatches where firstIndexInGroup.HandledKeyNames.Contains(o.Key) select o).ToList();
-                foreach (var handledKey in handledKeys)
-                {
-                    handledKey.Handled = true;
-                }
-
-                indexSelection.Add(new IndexSelection(firstIndexInGroup.Index, firstIndexInGroup.HandledKeyNames));
-            }
-
-            indexSelection.UnhandledKeys.AddRange((from o in indexKeyMatches where o.Handled == false select o.Key).ToList());
         }
 
         public List<Library.Payloads.Models.Index> List(Session session, string schema)
@@ -406,7 +403,6 @@ namespace LeafSQL.Engine.Indexes
         {
             return MatchDocuments(indexPageCatalog, conditions, null);
         }
-
 
         /// <summary>
         /// Finds document IDs given a set of conditions.

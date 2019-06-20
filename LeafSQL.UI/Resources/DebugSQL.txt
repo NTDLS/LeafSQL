@@ -10,9 +10,12 @@ SELECT TOP 100
 FROM
 	:AdventureWorks2012:Production:Product
 WHERE
-	color = 'Black'
-	AND SafetyStockLevel = 500
-	AND (
-		AND ProductLine = 'M '
-		AND Class = 'L '
-	)
+	Color = 'Black'
+	OR Color = 'Silver'
+	--AND SafetyStockLevel > 10
+	--AND SizeUnitMeasureCode = 'CM '
+	--AND Size > 40
+	--AND (
+	--	ProductLine = 'M '
+	--	AND Class = 'L '
+	--)
