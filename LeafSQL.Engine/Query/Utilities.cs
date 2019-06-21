@@ -93,6 +93,11 @@ namespace LeafSQL.Engine.Query
 
             for (; position < query.Length; position++)
             {
+                if (token == "(" || token == ")")
+                {
+                    break;
+                }
+
                 if (char.IsWhiteSpace(query[position]) || delimiters.Contains(query[position]) == true)
                 {
                     break;

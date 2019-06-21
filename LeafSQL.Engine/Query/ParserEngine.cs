@@ -7,6 +7,13 @@ namespace LeafSQL.Engine.Query
 {
     public class ParserEngine
     {
+        private enum SubExpressionMode
+        {
+            None,
+            Single,
+            Multi
+        }
+
         static public PreparedQuery ParseQuery(string query)
         {
             PreparedQuery result = new PreparedQuery();
@@ -339,10 +346,10 @@ namespace LeafSQL.Engine.Query
         private static Conditions ParseConditions(string conditionsText)
         {
             int position = 0;
-            return ParseConditions(conditionsText, ref position, 0);
+            return ParseConditions(conditionsText, ref position, 0, SubExpressionMode.None);
         }
 
-        private static Conditions ParseConditions(string conditionsText, ref int position, int nestLevel)
+        private static Conditions ParseConditions(string conditionsText, ref int position, int nestLevel, SubExpressionMode subExpressionMode)
         {
             Conditions conditions = new Conditions();
 
@@ -366,16 +373,40 @@ namespace LeafSQL.Engine.Query
                 if (token.ToLower() == "and")
                 {
                     conditionType = ConditionType.And;
-                    continue;
+                    Utilities.GetNextToken(conditionsText, ref position); //Skip the "AND" token.
                 }
-                else if (token.ToLower() == "or")
+
+                //else if (token.ToLower() == "or")
+                //{
+                //    conditionType = ConditionType.Or;
+                //    continue;
+                //}
+                if (token.ToLower() == "(" || token.ToLower() == "or")
                 {
-                    conditionType = ConditionType.Or;
-                    continue;
-                }
-                else if (token.ToLower() == "(")
-                {
-                    Conditions nestedConditions = ParseConditions(conditionsText, ref position, nestLevel + 1);
+                    var nestedMode = SubExpressionMode.None;
+
+                    if (token.ToLower() == "or")
+                    {
+                        conditionType = ConditionType.Or;
+                        nestedMode = SubExpressionMode.Single;
+                    }
+
+                    if (token.ToLower() == "(")
+                    {
+                        nestedMode = SubExpressionMode.Multi;
+                    }
+
+                    int testPosition = position; //Skip the parenthesis.
+                    if ((token = Utilities.GetNextToken(conditionsText, ref testPosition)) == string.Empty)
+                    {
+                        throw new Exception("Invalid query. Unexpexted end of query found.");
+                    }
+                    if (token == "(")
+                    {
+                        position = testPosition;
+                    }
+
+                    Conditions nestedConditions = ParseConditions(conditionsText, ref position, nestLevel + 1, nestedMode);
 
                     if (condition == null)
                     {
@@ -393,6 +424,10 @@ namespace LeafSQL.Engine.Query
                     if (nestLevel == 0)
                     {
                         throw new Exception("Invalid query. Unexpected token [)].");
+                    }
+                    else if (subExpressionMode != SubExpressionMode.Multi)
+                    {
+                        throw new Exception("Invalid query. Nested condition mismatch.");
                     }
                     return conditions;
                 }
@@ -426,6 +461,11 @@ namespace LeafSQL.Engine.Query
                     condition.Value = token;
 
                     conditions.Add(condition);
+
+                    if (subExpressionMode == SubExpressionMode.Single)
+                    {
+                        return conditions;
+                    }
                 }
             }
 

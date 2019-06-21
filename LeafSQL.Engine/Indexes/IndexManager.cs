@@ -395,10 +395,10 @@ namespace LeafSQL.Engine.Indexes
         /// <param name="indexPageCatalog"></param>
         /// <param name="conditions"></param>
         /// <returns></returns>
-        public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, List<Condition> conditions)
+        public HashSet<Guid> MatchDocuments(PersistIndexPageCatalog indexPageCatalog, IndexSelection indexSelection)
         {
             HashSet<Guid> globallyFoundDocumentIds = new HashSet<Guid>();
-            MatchDocuments(indexPageCatalog.Leaves, conditions, 0, globallyFoundDocumentIds);
+            MatchDocuments(0, indexPageCatalog.Leaves, indexSelection, globallyFoundDocumentIds);
             return globallyFoundDocumentIds;
         }
 
@@ -408,8 +408,9 @@ namespace LeafSQL.Engine.Indexes
         /// <param name="persistIndexLeaves"></param>
         /// <param name="conditions"></param>
         /// <param name="foundDocumentIds"></param>
-        private void MatchDocuments(PersistIndexExtent persistIndexLeaves, List<Condition> conditions, int conditionOrdinal, HashSet<Guid> globallyFoundDocumentIds)
+        private void MatchDocuments(int nestedLevel, PersistIndexExtent persistIndexLeaves, IndexSelection indexSelection, HashSet<Guid> globallyFoundDocumentIds)
         {
+            /*
             HashSet<Guid> sessionFoundDocumentIds = new HashSet<Guid>();
 
             //TODO: This is broken, very broken.
@@ -478,13 +479,12 @@ namespace LeafSQL.Engine.Indexes
                     else
                     {
                         //Match the next condition to the next lowest leaf level.
-                        MatchDocuments(leaf.Extent, conditions, conditionOrdinal + 1, globallyFoundDocumentIds);
+                        MatchDocuments(nestedLevel++, leaf.Extent, indexSelection, globallyFoundDocumentIds);
                         return;
                     }
                 }
             }
-
-            //globallyFoundDocumentIds.Add(
+            */
         }
 
         /// <summary>

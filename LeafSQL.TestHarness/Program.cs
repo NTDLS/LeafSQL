@@ -41,7 +41,7 @@ namespace LeafSQL.TestHarness
         static void Main(string[] args)
         {
             //Exporter.ExportAll();
-            TestCreateAllAdventureWorks2012Indexes();
+            //TestCreateAllAdventureWorks2012Indexes();
             //TestServerStress();
 
             //TestCreateIndexAddDocuments();
@@ -55,7 +55,7 @@ namespace LeafSQL.TestHarness
             //    client.Logout();
             //}
 
-            ////ExecuteAndPrint("SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
+            ExecuteAndPrint("SELECT TOP 100 * FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver' OR (WER = 1 OR WEB = 2) OR Blah = 9 OR GGG = 10 AND ABC = '123'");
             ////ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product WHERE SafetyStockLevel = 1000 AND Color = 'Silver'");
             //ExecuteAndPrint("SELECT TOP 100 ProductID,Name,ProductNumber,Color,SafetyStockLevel FROM :AdventureWorks2012:Production:Product where color = 'Black' and SafetyStockLevel = 500 and ProductLine = 'M ' and Class = 'L '");
 
